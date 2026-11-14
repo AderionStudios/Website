@@ -1,7 +1,7 @@
-# FLAOUVE — Indie Game Studio Static Web Platform
+# ADERION STUDIO — Official Static Web Platform
 
-**Bilingual Editorial Web Architecture · Zero-Backend · TypeScript-Only · cPanel-Ready**  
-**Çift Dilli Editoryal Web Mimarisi · Sıfır Sunucu Bağımlılığı · Zorunlu TypeScript · cPanel Uyumlu**
+**Type-Safe Editorial Web Architecture · Zero-Backend · TypeScript-Only · cPanel-Ready**  
+**Tip Güvenli Editoryal Web Mimarisi · Sıfır Sunucu Bağımlılığı · Zorunlu TypeScript · cPanel Uyumlu**
 
 [English Documentation](#english) · [Türkçe Dokümantasyon](#türkçe)
 
@@ -11,101 +11,102 @@
 
 ### 1. Project Overview
 
-**FLAOUVE** is an open-source, type-safe, 100% static editorial web platform built for independent game studios, solo developers, and creative collectives. Designed around high-contrast dark editorial typography, asymmetric CSS Grid layouts, and zero server-side dependencies, it ships production-ready static assets directly to **cPanel (`public_html`)**, VPS servers, or static CDNs.
+**Aderion Studio** is an open-source, type-safe, 100% static editorial web platform built for independent game development. Designed with high-contrast editorial typography, asymmetric responsive CSS Grid layouts, and zero server-side dependencies, it delivers high performance and security for deployment to **cPanel (`public_html`)**, static CDNs, or VPS hosting.
 
 ### 2. Core Architectural Principles
 
-* **Zero-Backend:** Pure **HTML5**, **CSS3**, and compiled **ES2020 JavaScript** (`assets/js/`). No database, PHP, or Node.js runtime is required in production, minimizing TTFB and eliminating classic CMS attack surfaces (SQLi, RCE).
-* **TypeScript-Only Policy:** Handwriting raw `.js` files is strictly forbidden. All client-side logic lives under `src/ts/` with `strict: true` and zero external UI frameworks (Vanilla DOM API only), compiled via `tsc` into `assets/js/`.
-* **cPanel-Ready & Hardened:** Includes a production Apache/cPanel `.htaccess` configuration (dotfile/dotdir protection, `Options -Indexes`, HTTPS 301 enforcement, security headers, Brotli/Gzip compression, and `Cache-Control`/`Expires` rules) alongside automated SSH/`rsync` deployment workflows.
-* **Compile-Time Safe i18n:** Client-side Turkish (`tr`) / English (`en`) localization backed by `TranslationSchema` (`src/ts/types/i18n.d.ts`), `navigator.language` detection, `localStorage` persistence, and instant DOM updates via `data-i18n` attributes.
+* **Zero-Backend (Static Only):** Pure **HTML5**, **CSS3**, and compiled **ES2020 JavaScript** (`assets/js/`). No database, PHP, or Node.js runtime is required in production, ensuring near-instant TTFB and eliminating server-side attack vectors.
+* **TypeScript-Only Policy:** Handwriting raw `.js` under `src/ts/` is prohibited. All client logic is written in strict TypeScript and compiled into standalone `assets/js/main.js` via `tsc`.
+* **Universal Cross-Platform Build Runners:** Automated scripts (`build.sh`, `build.bat`, `build.ps1`) auto-detect **Podman**, **Docker**, or local **Node/npm** without manual container setup.
+* **Discord Integration:** Real-time profile card rendering with avatars, animated badges, banners, and configurable status bubbles (`bubble_tr`, `bubble_en`) from `data/credits.json`.
+* **Compile-Time Safe i18n:** Client-side Turkish (`tr`) / English (`en`) localization enforced by TypeScript's `TranslationSchema`.
 
-### 3. Directory Structure
+### 3. Repository Structure
 
 ```text
 Website/
-├── index.html                  # Editorial home showcase, manifesto, featured title & studio strip
-├── games.html                  # Studio game catalog, platform filters, system specs & gallery
+├── index.html                  # Editorial home showcase, manifesto & official channels
+├── games.html                  # Active development coming-soon showcase & pillars
+├── games_backup.html           # Preserved full game catalog backup
 ├── credit.html                 # Studio roster & dynamic Discord profile cards
-├── press-kit.html              # Verified fact sheet, studio bio, vector logos & media kit
-├── .htaccess                   # Apache/cPanel security, HTTPS redirect, compression & cache rules
-├── robots.txt                  # Search engine crawler directives & sitemap pointer
-├── sitemap.xml                 # XML Sitemap covering all studio pages
-├── .gitignore                  # Ignores node_modules/ & local temp files; preserves assets/js/
-├── tsconfig.json               # Strict TypeScript compiler config (src/ts -> assets/js)
-├── package.json                # Minimal dev dependencies (TypeScript only)
+├── build.sh                    # Universal build runner for Linux & macOS (Podman/Docker/npm)
+├── build.bat                   # Universal build runner for Windows CMD
+├── build.ps1                   # Universal build runner for Windows PowerShell
+├── .htaccess                   # Apache/cPanel security, HTTPS redirect & cache rules
+├── robots.txt                  # Search engine crawler directives
+├── sitemap.xml                 # XML Sitemap for search engines
+├── .gitignore                  # Git exclusions (preserves assets/js/)
+├── tsconfig.json               # Strict TypeScript configuration
+├── package.json                # Project metadata & build scripts
 ├── data/
-│   └── credits.json            # Central team roster & Discord ID data source
+│   └── credits.json            # Central single source of truth for team & Discord data
 ├── .github/
 │   └── workflows/
-│       ├── build.yml           # CI: Zero-raw-JS guardrail, typecheck, build & XML validation
-│       └── deploy.yml          # CD: Stages production bundle & syncs to cPanel public_html
+│       ├── build.yml           # CI: Zero-raw-JS check, typecheck, build & XML validation
+│       └── deploy.yml          # CD: Static bundle staging & automated cPanel rsync deployment
 ├── src/
 │   └── ts/
 │       ├── types/
 │       │   └── i18n.d.ts       # Strongly typed TranslationSchema & locale contracts
-│       ├── config.ts           # Central studio metadata, games, team & iframe origin allowlist
-│       ├── i18n.ts             # TR/EN dictionaries, locale detection & DOM translation engine
-│       └── main.ts             # Trailer modal, mobile drawer, filters & keyboard accessibility
+│       ├── config.ts           # Central studio metadata & iframe allowlists
+│       ├── credits-data.ts     # Auto-generated credits contract
+│       ├── i18n.ts             # TR/EN dictionaries & DOM localization engine
+│       └── main.ts             # Application bootstrap, theme toggle, modals & i18n
 ├── assets/
 │   ├── css/
-│   │   ├── variables.css       # Design tokens (palette, typography, spacing, borders)
-│   │   ├── main.css            # Asymmetric editorial grid, stroke headings & components
-│   │   └── responsive.css      # Desktop, tablet & mobile media queries
-│   ├── js/                     # Compiled tsc output deployed to cPanel (do not hand-edit)
-│   ├── fonts/                  # Self-hosted web font assets
-│   ├── img/                    # Hero concept artwork, game covers & team visuals
-│   └── press-kit/              # Downloadable press media archives
-└── LICENSE                     # Apache License 2.0
+│   │   ├── variables.css       # Design tokens (colors, typography, spacing)
+│   │   ├── main.css            # Editorial styling, Discord cards & coming soon state
+│   │   └── responsive.css      # Fluid responsive breakpoints (mobile, tablet, desktop)
+│   ├── js/                     # Compiled production JavaScript bundle (assets/js/main.js)
+│   └── img/                    # Studio logos, concept art & Discord asset cache
+└── scripts/
+    ├── render-credits.js       # Discord profile fetcher & HTML credits generator
+    ├── add-credit.js           # CLI helper to add new members
+    └── bundle.js               # Standalone single-file bundle generator
 ```
 
-### 4. Universal Cross-Platform Build Runners (Podman / Docker / Native)
+### 4. Build & Development
 
-The repository provides automated cross-platform build scripts that auto-detect **Podman**, fallback to **Docker**, or use native **Node/npm**:
+The repository includes universal runners that prioritize Podman, then Docker, then native npm:
 
 ```bash
-# Linux & macOS (Bash)
-./build.sh              # Runs npm run build
-./build.sh typecheck    # Runs npm run typecheck
-./build.sh watch        # Runs npm run watch
-./build.sh install      # Runs npm install
+# Linux & macOS
+./build.sh              # Compile TypeScript & generate assets
+./build.sh typecheck    # Run typecheck without emitting files
+./build.sh watch        # Watch mode for live TypeScript compilation
+./build.sh install      # Install dependencies
 
 # Windows (Command Prompt)
-build.bat               # Runs npm run build
-build.bat typecheck     # Runs npm run typecheck
+build.bat               # Compile TypeScript & generate assets
+build.bat typecheck     # Run typecheck
 
 # Windows (PowerShell)
-.\build.ps1             # Runs npm run build
-.\build.ps1 typecheck   # Runs npm run typecheck
+.\build.ps1             # Compile TypeScript & generate assets
+.\build.ps1 typecheck   # Run typecheck
 ```
 
-Alternatively, commands can still be executed directly via Podman:
+### 5. Contributors & Core Team
 
-```bash
-# Direct Podman execution
-podman exec website-dev npm run build
-podman exec website-dev npm run typecheck
-podman exec website-dev npm run add-member -- --name="Member Name" --discord="https://discord.com/users/ID" --role="Role Title"
-```
+| Avatar | Member | Role | Socials |
+| :---: | :--- | :--- | :--- |
+| <img src="https://github.com/Stett1N.png" width="48" height="48" style="border-radius:50%" /> | **Stettin**<br>`@stettin` | **Founder / Studio Owner & Creative Designer**<br>Kurucu, Stüdyo Sahibi & Yaratıcı Tasarımcı | [![GitHub](https://img.shields.io/badge/GitHub-Stett1N-181717?logo=github)](https://github.com/Stett1N) [![Discord](https://img.shields.io/badge/Discord-296189055379570688-5865F2?logo=discord)](https://discord.com/users/296189055379570688) |
+| <img src="https://github.com/flaouve.png" width="48" height="48" style="border-radius:50%" /> | **Flaouve**<br>`@flaouve` | **Chief / Site Director — DevOps & Server Architecture**<br>DevOps, Sistem Mimarisi & Altyapı Lideri | [![GitHub](https://img.shields.io/badge/GitHub-flaouve-181717?logo=github)](https://github.com/flaouve) [![GitLab](https://img.shields.io/badge/GitLab-flaouve-FC6D26?logo=gitlab)](https://gitlab.com/flaouve) [![Website](https://img.shields.io/badge/Website-flaouve.dev-00C7B7)](https://flaouve.dev/) [![Discord](https://img.shields.io/badge/Discord-966300934202359888-5865F2?logo=discord)](https://discord.com/users/966300934202359888) |
 
-### 5. CI/CD & cPanel Deployment
+### 6. Contributing Guidelines
 
-* **CI Pipeline ([`.github/workflows/build.yml`](./.github/workflows/build.yml)):** Runs on every push and PR to `main`. Enforces zero raw `.js` files under `src/`, executes `npm run typecheck` and `npm run build`, verifies compiled outputs (`assets/js/main.js`, `config.js`, `i18n.js`), and validates `sitemap.xml` and `feed.xml`.
-* **CD Pipeline ([`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)):** Runs on push to `main` or manual `workflow_dispatch`. Compiles TypeScript, stages only static production artifacts (`.html`, `.htaccess`, `robots.txt`, `sitemap.xml`, `feed.xml`, `assets/`) into `_deploy/`, preserves cPanel-managed paths (`.well-known/`, `cgi-bin/`), and syncs via SSH/`rsync`. Configure repository secrets:
-  * `CPANEL_HOST` (required)
-  * `CPANEL_USER` (required)
-  * `CPANEL_SSH_KEY` (required)
-  * `CPANEL_PORT` (optional, defaults to `22`)
-  * `CPANEL_REMOTE_PATH` (optional, defaults to `public_html/`)
-  * `CPANEL_SSH_KNOWN_HOSTS` (optional, pinned host key)
+Contributions and suggestions are warmly welcomed! To contribute:
 
-### 6. Multi-Agent Architecture Summary
-
-This repository was engineered using a specialized multi-agent workflow with strict file ownership boundaries:
-
-1. **Editorial UI & Assets Agent:** Semantic HTML5 pages (`index.html`, `games.html`, `credit.html`, `press-kit.html`), editorial CSS system (`variables.css`, `main.css`, `responsive.css`), and vector visual assets.
-2. **TypeScript & i18n Engineering Agent:** Tooling (`package.json`, `tsconfig.json`), strict translation contracts (`src/ts/types/i18n.d.ts`), studio data layer (`src/ts/config.ts`, `data/credits.json`), client i18n engine (`src/ts/i18n.ts`), and accessible interactions (`src/ts/main.ts`).
-3. **DevOps, Security & SEO Specialist:** Server hardening (`.htaccess`), crawler endpoints (`robots.txt`, `sitemap.xml`), repository hygiene (`.gitignore`), and GitHub Actions CI/CD (`.github/workflows/`).
+1. **Fork** the repository and create your feature branch:
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+2. **Strict TypeScript Policy:** Do not add or edit raw `.js` in `src/`. All logic must be in `src/ts/` with strict types.
+3. **Verify Build:** Ensure all checks pass:
+   ```bash
+   ./build.sh typecheck
+   ./build.sh
+   ```
+4. **Commit & Pull Request:** Commit with clear descriptive messages and open a PR.
 
 ---
 
@@ -113,58 +114,64 @@ This repository was engineered using a specialized multi-agent workflow with str
 
 ### 1. Proje Özeti
 
-**FLAOUVE**, bağımsız oyun stüdyoları, solo geliştiriciler ve yaratıcı kolektifler için tasarlanmış; tip güvenli, %100 statik ve açık kaynaklı bir editoryal web platformudur. Yüksek kontrastlı koyu tema, asimetrik CSS Grid yerleşimi ve sıfır sunucu bağımlılığı üzerine kurulan mimari; doğrudan **cPanel (`public_html`)**, VPS veya statik CDN ortamlarında anında çalışır.
+**Aderion Studio**, bağımsız oyun geliştirme için tasarlanmış; tip güvenli, %100 statik ve açık kaynaklı bir editoryal web platformudur. Yüksek kontrastlı koyu tema, asimetrik CSS Grid tasarımı ve sıfır sunucu bağımlılığı üzerine kurulu olan platform; **cPanel (`public_html`)**, statik CDN veya VPS sunucularında doğrudan ve yüksek performansla çalışır.
 
 ### 2. Temel Mimari İlkeler
 
-* **Sıfır Sunucu Bağımlılığı (Zero-Backend):** Yalnızca standart **HTML5**, **CSS3** ve derlenmiş **ES2020 JavaScript** (`assets/js/`) çıktıları kullanılır. Üretim ortamında veritabanı, PHP veya Node.js çalışma zamanı gerekmez; TTFB minimumdur ve klasik CMS zafiyetlerini (SQLi, RCE) barındırmaz.
-* **Ham JavaScript Yasağı (TypeScript-Only):** Doğrudan `.js` dosyası yazmak yasaktır. Tüm istemci mantığı harici framework olmadan (`Vanilla DOM API`) `src/ts/` altında `strict: true` ile yazılır ve `tsc` ile `assets/js/` dizinine derlenir.
-* **cPanel Uyumluluğu ve Sıkılaştırma:** `.htaccess` dosyası ile gizli dosya/dizin engelleme, `Options -Indexes`, HTTPS 301 yönlendirmesi, HTTP güvenlik başlıkları, Brotli/Gzip sıkıştırma ve `Cache-Control`/`Expires` önbellekleme kurallarını hazır sunar.
-* **Tip Güvenli Çoklu Dil (i18n):** `TranslationSchema` (`src/ts/types/i18n.d.ts`) arayüzü ile eksik çevirileri derleme anında yakalar; `navigator.language` tespiti, `localStorage` tercihi ve `data-i18n` nitelikleri üzerinden sayfa yenilenmeden TR/EN dil geçişi sağlar.
+* **Sıfır Sunucu Bağımlılığı (Zero-Backend):** Üretim ortamında veritabanı, PHP veya Node.js gerektirmez. Saf **HTML5**, **CSS3** ve derlenmiş **ES2020 JavaScript** (`assets/js/`) ile çalışır.
+* **Ham JavaScript Yasağı (TypeScript-Only):** `src/ts/` altında doğrudan `.js` yazmak yasaktır. Tüm istemci kodları sıkı TypeScript kurallarıyla yazılır ve `tsc` ile derlenir.
+* **Evrensel Derleme Betikleri:** `build.sh`, `build.bat` ve `build.ps1` betikleri sistemde **Podman**, **Docker** veya yerel **Node/npm** olup olmadığını otomatik olarak tespit eder.
+* **Dinamik Discord Kartları:** `data/credits.json` üzerinden anlık Discord avatarları, afişler ve iki dilli (`bubble_tr`, `bubble_en`) konuşma baloncukları sunar.
+* **Tip Güvenli İki Dilli Yapı (i18n):** Türkçe (`tr`) ve İngilizce (`en`) dilleri `TranslationSchema` ile derleme anında doğrulanır.
 
 ### 3. Dizin Yapısı
 
-Tam dizin ağacı yukarıdaki [Directory Structure](#3-directory-structure) bölümünde yer almaktadır. Kaynak TypeScript kodları `src/ts/` altında tutulur; `assets/js/` dizini yalnızca `tsc` tarafından üretilen cPanel uyumlu çıktıları içerir.
+Detaylı dizin ağacı yukarıdaki [Repository Structure](#3-repository-structure) bölümünde listelenmiştir.
 
-### 4. Evrensel Çapraz Platform Derleme Betikleri (Podman / Docker / Yerel)
+### 4. Derleme ve Geliştirme
 
-Projeyi derlemek için sisteminizde **Podman**, **Docker** veya yerel **Node.js/npm** olup olmadığını otomatik tespit eden betikler hazırlanmıştır:
+İşletim sisteminize uygun betiği çalıştırarak kolayca derleme yapabilirsiniz:
 
 ```bash
-# Linux ve macOS (Bash)
-./build.sh              # npm run build çalıştırır
-./build.sh typecheck    # npm run typecheck çalıştırır
-./build.sh watch        # Canlı izleme (watch mode)
-./build.sh install      # npm install bağımlılık yükleme
+# Linux ve macOS
+./build.sh              # Projeyi derler
+./build.sh typecheck    # Hata üretmeden tip kontrolü yapar
+./build.sh watch        # Canlı izleme modu
+./build.sh install      # Bağımlılıkları kurar
 
 # Windows (Komut Satırı / CMD)
-build.bat               # npm run build çalıştırır
-build.bat typecheck     # npm run typecheck çalıştırır
+build.bat               # Projeyi derler
+build.bat typecheck     # Tip kontrolü yapar
 
 # Windows (PowerShell)
-.\build.ps1             # npm run build çalıştırır
-.\build.ps1 typecheck   # npm run typecheck çalıştırır
+.\build.ps1             # Projeyi derler
+.\build.ps1 typecheck   # Tip kontrolü yapar
 ```
 
-Doğrudan Podman konteyneri üzerinden çalıştırmak isterseniz:
+### 5. Çekirdek Ekip & Katkıda Bulunanlar (Contributors)
 
-```bash
-# Podman konteyneri üzerinden doğrudan çalıştırma
-podman exec website-dev npm run build
-podman exec website-dev npm run typecheck
-podman exec website-dev npm run add-member -- --name="Ad Soyad" --discord="https://discord.com/users/ID" --role="Rol"
-```
+| Profil | Üye | Görev & Rol | Bağlantılar |
+| :---: | :--- | :--- | :--- |
+| <img src="https://github.com/Stett1N.png" width="48" height="48" style="border-radius:50%" /> | **Stettin**<br>`@stettin` | **Kurucu, Stüdyo Sahibi & Yaratıcı Tasarımcı**<br>Founder / Studio Owner & Creative Designer | [![GitHub](https://img.shields.io/badge/GitHub-Stett1N-181717?logo=github)](https://github.com/Stett1N) [![Discord](https://img.shields.io/badge/Discord-296189055379570688-5865F2?logo=discord)](https://discord.com/users/296189055379570688) |
+| <img src="https://github.com/flaouve.png" width="48" height="48" style="border-radius:50%" /> | **Flaouve**<br>`@flaouve` | **Chief / Site Director — DevOps & Sunucu Yönetimi**<br>DevOps, Sistem Mimarisi & Altyapı Lideri | [![GitHub](https://img.shields.io/badge/GitHub-flaouve-181717?logo=github)](https://github.com/flaouve) [![GitLab](https://img.shields.io/badge/GitLab-flaouve-FC6D26?logo=gitlab)](https://gitlab.com/flaouve) [![Website](https://img.shields.io/badge/Website-flaouve.dev-00C7B7)](https://flaouve.dev/) [![Discord](https://img.shields.io/badge/Discord-966300934202359888-5865F2?logo=discord)](https://discord.com/users/966300934202359888) |
 
-### 5. CI/CD ve cPanel Dağıtımı
+### 6. Katkıda Bulunma Rehberi (Contributing)
 
-* **Sürekli Entegrasyon ([`.github/workflows/build.yml`](./.github/workflows/build.yml)):** `main` dalına gönderilen her `push` ve `pull_request` işleminde `src/` altında ham `.js` bulunmadığını doğrular, `npm run typecheck` ve `npm run build` adımlarını çalıştırır, üretilen `assets/js/` dosyalarını ve `sitemap.xml` geçerliliğini denetler.
-* **Sürekli Dağıtım ([`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)):** `main` dalına `push` veya manuel `workflow_dispatch` tetiklendiğinde TypeScript kodunu derler, yalnızca üretim dosyalarını (`.html`, `.htaccess`, `robots.txt`, `sitemap.xml`, `assets/`) `_deploy/` dizininde paketler, cPanel'e ait `.well-known/` ve `cgi-bin/` dizinlerini koruyarak SSH/`rsync` ile `public_html` dizinine aktarır.
+Topluluk katkıları ve öneriler memnuniyetle karşılanır:
 
-### 6. Çoklu Ajan Mimari Özeti
+1. Depoyu **Fork** edin ve geliştirme dalınızı açın:
+   ```bash
+   git checkout -b feature/yeni-ozellik
+   ```
+2. Değişikliklerinizi yapın ve derleme testlerini çalıştırın:
+   ```bash
+   ./build.sh typecheck
+   ./build.sh
+   ```
+3. Commit mesajınızı yazarak bir **Pull Request (PR)** açın.
 
-Platform, dosya sahipliği sınırları net biçimde ayrılmış üç uzman ajan alanı ile geliştirilmiştir:
+---
 
-1. **Editoryal Arayüz ve Görsel Tasarım Ajanı:** Semantik HTML5 sayfaları (`index.html`, `games.html`, `credit.html`, `press-kit.html`), CSS tasarım tokenları (`variables.css`, `main.css`, `responsive.css`) ve vektör görseller.
-2. **TypeScript ve i18n Mühendislik Ajanı:** Derleme yapılandırması (`package.json`, `tsconfig.json`), tip güvenli çeviri şeması (`i18n.d.ts`), merkezi veri katmanı (`config.ts`, `data/credits.json`), çoklu dil motoru (`i18n.ts`) ve etkileşim kontrolleri (`main.ts`).
-3. **DevOps, Güvenlik ve SEO Uzmanı:** Apache/cPanel sıkılaştırma (`.htaccess`), arama motoru dosyaları (`robots.txt`, `sitemap.xml`), depo kuralları (`.gitignore`) ve GitHub Actions CI/CD iş akışları.
-* [`LICENSE`](./LICENSE) — Apache License 2.0
+### 7. Lisans (License)
+
+Bu proje [Apache License 2.0](LICENSE) ile lisanslanmıştır.
