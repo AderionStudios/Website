@@ -59,25 +59,33 @@ Website/
 └── LICENSE                     # Apache License 2.0
 ```
 
-### 4. Podman-Only Development & Build Commands
+### 4. Universal Cross-Platform Build Runners (Podman / Docker / Native)
 
-All Node.js and TypeScript tooling runs exclusively inside the **`website-dev`** Podman container (`Node.js 20`) to keep the host environment clean and reproducible:
+The repository provides automated cross-platform build scripts that auto-detect **Podman**, fallback to **Docker**, or use native **Node/npm**:
 
 ```bash
-# Install TypeScript compiler inside the Podman container
-podman exec website-dev npm install
+# Linux & macOS (Bash)
+./build.sh              # Runs npm run build
+./build.sh typecheck    # Runs npm run typecheck
+./build.sh watch        # Runs npm run watch
+./build.sh install      # Runs npm install
 
-# Run strict type-checking without emitting files
-podman exec website-dev npm run typecheck
+# Windows (Command Prompt)
+build.bat               # Runs npm run build
+build.bat typecheck     # Runs npm run typecheck
 
-# Compile src/ts/*.ts -> assets/js/*.js
+# Windows (PowerShell)
+.\build.ps1             # Runs npm run build
+.\build.ps1 typecheck   # Runs npm run typecheck
+```
+
+Alternatively, commands can still be executed directly via Podman:
+
+```bash
+# Direct Podman execution
 podman exec website-dev npm run build
-
-# Add a new team member to credits (automatically generates cards with Discord & social links)
+podman exec website-dev npm run typecheck
 podman exec website-dev npm run add-member -- --name="Member Name" --discord="https://discord.com/users/ID" --role="Role Title"
-
-# Watch mode during active development
-podman exec website-dev npm run watch
 ```
 
 ### 5. CI/CD & cPanel Deployment
@@ -118,25 +126,33 @@ This repository was engineered using a specialized multi-agent workflow with str
 
 Tam dizin ağacı yukarıdaki [Directory Structure](#3-directory-structure) bölümünde yer almaktadır. Kaynak TypeScript kodları `src/ts/` altında tutulur; `assets/js/` dizini yalnızca `tsc` tarafından üretilen cPanel uyumlu çıktıları içerir.
 
-### 4. Podman ile Geliştirme ve Derleme Komutları
+### 4. Evrensel Çapraz Platform Derleme Betikleri (Podman / Docker / Yerel)
 
-Ana makineyi (host) kirletmeden tutarlı bir derleme ortamı sağlamak için tüm Node.js / TypeScript komutları **`website-dev`** Podman konteyneri içinde çalıştırılır:
+Projeyi derlemek için sisteminizde **Podman**, **Docker** veya yerel **Node.js/npm** olup olmadığını otomatik tespit eden betikler hazırlanmıştır:
 
 ```bash
-# Podman konteyneri içinde TypeScript bağımlılıklarını yükle
-podman exec website-dev npm install
+# Linux ve macOS (Bash)
+./build.sh              # npm run build çalıştırır
+./build.sh typecheck    # npm run typecheck çalıştırır
+./build.sh watch        # Canlı izleme (watch mode)
+./build.sh install      # npm install bağımlılık yükleme
 
-# Dosya üretmeden sıkı tip kontrolü çalıştır
-podman exec website-dev npm run typecheck
+# Windows (Komut Satırı / CMD)
+build.bat               # npm run build çalıştırır
+build.bat typecheck     # npm run typecheck çalıştırır
 
-# src/ts/*.ts dosyalarını assets/js/*.js olarak derle
+# Windows (PowerShell)
+.\build.ps1             # npm run build çalıştırır
+.\build.ps1 typecheck   # npm run typecheck çalıştırır
+```
+
+Doğrudan Podman konteyneri üzerinden çalıştırmak isterseniz:
+
+```bash
+# Podman konteyneri üzerinden doğrudan çalıştırma
 podman exec website-dev npm run build
-
-# Yeni Künye / Ekip Üyesi Ekleme (Discord linki ve rol ile otomatik kart üretir)
+podman exec website-dev npm run typecheck
 podman exec website-dev npm run add-member -- --name="Ad Soyad" --discord="https://discord.com/users/ID" --role="Rol"
-
-# Geliştirme sırasında değişiklikleri canlı izle
-podman exec website-dev npm run watch
 ```
 
 ### 5. CI/CD ve cPanel Dağıtımı
