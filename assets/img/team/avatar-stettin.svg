@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-labelledby="stettin-title stettin-desc">
+  <title id="stettin-title">Stettin — Founder &amp; Designer Avatar</title>
+  <desc id="stettin-desc">Dark editorial framed profile emblem for Stettin featuring geometric drafting axes, a crimson eclipse halo, and a minimalist silhouette bust.</desc>
+  <defs>
+    <radialGradient id="stettin-bg" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#1b1417"/>
+      <stop offset="65%" stop-color="#0f0f13"/>
+      <stop offset="100%" stop-color="#08080a"/>
+    </radialGradient>
+    <clipPath id="stettin-clip">
+      <circle cx="60" cy="60" r="56"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#stettin-clip)">
+    <rect width="120" height="120" fill="url(#stettin-bg)"/>
+
+    <!-- Editorial Design Drafting Grid & Axis -->
+    <g stroke="#ffffff" stroke-opacity="0.1" stroke-width="1" fill="none">
+      <line x1="0" y1="60" x2="120" y2="60"/>
+      <line x1="60" y1="0" x2="60" y2="120"/>
+      <line x1="16" y1="104" x2="104" y2="16"/>
+      <circle cx="60" cy="48" r="34"/>
+    </g>
+
+    <!-- Crimson Eclipse Halo -->
+    <circle cx="60" cy="46" r="24" fill="none" stroke="#e63946" stroke-width="1.8" stroke-opacity="0.88"/>
+    <path d="M 36 46 A 24 24 0 0 1 84 46" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="1"/>
+
+    <!-- Minimalist Architectural Silhouette Bust -->
+    <path d="M 18 120 C 20 90 36 78 60 78 C 84 78 100 90 102 120 Z" fill="#131318" stroke="#ffffff" stroke-opacity="0.65" stroke-width="1.4"/>
+    <path d="M 45 81 L 60 96 L 75 81" fill="none" stroke="#e63946" stroke-width="1.6"/>
+    <circle cx="60" cy="48" r="15" fill="#101015" stroke="#ffffff" stroke-opacity="0.85" stroke-width="1.4"/>
+    <!-- Sculpted Editorial Visor / Gaze Line -->
+    <line x1="51" y1="47" x2="69" y2="47" stroke="#ffffff" stroke-opacity="0.7" stroke-width="1.4"/>
+  </g>
+
+  <!-- Outer Frame Ring & Reticle Ticks -->
+  <circle cx="60" cy="60" r="56" fill="none" stroke="#ffffff" stroke-opacity="0.24" stroke-width="1.5"/>
+  <circle cx="60" cy="60" r="52" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
+  <rect x="58" y="2" width="4" height="6" fill="#e63946"/>
+</svg>

@@ -1,0 +1,220 @@
+# ==============================================================================
+# FLAOUVE Studio — Apache / cPanel Security, Performance & Caching Configuration
+# Reference: SECURITY.md, ARCHITECTURE.md, ROADMAP.md (Faz 5)
+# ==============================================================================
+
+# Disable directory browsing & set default charset / index
+Options -Indexes
+DirectoryIndex index.html
+AddDefaultCharset UTF-8
+
+# ------------------------------------------------------------------------------
+# 1. Access Control: Hide Dotfiles & Repository / Source Artifacts
+# ------------------------------------------------------------------------------
+# Block direct external access to hidden files (.htaccess, .env, .gitignore, etc.)
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Block direct access to TypeScript tooling & metadata if repo is cloned on server
+<FilesMatch "^(package(-lock)?\.json|tsconfig\.json)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ------------------------------------------------------------------------------
+# 2. Rewrite Rules: Dotdir Protection, Source Blocking & HTTPS Enforcement
+# ------------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block access to hidden directories (.git, .github, etc.) while allowing
+    # /.well-known/ for cPanel AutoSSL / Let's Encrypt domain validation
+    RewriteRule ^(?:.*/)?\.(?!well-known(?:/|$)) - [F,L]
+
+    # Block direct access to uncompiled TypeScript sources if present
+    RewriteRule ^src(?:/|$) - [F,L]
+
+    # Force HTTPS (301 Permanent Redirect)
+    # Checks X-Forwarded-Proto to avoid redirect loops behind reverse proxies/CDNs
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # --------------------------------------------------------------------------
+    # Optional Server-Side Accept-Language Redirection (ARCHITECTURE.md §3.D)
+    # --------------------------------------------------------------------------
+    # The site handles TR/EN localization natively in TypeScript (src/ts/i18n.ts).
+    # If you host separate localized subdirectories or want query-based routing,
+    # uncomment and adapt the rules below:
+    #
+    # RewriteCond %{QUERY_STRING} !(^|&)lang= [NC]
+    # RewriteCond %{HTTP:Accept-Language} ^tr [NC]
+    # RewriteRule ^$ /?lang=tr [R=302,L]
+    #
+    # RewriteCond %{QUERY_STRING} !(^|&)lang= [NC]
+    # RewriteCond %{HTTP:Accept-Language} ^en [NC]
+    # RewriteRule ^$ /?lang=en [R=302,L]
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 3. MIME Types
+# ------------------------------------------------------------------------------
+<IfModule mod_mime.c>
+    AddType text/javascript js mjs
+    AddType text/css css
+    AddType text/plain md
+    AddType application/json json map
+    AddType application/xml xml
+    AddType application/rss+xml rss
+    AddType image/svg+xml svg svgz
+    AddType image/webp webp
+    AddType image/avif avif
+    AddType font/woff woff
+    AddType font/woff2 woff2
+    AddType font/ttf ttf
+    AddType font/otf otf
+    AddType application/vnd.ms-fontobject eot
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 4. Security Headers & Cache-Control Policies
+# ------------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    # Clickjacking protection
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Prevent MIME-type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Control referrer information sent to external origins
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Restrict powerful browser features not required by a static studio site
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()"
+
+    # Optional HSTS — uncomment once HTTPS / AutoSSL is verified on all subdomains
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # Always revalidate HTML documents so content & asset references stay fresh
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    # Short cache for crawler / syndication endpoints
+    <FilesMatch "^(robots\.txt|sitemap\.xml|feed\.xml)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+
+    # Long-term immutable cache for fonts, images, vector graphics, and media
+    <FilesMatch "\.(webp|avif|png|jpe?g|gif|ico|svg|woff2|woff|ttf|otf|eot|mp4|webm)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # Strong cache with stale-while-revalidate for unhashed CSS & compiled JS
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=2592000, stale-while-revalidate=86400"
+    </FilesMatch>
+
+    # Ensure proxy/CDN caches differentiate compressed variants
+    <FilesMatch "\.(html|htm|css|js|xml|svg|json|txt)$">
+        Header append Vary Accept-Encoding
+    </FilesMatch>
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 5. Compression (Brotli & Gzip)
+# ------------------------------------------------------------------------------
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/html
+    AddOutputFilterByType BROTLI_COMPRESS text/plain
+    AddOutputFilterByType BROTLI_COMPRESS text/css
+    AddOutputFilterByType BROTLI_COMPRESS text/xml
+    AddOutputFilterByType BROTLI_COMPRESS application/javascript
+    AddOutputFilterByType BROTLI_COMPRESS text/javascript
+    AddOutputFilterByType BROTLI_COMPRESS application/x-javascript
+    AddOutputFilterByType BROTLI_COMPRESS application/json
+    AddOutputFilterByType BROTLI_COMPRESS application/xml
+    AddOutputFilterByType BROTLI_COMPRESS application/rss+xml
+    AddOutputFilterByType BROTLI_COMPRESS application/atom+xml
+    AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
+    AddOutputFilterByType BROTLI_COMPRESS font/ttf
+    AddOutputFilterByType BROTLI_COMPRESS font/otf
+    AddOutputFilterByType BROTLI_COMPRESS font/woff
+    AddOutputFilterByType BROTLI_COMPRESS font/woff2
+    AddOutputFilterByType BROTLI_COMPRESS application/font-woff
+    AddOutputFilterByType BROTLI_COMPRESS application/vnd.ms-fontobject
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/atom+xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE font/otf
+    AddOutputFilterByType DEFLATE font/woff
+    AddOutputFilterByType DEFLATE font/woff2
+    AddOutputFilterByType DEFLATE application/font-woff
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 6. Browser Expiration Caching (mod_expires)
+# ------------------------------------------------------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+
+    # HTML & data feeds
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType application/json "access plus 0 seconds"
+    ExpiresByType application/xml "access plus 1 hour"
+    ExpiresByType text/xml "access plus 1 hour"
+    ExpiresByType application/rss+xml "access plus 1 hour"
+    ExpiresByType application/atom+xml "access plus 1 hour"
+
+    # Stylesheets & compiled JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/x-javascript "access plus 1 month"
+
+    # Images & Vector SVG
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+
+    # Web Fonts
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+</IfModule>
