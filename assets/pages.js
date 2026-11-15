@@ -190,31 +190,84 @@ filters.forEach(button=>button.addEventListener('click',()=>{
 }));
 const APPLICATION_EMAIL='contact@aderionstudios.com';
 const APPLICATION_ENDPOINT='api/apply.php';
-document.querySelector('#applicationForm')?.addEventListener('submit',event=>{
+document.querySelector('#applicationForm')?.addEventListener('submit', async event => {
   event.preventDefault();
-  const form=event.currentTarget;
+  const form = event.currentTarget;
   if (!form.reportValidity()) return;
-  const fd=new FormData(form);
-  const role=roles.find(item=>item.id===fd.get('role'));
+  const fd = new FormData(form);
+  const role = roles.find(item => item.id === fd.get('role'));
   if (!role) return;
-  const dict=translations[locale];
-  const status=document.querySelector('#applicationStatus');
-  const message=[
-    dict.applicationSubject,
-    '',
-    'Name: ' + String(fd.get('name') || '').trim(),
-    'Email: ' + String(fd.get('email') || '').trim(),
-    'Role: ' + (role ? role[locale] : ''),
-    'Portfolio: ' + String(fd.get('portfolio') || '').trim(),
-    'Experience: ' + String(fd.get('experience') || ''),
-    '',
-    String(fd.get('message') || '').trim()
-  ].join('\n');
+  const dict = translations[locale];
+  const status = document.querySelector('#applicationStatus');
+  const submitBtn = form.querySelector('[type="submit"]');
+  const submitText = submitBtn ? submitBtn.querySelector('span') : null;
 
-  location.href = 'mailto:' + APPLICATION_EMAIL + '?subject=' + encodeURIComponent(dict.applicationSubject) + '&body=' + encodeURIComponent(message);
-  form.reset();
-  if(status) status.textContent = dict.applicationSent;
-  showToast(dict.applicationSent);
+  // Local file preview fallback
+  if (location.protocol === 'file:') {
+    const message = [
+      dict.applicationSubject,
+      '',
+      'Name: ' + String(fd.get('name') || '').trim(),
+      'Email: ' + String(fd.get('email') || '').trim(),
+      'Role: ' + (role ? role[locale] : ''),
+      'Portfolio: ' + String(fd.get('portfolio') || '').trim(),
+      'Experience: ' + String(fd.get('experience') || ''),
+      '',
+      String(fd.get('message') || '').trim()
+    ].join('\n');
+    location.href = 'mailto:' + APPLICATION_EMAIL + '?subject=' + encodeURIComponent(dict.applicationSubject) + '&body=' + encodeURIComponent(message);
+    form.reset();
+    if (status) status.textContent = dict.applicationSent;
+    showToast(dict.applicationSent);
+    return;
+  }
+
+  // Production API Submission
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.setAttribute('aria-busy', 'true');
+    if (submitText) submitText.textContent = dict.applicationSending;
+  }
+  if (status) status.textContent = dict.applicationSending;
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    let res;
+    try {
+      res = await fetch(APPLICATION_ENDPOINT, {
+        method: 'POST',
+        body: fd,
+        headers: { 'Accept': 'application/json' },
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    let data = null;
+    try { data = await res.json(); } catch (_) {}
+
+    if (res.ok && data && data.ok) {
+      form.reset();
+      const successMsg = data.message || dict.applicationSent;
+      if (status) status.textContent = successMsg;
+      showToast(successMsg);
+    } else {
+      const errMsg = (data && data.message) ? data.message : (res.status === 429 ? dict.applicationRateLimit : dict.applicationError);
+      if (status) status.textContent = errMsg;
+      showToast(errMsg);
+    }
+  } catch (_) {
+    if (status) status.textContent = dict.applicationError;
+    showToast(dict.applicationError);
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.removeAttribute('aria-busy');
+      if (submitText) submitText.textContent = dict.applySubmit;
+    }
+  }
 });
 document.addEventListener('aderion:language',()=>{
  const names={studio:['Stüdyo','Studio'],credits:['Ekip & Credits','Team & Credits'],join:['Bize Katıl','Join Us']};
