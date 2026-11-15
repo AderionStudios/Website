@@ -15,7 +15,7 @@ const tr: TranslationSchema = {
   'nav.games': 'OYUNLAR',
   'nav.devlog': 'GÜNLÜK',
   'nav.presskit': 'BASIN KİTİ',
-  'nav.cta_projects': 'Bu Kısım Daha Hazırlanamadı ↗',
+  'nav.cta_projects': 'PROJELERİMİZİ GÖRÜN ↗',
   'nav.menu_toggle': 'Menüyü aç veya kapat',
   'nav.lang_label': 'Dili değiştir (Türkçe / İngilizce)',
   'nav.theme_toggle': 'Temayı değiştir (Açık / Koyu)',
@@ -73,11 +73,11 @@ const tr: TranslationSchema = {
 
   // Games Page (games.html - Coming Soon)
   'games.coming_eyebrow': 'PROJELER & YAPIMLAR // ÇOK YAKINDA',
-  'games.coming_title_fill': 'YENİ DÜNYALAR',
-  'games.coming_title_stroke': 'HAZIRLANIYOR.',
+  'games.coming_title_fill': 'BU KISIM DAHA',
+  'games.coming_title_stroke': 'HAZIRLANMADI.',
   'games.coming_subtitle':
-    'Aderion Studio bünyesinde üzerinde çalıştığımız bağımsız oyun projelerimiz şu anda aktif geliştirme ve prodüksiyon aşamasındadır. İlk duyurularımız çok yakında burada paylaşılacaktır.',
-  'games.coming_status': 'DURUM: AKTİF GELİŞTİRME AŞAMASINDA',
+    'Aderion Studio bünyesinde üzerinde çalıştığımız bağımsız oyun projelerimiz ve bu sayfa şu anda aktif hazırlık aşamasındadır. İlk duyurularımız çok yakında burada paylaşılacaktır.',
+  'games.coming_status': 'DURUM: BU KISIM HENÜZ HAZIRLANMADI',
   'games.coming_heading': 'İlk Yapımımız Üzerinde Titizlikle Çalışıyoruz',
   'games.coming_text':
     'Hikaye anlatımı, atmosferik ses tasarımı ve özgün mekanikleri bir araya getiren bağımsız oyun projelerimiz stüdyo mutfağında şekilleniyor. Geliştirme süreçleri, ilk ekran görüntüleri ve fragmanlar çok yakında bu sayfada yer alacak.',
@@ -205,7 +205,7 @@ const en: TranslationSchema = {
   'nav.games': 'GAMES',
   'nav.devlog': 'DEVLOG',
   'nav.presskit': 'PRESS KIT',
-  'nav.cta_projects': 'Under Development ↗',
+  'nav.cta_projects': 'VIEW OUR PROJECTS ↗',
   'nav.menu_toggle': 'Toggle navigation menu',
   'nav.lang_label': 'Switch language (Turkish / English)',
   'nav.theme_toggle': 'Toggle color theme (Light / Dark)',
@@ -263,11 +263,11 @@ const en: TranslationSchema = {
 
   // Games Page (games.html - Coming Soon)
   'games.coming_eyebrow': 'PROJECTS & PRODUCTIONS // COMING SOON',
-  'games.coming_title_fill': 'NEW WORLDS',
-  'games.coming_title_stroke': 'IN THE MAKING.',
+  'games.coming_title_fill': 'UNDER',
+  'games.coming_title_stroke': 'DEVELOPMENT.',
   'games.coming_subtitle':
-    'Our independent game productions at Aderion Studio are currently in active development. Stay tuned for our upcoming reveals, teasers, and project announcements.',
-  'games.coming_status': 'STATUS: IN ACTIVE DEVELOPMENT',
+    'Our independent game productions and this showcase section are currently under active preparation. Official announcements will be shared here soon.',
+  'games.coming_status': 'STATUS: UNDER PREPARATION',
   'games.coming_heading': 'Crafting Our Debut Production With Care',
   'games.coming_text':
     'Combining environmental storytelling, atmospheric soundscapes, and distinctive gameplay mechanics, our independent titles are taking shape. Development logs, first screenshots, and trailers will soon be revealed here.',
