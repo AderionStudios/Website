@@ -479,10 +479,15 @@ function detectLocale() {
     catch {
         // Ignore storage access errors in restricted privacy contexts.
     }
-    if (typeof navigator !== 'undefined' && typeof navigator.language === 'string') {
-        return navigator.language.toLowerCase().startsWith('tr') ? 'tr' : 'en';
+    if (typeof navigator !== 'undefined') {
+        const primaryLang = (navigator.languages && navigator.languages.length > 0)
+            ? navigator.languages[0]
+            : navigator.language;
+        if (typeof primaryLang === 'string') {
+            return primaryLang.toLowerCase().startsWith('tr') ? 'tr' : 'en';
+        }
     }
-    return 'tr';
+    return 'en';
 }
 /**
  * Looks up a translation string for the active locale using strict compile-time keys.
