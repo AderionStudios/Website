@@ -1,48 +1,48 @@
 /* ==========================================================================
-   ADERION STUDIO — VRCHAT INSPIRED DESIGN SYSTEM (vrchat-theme.css)
-   Inspired by hello.vrchat.com: Modern Gaming Portal, Bento Grid, Hero Showcase,
+   ADERION STUDIO — MODERN PORTAL THEME (theme.css)
+   Modern Gaming Portal Design System, Bento Grid, Hero Showcase,
    Platform Pills, High-Contrast Chunky CTAs — Styled in Aderion Studio Warm Palette
    ========================================================================== */
 
 :root {
-  /* VRChat Style Metrics */
-  --vrc-radius-xl: 28px;
-  --vrc-radius-lg: 20px;
-  --vrc-radius-md: 14px;
-  --vrc-radius-pill: 9999px;
+  /* Portal Theme Metrics */
+  --theme-radius-xl: 28px;
+  --theme-radius-lg: 20px;
+  --theme-radius-md: 14px;
+  --theme-radius-pill: 9999px;
 
   /* Card Surfaces (Light Theme) */
-  --vrc-bg-surface: #FFFFFF;
-  --vrc-bg-surface-subtle: rgba(255, 245, 238, 0.7);
-  --vrc-bg-card-hover: #FFF9F5;
-  --vrc-border: rgba(184, 127, 102, 0.22);
-  --vrc-border-glow: rgba(151, 76, 68, 0.45);
-  --vrc-shadow-sm: 0 4px 16px rgba(65, 52, 44, 0.06);
-  --vrc-shadow-card: 0 16px 40px -10px rgba(65, 52, 44, 0.08);
-  --vrc-shadow-card-hover: 0 24px 50px -8px rgba(151, 76, 68, 0.16);
+  --theme-bg-surface: #FFFFFF;
+  --theme-bg-surface-subtle: rgba(255, 245, 238, 0.7);
+  --theme-bg-card-hover: #FFF9F5;
+  --theme-border: rgba(184, 127, 102, 0.22);
+  --theme-border-glow: rgba(151, 76, 68, 0.45);
+  --theme-shadow-sm: 0 4px 16px rgba(65, 52, 44, 0.06);
+  --theme-shadow-card: 0 16px 40px -10px rgba(65, 52, 44, 0.08);
+  --theme-shadow-card-hover: 0 24px 50px -8px rgba(151, 76, 68, 0.16);
 
   /* Navbar */
-  --vrc-nav-bg: rgba(242, 221, 205, 0.88);
-  --vrc-nav-blur: blur(20px);
+  --theme-nav-bg: rgba(242, 221, 205, 0.88);
+  --theme-nav-blur: blur(20px);
 }
 
 [data-theme="dark"] {
   /* Card Surfaces (Dark Theme) */
-  --vrc-bg-surface: #241D19;
-  --vrc-bg-surface-subtle: rgba(39, 32, 28, 0.7);
-  --vrc-bg-card-hover: #2C231F;
-  --vrc-border: rgba(255, 255, 255, 0.10);
-  --vrc-border-glow: rgba(209, 116, 107, 0.5);
-  --vrc-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
-  --vrc-shadow-card: 0 16px 40px -10px rgba(0, 0, 0, 0.55);
-  --vrc-shadow-card-hover: 0 24px 50px -8px rgba(209, 116, 107, 0.25);
+  --theme-bg-surface: #241D19;
+  --theme-bg-surface-subtle: rgba(39, 32, 28, 0.7);
+  --theme-bg-card-hover: #2C231F;
+  --theme-border: rgba(255, 255, 255, 0.10);
+  --theme-border-glow: rgba(209, 116, 107, 0.5);
+  --theme-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --theme-shadow-card: 0 16px 40px -10px rgba(0, 0, 0, 0.55);
+  --theme-shadow-card-hover: 0 24px 50px -8px rgba(209, 116, 107, 0.25);
 
-  --vrc-nav-bg: rgba(28, 22, 19, 0.88);
-  --vrc-nav-blur: blur(20px);
+  --theme-nav-bg: rgba(28, 22, 19, 0.88);
+  --theme-nav-blur: blur(20px);
 }
 
-/* 1. Global VRChat-Style Atmospheric Background Glows (Celestial Deep Blue Palette) */
-.vrc-atmosphere {
+/* 1. Global Atmospheric Background Glows (Celestial Deep Blue Palette) */
+.theme-atmosphere {
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -50,7 +50,7 @@
   overflow: hidden;
 }
 
-.vrc-glow-orb {
+.theme-glow-orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(100px);
@@ -58,12 +58,12 @@
   will-change: transform;
 }
 
-[data-theme="dark"] .vrc-glow-orb {
+[data-theme="dark"] .theme-glow-orb {
   opacity: 0.72;
   filter: blur(130px);
 }
 
-.vrc-orb-top {
+.theme-orb-top {
   width: min(750px, 85vw);
   height: min(750px, 85vw);
   background: radial-gradient(circle, #3c4667 0%, rgba(60, 70, 103, 0) 70%);
@@ -71,7 +71,7 @@
   left: 20%;
 }
 
-.vrc-orb-right {
+.theme-orb-right {
   width: min(650px, 75vw);
   height: min(650px, 75vw);
   background: radial-gradient(circle, #232b47 0%, rgba(35, 43, 71, 0) 70%);
@@ -79,7 +79,7 @@
   right: -10%;
 }
 
-.vrc-orb-bottom {
+.theme-orb-bottom {
   width: min(550px, 65vw);
   height: min(550px, 65vw);
   background: radial-gradient(circle, #181820 0%, rgba(24, 24, 32, 0) 70%);
@@ -87,8 +87,8 @@
   left: 5%;
 }
 
-/* 2. VRChat Style Top Prototype Switcher Banner */
-.vrc-preview-bar {
+/* 2. Top Prototype Switcher Banner */
+.theme-preview-bar {
   position: relative;
   z-index: 100;
   max-width: var(--container-max);
@@ -96,44 +96,44 @@
   padding-inline: var(--gutter);
 }
 
-.vrc-preview-bar-inner {
+.theme-preview-bar-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   padding: 0.55rem 1.25rem;
-  background: var(--vrc-bg-surface);
-  border: 1px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-pill);
-  box-shadow: var(--vrc-shadow-sm);
+  background: var(--theme-bg-surface);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-pill);
+  box-shadow: var(--theme-shadow-sm);
   font-family: var(--font-mono);
   font-size: 0.78rem;
 }
 
-.vrc-badge-pill {
+.theme-badge-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   color: #FFFFFF;
   padding: 0.28rem 0.85rem;
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   font-weight: 700;
   font-size: 0.72rem;
   letter-spacing: 0.05em;
 }
 
-.vrc-preview-switch-links {
+.theme-preview-switch-links {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.vrc-switch-link {
+.theme-switch-link {
   padding: 0.3rem 0.75rem;
-  border-radius: var(--vrc-radius-pill);
-  background: var(--vrc-bg-surface-subtle);
-  border: 1px solid var(--vrc-border);
+  border-radius: var(--theme-radius-pill);
+  background: var(--theme-bg-surface-subtle);
+  border: 1px solid var(--theme-border);
   color: var(--text-muted);
   text-decoration: none;
   font-weight: 600;
@@ -141,13 +141,13 @@
   transition: all var(--transition-fast);
 }
 
-.vrc-switch-link:hover {
+.theme-switch-link:hover {
   background: var(--accent-primary);
   color: #FFFFFF;
   border-color: var(--accent-primary);
 }
 
-/* 3. VRChat Sleek Floating Header / Navbar */
+/* 3. Sleek Floating Header / Navbar */
 .site-header {
   position: sticky;
   top: 0.75rem;
@@ -164,12 +164,12 @@
 .site-header .header-inner {
   height: auto;
   min-height: 64px;
-  background: var(--vrc-nav-bg);
-  backdrop-filter: var(--vrc-nav-blur);
-  -webkit-backdrop-filter: var(--vrc-nav-blur);
-  border: 1px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-pill);
-  box-shadow: var(--vrc-shadow-sm);
+  background: var(--theme-nav-bg);
+  backdrop-filter: var(--theme-nav-blur);
+  -webkit-backdrop-filter: var(--theme-nav-blur);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-pill);
+  box-shadow: var(--theme-shadow-sm);
   padding: 0.45rem 0.85rem 0.45rem 0.75rem;
   display: flex;
   align-items: center;
@@ -179,15 +179,15 @@
 }
 
 .site-header .header-inner:hover {
-  box-shadow: var(--vrc-shadow-card);
-  border-color: var(--vrc-border-glow);
+  box-shadow: var(--theme-shadow-card);
+  border-color: var(--theme-border-glow);
 }
 
 /* Brand Logo + Wordmark */
 .brand-pill {
-  background: var(--vrc-bg-surface);
-  border: 1px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-pill);
+  background: var(--theme-bg-surface);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-pill);
   padding: 0.4rem 1.15rem 0.4rem 0.65rem;
   display: inline-flex;
   align-items: center;
@@ -226,15 +226,15 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  background: var(--vrc-bg-surface-subtle);
+  background: var(--theme-bg-surface-subtle);
   padding: 0.25rem 0.45rem;
-  border: 1px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-pill);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-pill);
 }
 
 .nav-link {
   padding: 0.45rem 1rem;
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   font-family: var(--font-mono);
   font-size: 0.76rem;
   font-weight: 700;
@@ -244,22 +244,22 @@
 }
 
 .nav-link:hover {
-  background: var(--vrc-bg-surface);
+  background: var(--theme-bg-surface);
   color: var(--accent-primary);
 }
 
 .theme-switch,
 .lang-switch {
-  border-radius: var(--vrc-radius-pill);
-  border: 1px solid var(--vrc-border);
-  background: var(--vrc-bg-surface);
+  border-radius: var(--theme-radius-pill);
+  border: 1px solid var(--theme-border);
+  background: var(--theme-bg-surface);
   padding: 0.45rem 0.85rem;
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--text-primary);
   cursor: pointer;
-  box-shadow: var(--vrc-shadow-sm);
+  box-shadow: var(--theme-shadow-sm);
   transition: all var(--transition-fast);
 }
 
@@ -269,9 +269,9 @@
   transform: translateY(-2px);
 }
 
-/* VRChat Chunky CTA Button */
+/* Chunky CTA Button */
 .cta-pill {
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   color: #FFFFFF !important;
   font-family: var(--font-mono);
@@ -289,7 +289,7 @@
   box-shadow: 0 10px 26px -2px rgba(151, 76, 68, 0.55);
 }
 
-/* 4. VRChat Style Hero Section */
+/* 4. Portal Hero Section */
 .hero-section {
   position: relative;
   z-index: 10;
@@ -320,34 +320,34 @@
   padding: 0;
 }
 
-/* VRChat Status Pill Tag */
-.vrc-hero-pill-badge {
+/* Status Pill Tag */
+.theme-hero-pill-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   align-self: flex-start;
   padding: 0.45rem 1.15rem;
-  background: var(--vrc-bg-surface);
-  border: 1.5px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-pill);
+  background: var(--theme-bg-surface);
+  border: 1.5px solid var(--theme-border);
+  border-radius: var(--theme-radius-pill);
   font-family: var(--font-mono);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--accent-primary);
-  box-shadow: var(--vrc-shadow-sm);
+  box-shadow: var(--theme-shadow-sm);
 }
 
-.vrc-pulse-indicator {
+.theme-pulse-indicator {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--accent-primary);
   box-shadow: 0 0 10px var(--accent-primary);
-  animation: vrcPulse 2s infinite ease-in-out;
+  animation: themePulse 2s infinite ease-in-out;
 }
 
-@keyframes vrcPulse {
+@keyframes themePulse {
   0% { transform: scale(0.9); opacity: 0.7; }
   50% { transform: scale(1.3); opacity: 1; }
   100% { transform: scale(0.9); opacity: 0.7; }
@@ -389,7 +389,7 @@
 }
 
 .btn-primary {
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   color: #FFFFFF;
   padding: 1rem 2.2rem;
@@ -412,16 +412,16 @@
 }
 
 .btn-secondary {
-  border-radius: var(--vrc-radius-pill);
-  background: var(--vrc-bg-surface);
+  border-radius: var(--theme-radius-pill);
+  background: var(--theme-bg-surface);
   color: var(--text-primary);
   padding: 1rem 2.2rem;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   font-weight: 800;
   letter-spacing: 0.1em;
-  border: 1.5px solid var(--vrc-border);
-  box-shadow: var(--vrc-shadow-sm);
+  border: 1.5px solid var(--theme-border);
+  box-shadow: var(--theme-shadow-sm);
   transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
@@ -432,29 +432,29 @@
   border-color: var(--accent-primary);
   color: var(--accent-primary);
   transform: translateY(-3px) scale(1.03);
-  box-shadow: var(--vrc-shadow-card);
+  box-shadow: var(--theme-shadow-card);
 }
 
-/* Right: VRChat Style Hero Showcase Card */
+/* Right: Hero Showcase Card */
 .hero-artwork {
   grid-column: 2;
   margin: 0;
-  background: var(--vrc-bg-surface);
-  border: 1.5px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-xl);
-  box-shadow: var(--vrc-shadow-card);
+  background: var(--theme-bg-surface);
+  border: 1.5px solid var(--theme-border);
+  border-radius: var(--theme-radius-xl);
+  box-shadow: var(--theme-shadow-card);
   overflow: hidden;
   position: relative;
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .hero-artwork:hover {
-  box-shadow: var(--vrc-shadow-card-hover);
-  border-color: var(--vrc-border-glow);
+  box-shadow: var(--theme-shadow-card-hover);
+  border-color: var(--theme-border-glow);
   transform: translateY(-4px);
 }
 
-.vrc-artwork-wrapper {
+.theme-artwork-wrapper {
   position: relative;
   width: 100%;
   min-height: 420px;
@@ -463,19 +463,19 @@
   align-items: stretch;
 }
 
-.vrc-artwork-wrapper img {
+.theme-artwork-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.hero-artwork:hover .vrc-artwork-wrapper img {
+.hero-artwork:hover .theme-artwork-wrapper img {
   transform: scale(1.04);
 }
 
-/* VRChat Floating Badges & Tags over the Artwork */
-.vrc-art-tags-top {
+/* Floating Badges & Tags over the Artwork */
+.theme-art-tags-top {
   position: absolute;
   top: 1.25rem;
   left: 1.25rem;
@@ -487,13 +487,13 @@
   z-index: 3;
 }
 
-.vrc-chip-featured {
+.theme-chip-featured {
   background: rgba(151, 76, 68, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: #FFFFFF;
   padding: 0.35rem 0.95rem;
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 800;
@@ -501,13 +501,13 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.vrc-chip-platform {
+.theme-chip-platform {
   background: rgba(40, 32, 28, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: #FFFFFF;
   padding: 0.35rem 0.85rem;
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
@@ -523,12 +523,12 @@
   right: 1.25rem;
   z-index: 3;
   padding: 1.15rem 1.45rem;
-  background: var(--vrc-bg-surface);
+  background: var(--theme-bg-surface);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-lg);
-  box-shadow: var(--vrc-shadow-card);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-lg);
+  box-shadow: var(--theme-shadow-card);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -548,8 +548,8 @@
   color: var(--text-muted);
 }
 
-/* 5. VRChat Platform & Features Strip (Horizontal Badges) */
-.vrc-platforms-section {
+/* 5. Platform & Features Strip (Horizontal Badges) */
+.theme-platforms-section {
   position: relative;
   z-index: 10;
   max-width: var(--container-max);
@@ -557,27 +557,27 @@
   padding-inline: var(--gutter);
 }
 
-.vrc-platforms-bar {
+.theme-platforms-bar {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.85rem;
   padding: 0.95rem 1.75rem;
-  background: var(--vrc-bg-surface);
-  border: 1px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-pill);
-  box-shadow: var(--vrc-shadow-sm);
+  background: var(--theme-bg-surface);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-pill);
+  box-shadow: var(--theme-shadow-sm);
 }
 
-.vrc-platform-badge {
+.theme-platform-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   padding: 0.35rem 0.95rem;
-  background: var(--vrc-bg-surface-subtle);
-  border: 1px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-pill);
+  background: var(--theme-bg-surface-subtle);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-pill);
   font-family: var(--font-mono);
   font-size: 0.76rem;
   font-weight: 700;
@@ -586,15 +586,15 @@
   transition: all var(--transition-fast);
 }
 
-.vrc-platform-badge:hover {
+.theme-platform-badge:hover {
   background: var(--accent-primary);
   color: #FFFFFF;
   border-color: var(--accent-primary);
   transform: translateY(-2px);
 }
 
-/* 6. VRChat Style Bento Grid (4 Core Studio Pillars) */
-.vrc-bento-section {
+/* 6. Bento Grid (4 Core Studio Pillars) */
+.theme-bento-section {
   position: relative;
   z-index: 10;
   max-width: var(--container-max);
@@ -603,7 +603,7 @@
   padding-bottom: 4.5rem;
 }
 
-.vrc-section-intro {
+.theme-section-intro {
   text-align: center;
   margin-bottom: 2.75rem;
   display: flex;
@@ -612,11 +612,11 @@
   gap: 0.75rem;
 }
 
-.vrc-section-intro .vrc-hero-pill-badge {
+.theme-section-intro .theme-hero-pill-badge {
   align-self: center;
 }
 
-.vrc-section-title {
+.theme-section-title {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 3.8vw, 3.4rem);
   font-weight: 900;
@@ -624,7 +624,7 @@
   color: var(--text-primary);
 }
 
-.vrc-section-subtitle {
+.theme-section-subtitle {
   font-size: 1.05rem;
   color: var(--text-muted);
   max-width: 64ch;
@@ -632,17 +632,17 @@
 }
 
 /* Bento Layout */
-.vrc-bento-grid {
+.theme-bento-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 1.5rem;
 }
 
-.vrc-bento-card {
-  background: var(--vrc-bg-surface);
-  border: 1.5px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-xl);
-  box-shadow: var(--vrc-shadow-card);
+.theme-bento-card {
+  background: var(--theme-bg-surface);
+  border: 1.5px solid var(--theme-border);
+  border-radius: var(--theme-radius-xl);
+  box-shadow: var(--theme-shadow-card);
   padding: clamp(1.75rem, 3vw, 2.5rem);
   display: flex;
   flex-direction: column;
@@ -653,56 +653,56 @@
   transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-fast);
 }
 
-.vrc-bento-card:hover {
+.theme-bento-card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--vrc-shadow-card-hover);
-  border-color: var(--vrc-border-glow);
-  background: var(--vrc-bg-card-hover);
+  box-shadow: var(--theme-shadow-card-hover);
+  border-color: var(--theme-border-glow);
+  background: var(--theme-bg-card-hover);
 }
 
 /* Bento Spans */
-.vrc-bento-card-wide-left {
+.theme-bento-card-wide-left {
   grid-column: span 7;
 }
 
-.vrc-bento-card-right {
+.theme-bento-card-right {
   grid-column: span 5;
 }
 
-.vrc-bento-card-half {
+.theme-bento-card-half {
   grid-column: span 6;
 }
 
-.vrc-bento-header {
+.theme-bento-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.vrc-bento-num-chip {
+.theme-bento-num-chip {
   font-family: var(--font-mono);
   font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.14em;
   color: var(--accent-primary);
-  background: var(--vrc-bg-surface-subtle);
+  background: var(--theme-bg-surface-subtle);
   padding: 0.3rem 0.85rem;
-  border-radius: var(--vrc-radius-pill);
-  border: 1px solid var(--vrc-border);
+  border-radius: var(--theme-radius-pill);
+  border: 1px solid var(--theme-border);
 }
 
-.vrc-bento-icon {
+.theme-bento-icon {
   font-size: 1.6rem;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
 }
 
-.vrc-bento-body {
+.theme-bento-body {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
 }
 
-.vrc-bento-title {
+.theme-bento-title {
   font-family: var(--font-display);
   font-size: clamp(1.25rem, 1.8vw, 1.65rem);
   font-weight: 800;
@@ -710,20 +710,20 @@
   line-height: 1.25;
 }
 
-.vrc-bento-desc {
+.theme-bento-desc {
   font-size: 0.95rem;
   line-height: 1.65;
   color: var(--text-muted);
 }
 
-.vrc-bento-footer {
+.theme-bento-footer {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   margin-top: 0.5rem;
 }
 
-.vrc-bento-action-pill {
+.theme-bento-action-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -734,18 +734,18 @@
   transition: transform var(--transition-fast);
 }
 
-.vrc-bento-card:hover .vrc-bento-action-pill {
+.theme-bento-card:hover .theme-bento-action-pill {
   transform: translateX(4px);
 }
 
-/* 7. VRChat Style Community Social Cards Grid */
+/* 7. Community Social Cards Grid */
 .editorial-section {
   position: relative;
   z-index: 10;
   padding-block: 4rem 5rem;
-  background: var(--vrc-bg-surface-subtle);
-  border-top: 1px solid var(--vrc-border);
-  border-bottom: 1px solid var(--vrc-border);
+  background: var(--theme-bg-surface-subtle);
+  border-top: 1px solid var(--theme-border);
+  border-bottom: 1px solid var(--theme-border);
 }
 
 .social-grid {
@@ -755,10 +755,10 @@
 }
 
 .social-card {
-  background: var(--vrc-bg-surface);
-  border: 1.5px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-lg);
-  box-shadow: var(--vrc-shadow-sm);
+  background: var(--theme-bg-surface);
+  border: 1.5px solid var(--theme-border);
+  border-radius: var(--theme-radius-lg);
+  box-shadow: var(--theme-shadow-sm);
   padding: 1.8rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -770,23 +770,23 @@
 
 .social-card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--vrc-shadow-card-hover);
-  border-color: var(--vrc-border-glow);
-  background: var(--vrc-bg-card-hover);
+  box-shadow: var(--theme-shadow-card-hover);
+  border-color: var(--theme-border-glow);
+  background: var(--theme-bg-card-hover);
 }
 
-.vrc-social-card-top {
+.theme-social-card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.vrc-social-avatar {
+.theme-social-avatar {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--vrc-bg-surface-subtle);
-  border: 1.5px solid var(--vrc-border);
+  background: var(--theme-bg-surface-subtle);
+  border: 1.5px solid var(--theme-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -795,52 +795,52 @@
   flex-shrink: 0;
 }
 
-.vrc-social-avatar svg {
+.theme-social-avatar svg {
   display: block;
   transition: transform var(--transition-fast), fill var(--transition-fast);
 }
 
-.social-card[data-platform="youtube"]:hover .vrc-social-avatar {
+.social-card[data-platform="youtube"]:hover .theme-social-avatar {
   background: rgba(255, 0, 0, 0.12);
   border-color: #FF0000;
   color: #FF0000;
   transform: scale(1.08);
 }
 
-.social-card[data-platform="x"]:hover .vrc-social-avatar {
-  background: var(--vrc-bg-surface);
+.social-card[data-platform="x"]:hover .theme-social-avatar {
+  background: var(--theme-bg-surface);
   border-color: var(--text-primary);
   color: var(--text-primary);
   transform: scale(1.08);
 }
 
-.social-card[data-platform="instagram"]:hover .vrc-social-avatar {
+.social-card[data-platform="instagram"]:hover .theme-social-avatar {
   background: rgba(225, 48, 108, 0.12);
   border-color: #E1306C;
   color: #E1306C;
   transform: scale(1.08);
 }
 
-.social-card[data-platform="reddit"]:hover .vrc-social-avatar {
+.social-card[data-platform="reddit"]:hover .theme-social-avatar {
   background: rgba(255, 69, 0, 0.12);
   border-color: #FF4500;
   color: #FF4500;
   transform: scale(1.08);
 }
 
-.social-card[data-platform="patreon"]:hover .vrc-social-avatar {
+.social-card[data-platform="patreon"]:hover .theme-social-avatar {
   background: rgba(255, 66, 77, 0.12);
   border-color: #FF424D;
   color: #FF424D;
   transform: scale(1.08);
 }
 
-.vrc-social-arrow {
+.theme-social-arrow {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--vrc-bg-surface-subtle);
-  border: 1px solid var(--vrc-border);
+  background: var(--theme-bg-surface-subtle);
+  border: 1px solid var(--theme-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -850,7 +850,7 @@
   transition: all var(--transition-fast);
 }
 
-.social-card:hover .vrc-social-arrow {
+.social-card:hover .theme-social-arrow {
   background: var(--accent-primary);
   color: #FFFFFF;
   border-color: var(--accent-primary);
@@ -884,7 +884,7 @@
   color: var(--text-muted);
 }
 
-.vrc-social-action-tag {
+.theme-social-action-tag {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -896,18 +896,18 @@
   transition: transform var(--transition-fast), color var(--transition-fast);
 }
 
-.social-card:hover .vrc-social-action-tag {
+.social-card:hover .theme-social-action-tag {
   transform: translateX(4px);
   color: var(--accent-secondary);
 }
 
-/* 8. VRChat Footer */
+/* 8. Portal Footer */
 .site-footer {
   position: relative;
   z-index: 10;
   padding-block: 3.5rem 4.5rem;
-  background: var(--vrc-bg-surface);
-  border-top: 1px solid var(--vrc-border);
+  background: var(--theme-bg-surface);
+  border-top: 1px solid var(--theme-border);
 }
 
 .site-footer .footer-inner {
@@ -921,7 +921,7 @@
   flex-wrap: wrap;
 }
 
-.vrc-footer-brand {
+.theme-footer-brand {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -930,7 +930,7 @@
   font-size: 0.95rem;
 }
 
-.vrc-footer-brand img {
+.theme-footer-brand img {
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -939,7 +939,7 @@
   filter: none !important;
 }
 
-.vrc-footer-links {
+.theme-footer-links {
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -948,7 +948,7 @@
   color: var(--text-muted);
 }
 
-.vrc-footer-links a:hover {
+.theme-footer-links a:hover {
   color: var(--accent-primary);
 }
 
@@ -960,24 +960,24 @@
 }
 
 .modal-dialog {
-  border-radius: var(--vrc-radius-xl);
-  background: var(--vrc-bg-surface);
-  border: 1.5px solid var(--vrc-border);
+  border-radius: var(--theme-radius-xl);
+  background: var(--theme-bg-surface);
+  border: 1.5px solid var(--theme-border);
   box-shadow: 0 32px 72px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 
 .modal-header {
-  border-bottom: 1px solid var(--vrc-border);
+  border-bottom: 1px solid var(--theme-border);
   padding: 1.25rem 1.75rem;
-  background: var(--vrc-bg-surface-subtle);
+  background: var(--theme-bg-surface-subtle);
 }
 
 .modal-close {
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   padding: 0.4rem 1rem;
-  background: var(--vrc-bg-surface);
-  border: 1px solid var(--vrc-border);
+  background: var(--theme-bg-surface);
+  border: 1px solid var(--theme-border);
   font-family: var(--font-mono);
   font-size: 0.76rem;
   font-weight: 700;
@@ -989,12 +989,12 @@
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
-  .vrc-bento-card-wide-left,
-  .vrc-bento-card-right,
-  .vrc-bento-card-half {
+  .theme-bento-card-wide-left,
+  .theme-bento-card-right,
+  .theme-bento-card-half {
     grid-column: span 12;
   }
-  .vrc-community-banner {
+  .theme-community-banner {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -1008,17 +1008,17 @@
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    border: 1px solid var(--vrc-border);
-    background: var(--vrc-bg-surface);
+    border: 1px solid var(--theme-border);
+    background: var(--theme-bg-surface);
     color: var(--text-primary);
   }
 
   .site-nav,
   [data-nav-drawer] {
-    background: var(--vrc-bg-surface) !important;
+    background: var(--theme-bg-surface) !important;
     backdrop-filter: blur(28px) !important;
     -webkit-backdrop-filter: blur(28px) !important;
-    border-left: 1px solid var(--vrc-border);
+    border-left: 1px solid var(--theme-border);
   }
 
   .site-nav .nav-links {
@@ -1034,17 +1034,17 @@
 }
 
 
-/* 11. Subpages & Components in VRChat Style (Credit & Games) */
-.page-hero.vrc-page-hero {
+/* 11. Subpages & Components (Credit & Games) */
+.page-hero.theme-page-hero {
   position: relative;
   z-index: 10;
   padding-block: clamp(3rem, 5vw, 4.5rem) clamp(2rem, 3.5vw, 3rem);
   background: transparent;
-  border-bottom: 1px solid var(--vrc-border);
+  border-bottom: 1px solid var(--theme-border);
   text-align: center;
 }
 
-.page-hero.vrc-page-hero .container {
+.page-hero.theme-page-hero .container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1086,11 +1086,11 @@
   font-weight: 800;
   letter-spacing: 0.12em;
   color: var(--accent-primary);
-  background: var(--vrc-bg-surface);
-  border: 1px solid var(--vrc-border);
+  background: var(--theme-bg-surface);
+  border: 1px solid var(--theme-border);
   padding: 0.35rem 0.95rem;
-  border-radius: var(--vrc-radius-pill);
-  box-shadow: var(--vrc-shadow-sm);
+  border-radius: var(--theme-radius-pill);
+  box-shadow: var(--theme-shadow-sm);
   white-space: nowrap;
 }
 
@@ -1106,10 +1106,10 @@
 .department-line {
   flex: 1 1 auto;
   height: 1.5px;
-  background: linear-gradient(90deg, var(--vrc-border) 0%, transparent 100%);
+  background: linear-gradient(90deg, var(--theme-border) 0%, transparent 100%);
 }
 
-/* Discord Profile Cards in VRChat Aesthetic */
+/* Discord Profile Cards */
 .discord-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -1117,10 +1117,10 @@
 }
 
 .discord-profile-card {
-  background: var(--vrc-bg-surface);
-  border: 1.5px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-xl);
-  box-shadow: var(--vrc-shadow-card);
+  background: var(--theme-bg-surface);
+  border: 1.5px solid var(--theme-border);
+  border-radius: var(--theme-radius-xl);
+  box-shadow: var(--theme-shadow-card);
   overflow: hidden;
   position: relative;
   transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-fast);
@@ -1128,8 +1128,8 @@
 
 .discord-profile-card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--vrc-shadow-card-hover);
-  border-color: var(--vrc-border-glow);
+  box-shadow: var(--theme-shadow-card-hover);
+  border-color: var(--theme-border-glow);
 }
 
 .discord-banner-stage {
@@ -1141,7 +1141,7 @@
   background: #1e1f22;
   color: #f2f3f5;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
   transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
@@ -1169,7 +1169,7 @@
 .role-badge {
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   color: #FFFFFF;
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   padding: 0.3rem 0.85rem;
   font-family: var(--font-mono);
   font-size: 0.7rem;
@@ -1179,13 +1179,13 @@
 }
 
 .discord-divider {
-  background: var(--vrc-border);
+  background: var(--theme-border);
 }
 
 .social-chip {
-  background: var(--vrc-bg-surface-subtle);
-  border: 1px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-pill);
+  background: var(--theme-bg-surface-subtle);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-pill);
   padding: 0.3rem 0.75rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -1202,7 +1202,7 @@
 }
 
 .discord-btn-view {
-  border-radius: var(--vrc-radius-pill);
+  border-radius: var(--theme-radius-pill);
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   color: #FFFFFF;
   box-shadow: 0 4px 14px rgba(151, 76, 68, 0.35);
@@ -1211,12 +1211,12 @@
   font-weight: 700;
 }
 
-/* Games Coming Soon Card in VRChat Aesthetic */
+/* Games Coming Soon Card */
 .coming-soon-card {
-  background: var(--vrc-bg-surface);
-  border: 1.5px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-xl);
-  box-shadow: var(--vrc-shadow-card);
+  background: var(--theme-bg-surface);
+  border: 1.5px solid var(--theme-border);
+  border-radius: var(--theme-radius-xl);
+  box-shadow: var(--theme-shadow-card);
   padding: clamp(2rem, 4vw, 3.5rem);
   display: flex;
   flex-direction: column;
@@ -1229,9 +1229,9 @@
   gap: 0.5rem;
   align-self: flex-start;
   padding: 0.4rem 1.1rem;
-  background: var(--vrc-bg-surface-subtle);
-  border: 1px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-pill);
+  background: var(--theme-bg-surface-subtle);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-pill);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 800;
@@ -1270,9 +1270,9 @@
 }
 
 .feature-item {
-  background: var(--vrc-bg-surface-subtle);
-  border: 1.5px solid var(--vrc-border);
-  border-radius: var(--vrc-radius-lg);
+  background: var(--theme-bg-surface-subtle);
+  border: 1.5px solid var(--theme-border);
+  border-radius: var(--theme-radius-lg);
   padding: 1.75rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -1282,9 +1282,9 @@
 
 .feature-item:hover {
   transform: translateY(-4px);
-  background: var(--vrc-bg-card-hover);
-  border-color: var(--vrc-border-glow);
-  box-shadow: var(--vrc-shadow-sm);
+  background: var(--theme-bg-card-hover);
+  border-color: var(--theme-border-glow);
+  box-shadow: var(--theme-shadow-sm);
 }
 
 .feature-tag {
