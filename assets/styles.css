@@ -542,3 +542,9 @@ h2 em,h1 em{font-family:var(--serif);font-weight:500;letter-spacing:-.07em;color
 :root[data-theme="dark"] .field select option{background:#132033;color:#e9f2ff}
 :root[data-theme="dark"] .form-status{color:#bad5ff}
 @media(max-width:650px){.theme-toggle svg{width:18px;height:18px}}
+
+/* Credits V5: Center departments with a single team member. */
+.member-grid.is-single{grid-template-columns:minmax(0,610px);justify-content:center}
+.member-banner img{position:relative;z-index:0}
+.member-avatar .member-external-media{z-index:1}
+@media(max-width:650px){.member-grid.is-single{grid-template-columns:minmax(0,1fr)}}

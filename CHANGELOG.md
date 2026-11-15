@@ -1,10 +1,12 @@
-# Changelog
+# Aderion Studios — Site Degisiklikleri
 
-## V3
-- Dört sayfaya birbiriyle tutarlı açık/koyu mod eklendi.
-- Dil seçeneğinin yanına erişilebilir tema düğmesi eklendi; seçim tarayıcıda saklanır.
-- Join Us artık gerçek PHP e-posta endpoint'ine gönderim yapmayı deniyor: contact@aderionstudios.com.
-- Form metinleri ve onay bildirimi güncellendi; sunucu doğrulaması, spam önlemleri ve hata durumu eklendi.
-- Orijinal tasarım ve Credits JSON veri akışı korundu.
+## V5 — Credits gorsel duzeltmesi
 
-- Header logo updated to use the custom circular artwork supplied by the studio.
+- `data/credits.json` icin `name`, `handle`, `avatarExt`, `bannerExt` gibi opsiyonel profil alanlari destekleniyor.
+- Credits avatar ve banner kaynaklari oncelikle `assets/images/team/` uzerinden yukleniyor; dis baglanti olarak GitHub Raw ve jsDelivr yedekleri deneniyor.
+- Eksik gorsellerde bas harf ve renk gecisi yedekleri korunuyor.
+- Tek uyeli departman kartlari genis ekranda ortalaniyor.
+- Windows icin `update-credits.bat` ve Python 3 icin `scripts/update-credits.py` eklendi. Bu araci internet baglantisi olan bilgisayarda calistirdiktan sonra indirilen gorselleri cPanel'e yukleyebilirsiniz.
+- Tum V4 ozellikleri (ozel logo, acik/koyu mod, PHP basvuru formu) korundu.
+
+Ayrintilar: `CREDITS-KILAVUZU.md`.

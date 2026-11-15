@@ -1,4 +1,4 @@
-/* Extra pages: translations, data-driven studio credits, and local-only application drafts. */
+/* Extra pages: bilingual translations, JSON-driven credits and Join Us form. */
 const extraTr = {
   footerHome:'Ana sayfa',studioPageEyebrow:'BİZ KİMİZ?',studioPageTitle:'Küçük bir ekip.<br><em>Büyük dünyalar.</em>',
   studioPageIntro:'Aderion Studios, karakterleri ve hikâyeleri merkeze alan oyunlar kurmayı hedefleyen bağımsız bir stüdyo. Kendi yolumuzu, merak ettiğimiz dünyaları yaratarak çiziyoruz.',
@@ -18,7 +18,7 @@ const extraTr = {
   studioCtaLabel:'BU HİKÂYEDE BİR YERİN VAR',studioCtaTitle:'Yeni dünyalar <em>birlikte</em> kurulur.',studioCtaText:'Sanat, hikâye veya geliştirme tarafında katkı vermek ister misin?',
   creditsEyebrow:'STÜDYO KÜNYESİ',creditsTitle:'Dünyaların <em>arkasındaki</em><br>insanlar.',
   creditsIntro:'Aderion’u şekillendiren ekip. Farklı uzmanlıklar, ortak bir dünya kurma isteği.',creditsRoster:'EKİP / CREDITS',creditsLoading:'Ekip bilgileri yükleniyor…',
-  creditsSourceNote:'Üyeler ve roller, stüdyonun GitHub deposundaki credits.json verilerinden uyarlanmıştır. Discord görselleri çevrimiçi bağlantı gerektirebilir.',
+  creditsSourceNote:'Üyeler ve roller data/credits.json üzerinden gösterilir. Avatarlar önce yerel dosyalardan, ardından GitHub yedeğinden yüklenir.',
   creditsCtaLabel:'EKİBİN BİR PARÇASI OL',creditsCtaTitle:'Sıradaki hikâyeyi <em>birlikte</em> yazalım.',
   creditRole:'STÜDYO ROLÜ',creditProfile:'Discord profili',creditMembers:'ÜYE',creditSource:'Profil bağlantıları',
   joinEyebrow:'JOIN US / BİZE KATIL',joinTitle:'Birlikte<br><em>üretelim.</em>',
@@ -60,7 +60,7 @@ const extraEn = {
   studioCtaLabel:'THERE IS A PLACE FOR YOU IN THIS STORY',studioCtaTitle:'New worlds are built <em>together.</em>',studioCtaText:'Want to contribute through art, storytelling, or development?',
   creditsEyebrow:'STUDIO CREDITS',creditsTitle:'The people <em>behind</em><br>the worlds.',
   creditsIntro:'The people shaping Aderion. Different skills, the same drive to build worlds.',creditsRoster:'TEAM / CREDITS',creditsLoading:'Loading team information…',
-  creditsSourceNote:'Members and roles are adapted from credits.json in the studio GitHub repository. Discord images may require an internet connection.',
+  creditsSourceNote:'Team profiles are read from data/credits.json. Images load from local files first, then fall back to GitHub mirrors.',
   creditsCtaLabel:'BE PART OF THE TEAM',creditsCtaTitle:'Let’s write the next story <em>together.</em>',
   creditRole:'STUDIO ROLE',creditProfile:'Discord profile',creditMembers:'MEMBER',creditSource:'Profile links',
   joinEyebrow:'JOIN US / CREATE WITH US',joinTitle:'Let’s make<br><em>something.</em>',
@@ -99,32 +99,68 @@ const roles = [
 const escapeHtml = value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 let credits = window.ADERION_CREDITS || {departments:[]};
 const safeLink = candidate=>{try{let url=new URL(candidate);return ['https:','http:'].includes(url.protocol)?url.href:null;}catch{return null;}};
-const imageRoot='https://raw.githubusercontent.com/AderionStudios/Website/main/assets/img/team/discord_cache/';
+// Credits images are stored locally after running update-credits.bat.
+// Avoid hardcoded GitHub cache URLs: those files may not exist in the repository.
+function creditMediaCandidates(member,kind){
+  const explicit=typeof member[kind]==='string'?member[kind].trim():'';
+  const id=String(member.discordId||'');
+  const urls=[];
+  if(explicit && (/^https:\/\//i.test(explicit)||/^assets\/images\/team\/[\w.-]+$/.test(explicit))){
+    urls.push(explicit);
+  }
+  if(/^\d{16,24}$/.test(id)){
+    const preferred=String(member[kind+'Ext']||'').toLowerCase();
+    const extensions=[preferred,'png','gif','webp','jpg'].filter((ext,i,arr)=>
+      ['png','gif','webp','jpg'].includes(ext)&&arr.indexOf(ext)===i);
+    extensions.forEach(ext=>urls.push(`assets/images/team/${id}_${kind}.${ext}`));
+  }
+  return [...new Set(urls)];
+}
+function creditImgHtml(member,kind){
+  const candidates=creditMediaCandidates(member,kind);
+  if(!candidates.length)return '';
+  return `<img src="${escapeHtml(candidates[0])}" data-credit-media="${escapeHtml(JSON.stringify(candidates))}" data-credit-media-index="0" alt="" loading="lazy" class="member-external-media" referrerpolicy="no-referrer">`;
+}
+function setupCreditImages(root){
+  root.querySelectorAll('[data-credit-media]').forEach(img=>{
+    const sources=JSON.parse(img.dataset.creditMedia);
+    const next=()=>{
+      const nextIndex=Number(img.dataset.creditMediaIndex||0)+1;
+      if(nextIndex>=sources.length){img.hidden=true;return;}
+      img.dataset.creditMediaIndex=String(nextIndex);
+      img.src=sources[nextIndex];
+    };
+    img.addEventListener('error',next);
+    // A cached image can fail before the listener has been installed.
+    if(img.complete && img.naturalWidth===0)next();
+  });
+}
 function renderCredits(){
   const root=document.querySelector('#creditsRoot');
   if(!root)return;
   let count=0;
   const contents=(credits.departments||[]).map((department,depIndex)=>{
     const title=department[`title_${locale}`]||department.title_tr||'';
-    const members=(department.members||[]).map(member=>{
+    const deptMembers=department.members||[];
+    const members=deptMembers.map(member=>{
       count++;
       const discordId=/^\d{16,24}$/.test(String(member.discordId))?String(member.discordId):null;
-      const isStettin=member.id==='stettin';
-      const avatar=discordId?`${imageRoot}${discordId}_avatar.${isStettin?'gif':'png'}`:null;
-      const banner=discordId?`${imageRoot}${discordId}_banner.${isStettin?'gif':'png'}`:null;
-      const initial=String(member.id||'?')[0].toUpperCase();
+      const initial=String(member.name||member.id||'?')[0].toUpperCase();
+      const shownName=member.name||member.id||'';
+      const handle=member.handle||`@${member.id||''}`;
       const validLinks=Object.entries(member.links||{}).map(([label,url])=>safeLink(url)?`<a target="_blank" rel="noopener noreferrer" href="${escapeHtml(safeLink(url))}">${escapeHtml(label==='X(Twitter)'?'X':label)} <span aria-hidden="true">↗</span></a>`:'').join('');
       const discordLink=discordId?`<a class="member-discord" target="_blank" rel="noopener noreferrer" href="https://discord.com/users/${discordId}">${translations[locale].creditProfile} <span aria-hidden="true">↗</span></a>`:'';
-      return `<article class="member-card reveal in-view" data-member-id="${escapeHtml(member.id||'')}"><div class="member-banner ${escapeHtml(member.id||'')}">${banner?`<img src="${banner}" alt="" loading="lazy" class="member-external-media">`:''}<span class="member-banner-label">ADERION / CORE TEAM</span></div>
-      <div class="member-body"><div class="member-head"><div class="member-avatar">${escapeHtml(initial)}${avatar?`<img src="${avatar}" alt="" loading="lazy" class="member-external-media">`:''}</div><span class="member-role-badge">${escapeHtml(member.roleBadge||'')}</span></div>
-      <div class="member-identity"><h3>${escapeHtml(member.id==='stettin'?'Stettin':member.id==='flaouve'?'Flaouve':member.id||'')}</h3><span>@${escapeHtml(member.id||'')}</span></div><div class="member-status">${escapeHtml(member[`bubble_${locale}`]||member.bubble_tr||'')}</div>
+      return `<article class="member-card reveal in-view" data-member-id="${escapeHtml(member.id||'')}"><div class="member-banner ${escapeHtml(member.id||'')}">${creditImgHtml(member,'banner')}<span class="member-banner-label">ADERION / CORE TEAM</span></div>
+      <div class="member-body"><div class="member-head"><div class="member-avatar">${escapeHtml(initial)}${creditImgHtml(member,'avatar')}</div><span class="member-role-badge">${escapeHtml(member.roleBadge||'')}</span></div>
+      <div class="member-identity"><h3>${escapeHtml(shownName)}</h3><span>${escapeHtml(handle)}</span></div><div class="member-status">${escapeHtml(member[`bubble_${locale}`]||member.bubble_tr||'')}</div>
       <div class="member-role"><small>${translations[locale].creditRole}</small><strong>${escapeHtml(member[`role_${locale}`]||member.role_tr||'')}</strong><span>${escapeHtml(member[`meta_${locale}`]||member.meta_tr||'')}</span></div><div class="member-actions">${discordLink}<div class="member-socials">${validLinks}</div></div></div></article>`;
     }).join('');
-    return `<section class="credit-department"><div class="department-heading"><div><span class="department-index">${String(depIndex+1).padStart(2,'0')} / DEPARTMENT</span><h2>${escapeHtml(title)}</h2></div><span class="department-count">${(department.members||[]).length} ${translations[locale].creditMembers}</span></div><div class="member-grid">${members}</div></section>`;
+    return `<section class="credit-department"><div class="department-heading"><div><span class="department-index">${String(depIndex+1).padStart(2,'0')} / DEPARTMENT</span><h2>${escapeHtml(title)}</h2></div><span class="department-count">${deptMembers.length} ${translations[locale].creditMembers}</span></div><div class="member-grid${deptMembers.length===1?' is-single':''}">${members}</div></section>`;
   }).join('');
   root.innerHTML=contents||`<p>${escapeHtml(translations[locale].creditsLoading)}</p>`;
-  document.querySelector('#creditsCount').textContent=String(count).padStart(2,'0')+' MEMBERS';
-  root.querySelectorAll('.member-external-media').forEach(img=>img.addEventListener('error',()=>{img.hidden=true;}));
+  const counter=document.querySelector('#creditsCount');
+  if(counter)counter.textContent=String(count).padStart(2,'0')+' MEMBERS';
+  setupCreditImages(root);
 }
 async function loadCredits(){
  if(!document.querySelector('#creditsRoot'))return;

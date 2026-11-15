@@ -24,7 +24,11 @@ window.ADERION_CREDITS = {
             "X(Twitter)": "https://x.com/StettiN76",
             "steam": "https://steamcommunity.com/id/StettiNN/",
             "patreon": "https://www.patreon.com/cw/Stettin"
-          }
+          },
+          "avatarExt": "gif",
+          "bannerExt": "gif",
+          "name": "Stettin",
+          "handle": "@stettin"
         }
       ]
     },
@@ -51,7 +55,11 @@ window.ADERION_CREDITS = {
             "gitlab": "https://gitlab.com/flaouve",
             "website": "https://flaouve.dev/",
             "steam": "https://steamcommunity.com/id/flaouve/"
-          }
+          },
+          "avatarExt": "png",
+          "bannerExt": "png",
+          "name": "Flaouve",
+          "handle": "@flaouve"
         }
       ]
     }

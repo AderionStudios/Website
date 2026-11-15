@@ -1,133 +1,49 @@
-# ADERION STUDIOS — Official Static Web Platform
+# Aderion Studios — Website V3
 
-**Type-Safe Modern Gaming Portal · Zero-Backend · TypeScript-Only · Production-Ready**
+Önceki V2 tasarımı korunarak dört sayfaya **koyu mod** ve **gerçek Join Us e-posta gönderimi** eklendi.
 
----
+## Koyu / açık mod
 
-## 1. Project Overview
+- Tüm sayfalarda dil seçeneğinin solundaki ay/güneş düğmesiyle değiştirilir.
+- Seçim tarayıcıdaki `localStorage` üzerinde saklanır; sayfa geçişinde korunur.
+- İlk ziyaret açık temayla başlar (orijinal tasarım).
+- Sayfa, mobil menü, kartlar, form alanları ve Credits sayfası da renk değiştirir.
 
-**Aderion Studios** is an open-source, type-safe, 100% static web platform built for independent game development. Engineered with modern responsive bento-grid layouts, hardware-accelerated celestial background atmospheres, and zero server-side dependencies, it delivers blazing fast performance and airtight security for deployment across static CDNs, Apache/cPanel (`public_html`), Nginx, or GitHub Pages.
+## Join Us başvuru gönderimi
 
----
+- `join.html` formu, ziyaretçi **Başvurumu gönder** dediğinde `POST api/apply.php` çağrısı yapar.
+- Sunucu, e-postayı PHP `mail()` ile **contact@aderionstudios.com** adresine göndermeye çalışır. Gönderici aynı adrestir; adayın adresi `Reply-To` olur.
+- Ad, e-posta, ilgili rol, portföy URL'si, deneyim ve açıklama gönderilir. Zorunlu onay, gizli spam alanı, temel sunucu doğrulaması ve IP başına saatlik sınırlama bulunur.
+- **PHP `mail()` fonksiyonunun TRUE dönmesi sadece sunucunun postayı kuyruğa kabul ettiği anlamına gelir, posta kutusuna ulaştığını kanıtlamaz.** E-posta teslimi için cPanel hosting SMTP/mail servisi ve alan adının SPF/DKIM/DMARC yapılandırmasının çalışması gerekir. Gerçek bir test başvurusuyla doğrulayın.
+- E-posta gönderilemezse form **başarılı olduğunu iddia etmez**, Türkçe/İngilizce hata verir; aday formu tekrar deneyebilir.
+- `file://` üzerinden yerel HTML önizlemesi PHP çalıştıramaz. Bu ortamda form bir `mailto:` taslağı açar ve başvurunun gönderiminin kullanıcı tarafından tamamlanması gerektiğini söyler. `python -m http.server` de PHP çalıştırmaz.
 
-## 2. Core Architectural Principles
+## cPanel yükleme (önemli)
 
-* **Zero-Backend (100% Static Delivery):** Pure **HTML5**, modern **CSS3**, and compiled **ES2020 JavaScript** (`assets/js/`). No runtime server engines (PHP, Node.js, databases) are required in production, ensuring near-instant Time to First Byte (TTFB) and zero server attack surfaces.
-* **TypeScript-Only Policy:** Client-side source logic is maintained under `src/ts/` with strict type guarantees and compiled to `assets/js/` via `tsc`. Direct handwritten JavaScript in `src/` is prohibited and caught by CI guardrails.
-* **Bilingual Localization (TR / EN):** Intelligent locale detection (`navigator.language` / `Intl.DateTimeFormat`) automatically defaults to Turkish for Turkish locales and English for all international visitors, with instant manual toggle and persistence in `localStorage`.
-* **Dynamic Discord Integration:** Live Discord member cards with custom banners, avatars, badges, and theme-adaptive high-contrast speech bubbles (`bubble_tr`, `bubble_en`) generated from `data/credits.json`.
-* **Atmospheric CSS Design System:** Hardware-accelerated radial glow orbs (`#3c4667`, `#232b47`, `#181820`) running on pure CSS gradients and backdrop filters with zero image assets and zero JavaScript overhead.
-* **Universal Cross-Platform Build Runners:** Standalone runners (`build.sh`, `build.bat`, `build.ps1`) automatically detect and prioritize **Podman**, **Docker**, or native **Node/npm**.
+1. ZIP'i açıp `index.html`, `studio.html`, `credits.html`, `join.html`, `assets/`, `data/` ve **`api/`** klasörlerini `public_html/` içine yükleyin. `scripts/` yalnızca Credits yerel yedeğini üretmek içindir.
+2. cPanel'de alan adınızın PHP desteklediğini ve `mail()` fonksiyonuna izin verildiğini kontrol edin. `contact@aderionstudios.com` adresini etkinleştirin ve domain e-posta gönderimini SPF/DKIM/DMARC ile yapılandırın. Hosting tarafında yalnızca SMTP ile gönderime izin veriliyorsa `api/apply.php` dosyasını PHPMailer/SMTP'ye geçirmek gerekir.
+3. Test başvurusu yapın, gelen kutusu ve spam klasörünü kontrol edin. Gerekirse hosting mail loglarını inceleyin.
+4. Başvuru toplanacağı için yayımlamadan önce uygun **KVKK aydınlatma metnini**, saklama süresini, veri sahiplerinin haklarını ve stüdyonun gizlilik politikasını ekleyin. Formdaki izin kutusu tek başına mevzuat uyumu sağlamaz.
 
----
-
-## 3. Repository Structure
-
-```text
-Website/
-├── index.html                  # Main studio portal, hero showcase, bento grid & social channels
-├── games.html                  # Active projects showcase & classified [REDACTED] mystery title
-├── credit.html                 # Studio roster & dynamic Discord profile cards
-├── build.sh                    # Universal build runner for Linux & macOS (Podman/Docker/npm)
-├── build.bat                   # Universal build runner for Windows CMD
-├── build.ps1                   # Universal build runner for Windows PowerShell
-├── .htaccess                   # Apache/cPanel security headers, HTTPS enforcement & caching
-├── robots.txt                  # Search engine crawler directives
-├── sitemap.xml                 # Search engine XML sitemap
-├── .gitignore                  # Git exclusions (preserves production assets/js/)
-├── tsconfig.json               # Strict TypeScript compiler options
-├── package.json                # Project dependencies and build scripts
-├── data/
-│   └── credits.json            # Single source of truth for team members and Discord assets
-├── .github/
-│   └── workflows/
-│       └── build.yml           # CI: Typecheck, compile verification, zero-raw-JS & XML validation
-├── src/
-│   └── ts/
-│       ├── types/
-│       │   └── i18n.d.ts       # Strongly-typed TranslationSchema & locale contracts
-│       ├── config.ts           # Central studio configuration, social URLs & allowlists
-│       ├── credits-data.ts     # Auto-generated credits data contract
-│       ├── i18n.ts             # TR/EN dictionaries & DOM localization engine
-│       └── main.ts             # Application lifecycle, theme toggles & interactive components
-├── assets/
-│   ├── css/
-│   │   ├── variables.css       # Core color tokens, typography stacks & layout variables
-│   │   ├── main.css            # Foundation styles, typography & Discord card layouts
-│   │   ├── theme.css           # Modern gaming portal theme, bento grids & glow atmosphere
-│   │   └── responsive.css      # Fluid responsive breakpoints (mobile, tablet, desktop)
-│   ├── js/                     # Compiled production JavaScript bundle (assets/js/main.js)
-│   └── img/                    # Studio logos, favicon suite, game artwork & Discord cache
-└── scripts/
-    ├── render-credits.js       # Discord profile fetcher & HTML credits generator
-    ├── add-credit.js           # Interactive CLI helper to add studio members
-    └── bundle.js               # Standalone single-file bundle generator
-```
-
----
-
-## 4. Build & Development
-
-Run the universal build script for your operating system:
+### PHP ile yerelde test
 
 ```bash
-# Linux & macOS
-./build.sh              # Compile TypeScript & generate production assets
-./build.sh typecheck    # Run strict type checking without emitting files
-./build.sh watch        # Live watch mode for continuous compilation
-./build.sh install      # Install dependencies
-
-# Windows (Command Prompt)
-build.bat               # Compile TypeScript & generate assets
-build.bat typecheck     # Run typecheck
-
-# Windows (PowerShell)
-.\build.ps1             # Compile TypeScript & generate assets
-.\build.ps1 typecheck   # Run typecheck
+cd aderion-studios-v3
+php -S localhost:8080
 ```
 
----
+`http://localhost:8080` üzerinden görünümü ve formun hata durumlarını test edebilirsiniz. Gerçek gönderimi yalnızca posta gönderebilen bir cPanel sunucusunda ya da yapılandırılmış PHP sendmail/SMTP üzerinde test edin.
 
-## 5. Deployment Guide (cPanel / Apache / Static Hosting)
+## Credits ve diğer içerik
 
-Because this platform is completely static, publishing to **cPanel** is as simple as copying the static production files into `public_html/`:
+V2'deki Credits JSON dinamiği, Studio yol haritası ve sekiz ön başvuru alanı aynen korunur. GitHub Credits verisini yenilemek için `data/credits.json` dosyasını güncelleyin; yerel `file://` yedeği gerekiyorsa `python scripts/sync-credits.py` çalıştırın.
 
-1. Upload the following files to your `public_html/` root:
-   - `index.html`, `games.html`, `credit.html`
-   - `assets/` directory (including `assets/css/`, `assets/js/`, `assets/img/`)
-   - `.htaccess`, `robots.txt`, `sitemap.xml`, `favicon.ico`
-2. Ensure file permissions are set to standard `644` for files and `755` for directories.
-3. The included `.htaccess` automatically manages HTTPS redirection, MIME types, security headers, and aggressive static asset caching.
+İllüstrasyonlar kullanıcıdan alınan referanslardır; yayın haklarını doğrulayın.
 
----
+- Header logo updated to use the custom circular artwork supplied by the studio.
 
-## 6. Core Team & Contributors
+## V5 — Credits gorselleri
 
-| Avatar | Member | Role | Socials |
-| :---: | :--- | :--- | :--- |
-| <img src="https://github.com/Stett1N.png" width="48" height="48" style="border-radius:50%" /> | **Stettin**<br>`@stettin` | **Founder / Studio Owner & Creative Designer** | [![GitHub](https://img.shields.io/badge/GitHub-Stett1N-181717?logo=github)](https://github.com/Stett1N) [![Discord](https://img.shields.io/badge/Discord-296189055379570688-5865F2?logo=discord)](https://discord.com/users/296189055379570688) |
-| <img src="https://github.com/flaouve.png" width="48" height="48" style="border-radius:50%" /> | **Flaouve**<br>`@flaouve` | **Chief / Site Director — DevOps & Server Architecture** | [![GitHub](https://img.shields.io/badge/GitHub-flaouve-181717?logo=github)](https://github.com/flaouve) [![GitLab](https://img.shields.io/badge/GitLab-flaouve-FC6D26?logo=gitlab)](https://gitlab.com/flaouve) [![Website](https://img.shields.io/badge/Website-flaouve.dev-00C7B7)](https://flaouve.dev/) [![Discord](https://img.shields.io/badge/Discord-966300934202359888-5865F2?logo=discord)](https://discord.com/users/966300934202359888) |
+**Ekranda avatar yerine S/F harfi gorunuyorsa:** Orijinal GitHub projesindeki Discord gorselleri onbellege alinip HTML'e ekleniyor; bizim statik tasarimda bu resimler dis baglantiya bagliydi. Yeni surumde yerel resimler tercih ediliyor.
 
----
-
-## 7. Contributing
-
-Community contributions, issue reports, and feedback are warmly welcomed:
-
-1. **Fork** the repository and create your feature branch:
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-2. **Follow TypeScript-Only Policy:** Do not add or edit raw `.js` in `src/`. All logic must live in `src/ts/`.
-3. **Verify Build & Types:**
-   ```bash
-   npm run typecheck
-   npm run build
-   ```
-4. **Submit a Pull Request** with clear, descriptive commit messages.
-
----
-
-## 8. License
-
-This project is licensed under the [Apache License 2.0](LICENSE).
+Windows'ta `update-credits.bat`, Python kurulu diger sistemlerde `python scripts/update-credits.py` calistirip resimleri indirebilirsiniz. Sonra `assets/images/team/` klasorunu site ile birlikte cPanel'e yukleyin. Harici ag ulasilamazsa bas harfler yine yedek olarak gosterilir. Ayrinti icin `CREDITS-KILAVUZU.md` dosyasini okuyun.
