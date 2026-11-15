@@ -412,11 +412,16 @@ export function detectLocale(): Locale {
     // Ignore storage access errors in restricted privacy contexts.
   }
 
-  if (typeof navigator !== 'undefined' && typeof navigator.language === 'string') {
-    return navigator.language.toLowerCase().startsWith('tr') ? 'tr' : 'en';
+  if (typeof navigator !== 'undefined') {
+    const primaryLang = (navigator.languages && navigator.languages.length > 0)
+      ? navigator.languages[0]
+      : navigator.language;
+    if (typeof primaryLang === 'string') {
+      return primaryLang.toLowerCase().startsWith('tr') ? 'tr' : 'en';
+    }
   }
 
-  return 'tr';
+  return 'en';
 }
 
 /**
@@ -458,6 +463,11 @@ export function applyTranslations(): void {
     if (key && isTranslationKey(key)) {
       el.textContent = t(key);
     }
+  });
+
+  const bilingualTargets = document.querySelectorAll<HTMLElement>('[data-lang-tr][data-lang-en]');
+  bilingualTargets.forEach((el) => {
+    el.textContent = currentLocale === 'tr' ? (el.dataset.langTr ?? '') : (el.dataset.langEn ?? '');
   });
 
   const ariaTargets = document.querySelectorAll<HTMLElement>('[data-i18n-aria]');

@@ -208,8 +208,11 @@
 
 .brand-logo {
   border-radius: 50%;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  flex-shrink: 0;
+  filter: none !important;
 }
 
 /* Nav Links Pill Container */
@@ -925,6 +928,15 @@
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 0.95rem;
+}
+
+.vrc-footer-brand img {
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  flex-shrink: 0;
+  filter: none !important;
 }
 
 .vrc-footer-links {

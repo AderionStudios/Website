@@ -46,12 +46,17 @@ jobs:
             ".htaccess"
             "robots.txt"
             "sitemap.xml"
+            "favicon.ico"
             "assets/js/main.js"
             "assets/js/config.js"
             "assets/js/i18n.js"
             "assets/css/variables.css"
             "assets/css/main.css"
             "assets/css/responsive.css"
+            "assets/css/vrchat-theme.css"
+            "assets/img/team/logo-mark.svg"
+            "assets/img/team/logo-mark.png"
+            "assets/img/team/logo-full.png"
           )
 
           for file in "${required_files[@]}"; do
@@ -65,7 +70,7 @@ jobs:
         run: |
           rm -rf _deploy
           mkdir -p _deploy
-          cp index.html credit.html games.html .htaccess robots.txt sitemap.xml _deploy/
+          cp index.html credit.html games.html .htaccess robots.txt sitemap.xml favicon.ico _deploy/
           cp -r assets _deploy/assets
           echo "Staged files for deployment:"
           ls -la _deploy/
