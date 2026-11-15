@@ -58,7 +58,7 @@ window.ADERION_CREDITS = {
           },
           "avatarExt": "png",
           "bannerExt": "png",
-          "name": "Flaouve",
+          "name": "Luvie✦˚✴",
           "handle": "@flaouve"
         }
       ]
