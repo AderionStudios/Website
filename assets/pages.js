@@ -152,6 +152,9 @@ function renderCredits(){
         textEl.textContent = locale === 'tr' ? el.dataset.bubbleTr : el.dataset.bubbleEn;
       }
     });
+    root.querySelectorAll('[data-lang-tr]').forEach(el => {
+      el.textContent = locale === 'tr' ? el.dataset.langTr : el.dataset.langEn;
+    });
     const profileLabel = translations[locale]?.creditProfile || (locale === 'tr' ? 'Discord Profili' : 'Discord Profile');
     root.querySelectorAll('[data-t="creditProfile"]').forEach(el => {
       el.textContent = profileLabel + ' ↗';
