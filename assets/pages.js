@@ -138,34 +138,29 @@ function setupCreditImages(root){
 function renderCredits(){
   const root=document.querySelector('#creditsRoot');
   if(!root)return;
-  let count=0;
-  const contents=(credits.departments||[]).map((department,depIndex)=>{
-    const title=department[`title_${locale}`]||department.title_tr||'';
-    const deptMembers=department.members||[];
-    const members=deptMembers.map(member=>{
-      count++;
-      const discordId=/^\d{16,24}$/.test(String(member.discordId))?String(member.discordId):null;
-      const initial=String(member.name||member.id||'?')[0].toUpperCase();
-      const shownName=member.name||member.id||'';
-      const handle=member.handle||`@${member.id||''}`;
-      const validLinks=Object.entries(member.links||{}).map(([label,url])=>safeLink(url)?`<a target="_blank" rel="noopener noreferrer" href="${escapeHtml(safeLink(url))}">${escapeHtml(label==='X(Twitter)'?'X':label)} <span aria-hidden="true">↗</span></a>`:'').join('');
-      const discordLink=discordId?`<a class="member-discord" target="_blank" rel="noopener noreferrer" href="https://discord.com/users/${discordId}">${translations[locale].creditProfile} <span aria-hidden="true">↗</span></a>`:'';
-      return `<article class="member-card reveal in-view" data-member-id="${escapeHtml(member.id||'')}"><div class="member-banner ${escapeHtml(member.id||'')}">${creditImgHtml(member,'banner')}<span class="member-banner-label">ADERION / CORE TEAM</span></div>
-      <div class="member-body"><div class="member-head"><div class="member-avatar">${escapeHtml(initial)}${creditImgHtml(member,'avatar')}</div><span class="member-role-badge">${escapeHtml(member.roleBadge||'')}</span></div>
-      <div class="member-identity"><h3>${escapeHtml(shownName)}</h3><span>${escapeHtml(handle)}</span></div><div class="member-status">${escapeHtml(member[`bubble_${locale}`]||member.bubble_tr||'')}</div>
-      <div class="member-role"><small>${translations[locale].creditRole}</small><strong>${escapeHtml(member[`role_${locale}`]||member.role_tr||'')}</strong><span>${escapeHtml(member[`meta_${locale}`]||member.meta_tr||'')}</span></div><div class="member-actions">${discordLink}<div class="member-socials">${validLinks}</div></div></div></article>`;
-    }).join('');
-    return `<section class="credit-department"><div class="department-heading"><div><span class="department-index">${String(depIndex+1).padStart(2,'0')} / DEPARTMENT</span><h2>${escapeHtml(title)}</h2></div><span class="department-count">${deptMembers.length} ${translations[locale].creditMembers}</span></div><div class="member-grid${deptMembers.length===1?' is-single':''}">${members}</div></section>`;
-  }).join('');
-  root.innerHTML=contents||`<p>${escapeHtml(translations[locale].creditsLoading)}</p>`;
-  const counter=document.querySelector('#creditsCount');
-  if(counter)counter.textContent=String(count).padStart(2,'0')+' MEMBERS';
-  setupCreditImages(root);
+  const roleNodes = root.querySelectorAll('[data-role-tr]');
+  if(roleNodes.length > 0) {
+    roleNodes.forEach(el => {
+      el.textContent = locale === 'tr' ? el.dataset.roleTr : el.dataset.roleEn;
+    });
+    root.querySelectorAll('[data-meta-tr]').forEach(el => {
+      el.textContent = locale === 'tr' ? el.dataset.metaTr : el.dataset.metaEn;
+    });
+    root.querySelectorAll('[data-bubble-tr]').forEach(el => {
+      const textEl = el.querySelector('.status-bubble-text');
+      if (textEl) {
+        textEl.textContent = locale === 'tr' ? el.dataset.bubbleTr : el.dataset.bubbleEn;
+      }
+    });
+    const profileLabel = translations[locale]?.creditProfile || (locale === 'tr' ? 'Discord Profili' : 'Discord Profile');
+    root.querySelectorAll('[data-t="creditProfile"]').forEach(el => {
+      el.textContent = profileLabel + ' ↗';
+    });
+    return;
+  }
 }
 async function loadCredits(){
  if(!document.querySelector('#creditsRoot'))return;
- if(location.protocol==='file:'){renderCredits();return;}
- try {const response=await fetch('data/credits.json',{cache:'no-cache'});if(!response.ok)throw Error('Credits unavailable');const obj=await response.json();if(Array.isArray(obj.departments))credits=obj;}catch(_){/* Offline fallback in assets/credits-data.js */}
  renderCredits();
 }
 function renderRoles(){
@@ -192,7 +187,7 @@ filters.forEach(button=>button.addEventListener('click',()=>{
 }));
 const APPLICATION_EMAIL='contact@aderionstudios.com';
 const APPLICATION_ENDPOINT='api/apply.php';
-document.querySelector('#applicationForm')?.addEventListener('submit',async event=>{
+document.querySelector('#applicationForm')?.addEventListener('submit',event=>{
   event.preventDefault();
   const form=event.currentTarget;
   if (!form.reportValidity()) return;
@@ -201,53 +196,22 @@ document.querySelector('#applicationForm')?.addEventListener('submit',async even
   if (!role) return;
   const dict=translations[locale];
   const status=document.querySelector('#applicationStatus');
-  const submit=form.querySelector('[type="submit"]');
-  const message=[dict.applicationSubject,'',`Name: ${String(fd.get('name')).trim()}`,`Email: ${String(fd.get('email')).trim()}`,`Role: ${role[locale]}`,`Portfolio: ${String(fd.get('portfolio')).trim()}`,`Experience: ${String(fd.get('experience'))}`,'',String(fd.get('message')).trim()].join('\n');
+  const message=[
+    dict.applicationSubject,
+    '',
+    'Name: ' + String(fd.get('name') || '').trim(),
+    'Email: ' + String(fd.get('email') || '').trim(),
+    'Role: ' + (role ? role[locale] : ''),
+    'Portfolio: ' + String(fd.get('portfolio') || '').trim(),
+    'Experience: ' + String(fd.get('experience') || ''),
+    '',
+    String(fd.get('message') || '').trim()
+  ].join('\n');
 
-  // Opening a local HTML file cannot execute PHP; use an explicit, user-confirmed mail draft.
-  if (location.protocol === 'file:') {
-    location.href=`mailto:${APPLICATION_EMAIL}?subject=${encodeURIComponent(dict.applicationSubject)}&body=${encodeURIComponent(message)}`;
-    status.textContent=dict.applicationLocal;
-    showToast(dict.applicationLocal);
-    return;
-  }
-
-  submit.disabled=true;
-  submit.setAttribute('aria-busy','true');
-  submit.querySelector('span').textContent=dict.applicationSending;
-  status.textContent=dict.applicationSending;
-  fd.set('consent','yes');
-  try {
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),20000);
-    let response;
-    try {
-      response=await fetch(APPLICATION_ENDPOINT,{
-        method:'POST',
-        body:new URLSearchParams(fd),
-        headers:{'Accept':'application/json'},
-        cache:'no-store',credentials:'same-origin',signal:controller.signal
-      });
-    } finally {clearTimeout(timeout);}
-    let result=null;
-    try {result=await response.json();}catch(_){}
-    if(!response.ok||!result?.ok){
-      status.textContent=response.status===429?dict.applicationRateLimit:dict.applicationError;
-      showToast(status.textContent);
-      return;
-    }
-    form.reset();
-    status.textContent=dict.applicationSent;
-    showToast(dict.applicationSent);
-  }catch(_){
-    status.textContent=dict.applicationError;
-    showToast(dict.applicationError);
-  }finally{
-    submit.disabled=false;
-    submit.removeAttribute('aria-busy');
-    // Language can change while the request is in flight.
-    submit.querySelector('span').textContent=translations[locale].applySubmit;
-  }
+  location.href = 'mailto:' + APPLICATION_EMAIL + '?subject=' + encodeURIComponent(dict.applicationSubject) + '&body=' + encodeURIComponent(message);
+  form.reset();
+  if(status) status.textContent = dict.applicationSent;
+  showToast(dict.applicationSent);
 });
 document.addEventListener('aderion:language',()=>{
  const names={studio:['Stüdyo','Studio'],credits:['Ekip & Credits','Team & Credits'],join:['Bize Katıl','Join Us']};

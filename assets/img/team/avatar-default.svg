@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-labelledby="default-title default-desc">
+  <title id="default-title">Aderion Team Member</title>
+  <desc id="default-desc">Editorial framed profile emblem for Aderion Studio team member.</desc>
+  <defs>
+    <radialGradient id="def-bg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#2a201c"/>
+      <stop offset="65%" stop-color="#181311"/>
+      <stop offset="100%" stop-color="#0e0a09"/>
+    </radialGradient>
+    <clipPath id="def-clip">
+      <circle cx="60" cy="60" r="56"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#def-clip)">
+    <rect width="120" height="120" fill="url(#def-bg)"/>
+
+    <!-- Subtle Drafting Grid & Axes -->
+    <g stroke="#ffffff" stroke-opacity="0.08" stroke-width="1" fill="none">
+      <line x1="0" y1="60" x2="120" y2="60"/>
+      <line x1="60" y1="0" x2="60" y2="120"/>
+      <circle cx="60" cy="50" r="32"/>
+    </g>
+
+    <!-- Warm Terracotta Halo -->
+    <circle cx="60" cy="48" r="23" fill="none" stroke="#974C44" stroke-width="1.8" stroke-opacity="0.85"/>
+
+    <!-- Minimalist Bust Silhouette -->
+    <path d="M 22 120 C 24 92 38 80 60 80 C 82 80 96 92 98 120 Z" fill="#1c1614" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.2"/>
+    <circle cx="60" cy="50" r="14" fill="#15100e" stroke="#ffffff" stroke-opacity="0.75" stroke-width="1.2"/>
+    <path d="M 48 83 L 60 95 L 72 83" fill="none" stroke="#B87F66" stroke-width="1.5"/>
+  </g>
+
+  <!-- Outer Editorial Ring -->
+  <circle cx="60" cy="60" r="56" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>
+  <rect x="58" y="2" width="4" height="6" fill="#974C44"/>
+</svg>

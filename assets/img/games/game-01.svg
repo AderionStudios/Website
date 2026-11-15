@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img" aria-labelledby="g1-title g1-desc">
+  <title id="g1-title">Ashes of Veridia — Game Cover Art</title>
+  <desc id="g1-desc">Editorial cover artwork featuring shattered obsidian arches, a crimson solar eclipse, and a lone sentinel on a fractured bridge.</desc>
+  <defs>
+    <linearGradient id="g1-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#070709"/>
+      <stop offset="55%" stop-color="#140d10"/>
+      <stop offset="100%" stop-color="#060608"/>
+    </linearGradient>
+    <radialGradient id="g1-glow" cx="50%" cy="42%" r="45%">
+      <stop offset="0%" stop-color="#e63946" stop-opacity="0.52"/>
+      <stop offset="45%" stop-color="#e63946" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#070709" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="g1-shaft" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#e63946" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#g1-bg)"/>
+  <rect width="800" height="500" fill="url(#g1-glow)"/>
+
+  <!-- Geometric Astrolabe Sigil -->
+  <g transform="translate(400, 205)" fill="none" stroke="#ffffff" stroke-opacity="0.14">
+    <circle r="158" stroke-width="1"/>
+    <circle r="118" stroke-dasharray="4 8" stroke-width="1"/>
+    <polygon points="0,-142 123,71 -123,71" stroke-width="0.9"/>
+  </g>
+
+  <!-- Crimson Eclipse -->
+  <g transform="translate(400, 205)">
+    <circle r="76" fill="#09090b" stroke="#e63946" stroke-width="2.4"/>
+    <path d="M -76 0 A 76 76 0 0 1 76 0" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1"/>
+  </g>
+
+  <!-- Light Shaft & Shattered Cathedral Pillars -->
+  <polygon points="362,205 438,205 510,500 290,500" fill="url(#g1-shaft)"/>
+  <g fill="#0c0c10" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1">
+    <polygon points="105,500 135,95 190,115 178,500"/>
+    <polygon points="225,500 245,155 288,168 276,500"/>
+    <polygon points="518,500 508,168 552,155 572,500"/>
+    <polygon points="618,500 608,115 664,95 696,500"/>
+  </g>
+
+  <!-- Jagged Mountain Silhouette & Fractured Bridge -->
+  <path d="M0 390 L130 330 L260 365 L400 318 L545 362 L685 322 L800 375 L800 500 L0 500 Z" fill="#08080a"/>
+  <path d="M0 424 L270 408 L368 418 L432 418 L530 408 L800 424 L800 500 L0 500 Z" fill="#050507"/>
+  <line x1="0" y1="424" x2="368" y2="418" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1"/>
+  <line x1="432" y1="418" x2="800" y2="424" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1"/>
+
+  <!-- Lone Sentinel Silhouette -->
+  <g transform="translate(388, 354)">
+    <line x1="22" y1="4" x2="18" y2="64" stroke="#e63946" stroke-width="1.8"/>
+    <circle cx="22" cy="8" r="3" fill="#ffffff"/>
+    <path d="M8 14 C10 6 16 6 18 14 L23 30 L17 64 L3 64 L-4 32 Z" fill="#0d0d12" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1"/>
+  </g>
+
+  <!-- Ash Particles -->
+  <g fill="#e63946">
+    <circle cx="315" cy="296" r="1.8" fill-opacity="0.8"/>
+    <circle cx="478" cy="264" r="2.1" fill-opacity="0.75"/>
+    <circle cx="352" cy="348" r="1.4" fill-opacity="0.65"/>
+    <circle cx="456" cy="336" r="1.6" fill-opacity="0.7"/>
+  </g>
+
+  <!-- Editorial Framing -->
+  <rect x="20" y="20" width="760" height="460" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1"/>
+  <text x="36" y="44" fill="#ffffff" fill-opacity="0.5" font-family="monospace" font-size="11" letter-spacing="2.5">01 // ASHES OF VERIDIA</text>
+</svg>
