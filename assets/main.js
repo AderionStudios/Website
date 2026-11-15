@@ -31,12 +31,24 @@ const translations = {
     contactEyebrow:'BAĞLANTIDA KALALIM',contactTitle:'Güzel hikâyeler<br><em>birlikte başlar.</em>',
     contactIntro:'Bir fikrin, önerin ya da sadece söylemek istediğin bir şey mi var? Bir mesajla başlayabiliriz.',
     contactStatus:'YENİ HİKÂYELER İÇİN YOLDAYIZ',formEyebrow:'BİR MESAJ BIRAK',formName:'Adın',formEmail:'E-posta adresin',formMessage:'Mesajın',
-    formButton:'E-posta taslağı oluştur',formHint:'E-posta uygulaman açılır; göndermek için son onayı sen verirsin.',
+    formButton:'Mesajı gönder',
     footerRights:'Tüm hakları saklıdır.',backTop:'Yukarı dön',
-    copied:'Mesaj taslağın panoya kopyalandı. E-posta ile paylaşabilirsin.',mailDraft:'E-posta uygulaman açılıyor; gönderim için onay vermen gerekir.',
+    formSending:'Gönderiliyor…',formSent:'Mesajın stüdyoya iletildi! En kısa sürede dönüş yapacağız.',
+    formError:'Mesaj gönderilemedi. Lütfen daha sonra tekrar dene.',
+    formRateLimit:'Kısa sürede çok sayıda mesaj denendi. Bir süre sonra tekrar dene.',
+    formCopiedLocal:'Sunucu bağlantısı olmadan mesajın ve alıcı e-posta adresi panoya kopyalandı.',
+    copied:'Mesaj taslağın panoya kopyalandı. E-posta ile paylaşabilirsin.',
     copyFailed:'Kopyalama engellendi; açılan pencereden metni kopyalayabilirsin.',messageSubject:'Aderion Studios — İletişim',
     inviteLabel:'AYNI HİKÂYENİN PARÇASI OL',inviteTitle:'Bu dünyayı <em>birlikte</em> kuralım.',inviteIntro:'Hikâye anlatmayı, karakterlere hayat vermeyi veya oyun geliştirmeyi seviyorsan tanışalım.',inviteJoin:'Bize Katıl / Join Us',inviteMeet:'Ekibi tanı',
-    namePlaceholder:'Adın / Name',msgPlaceholder:'Bir merhaba de...',menuOpen:'Menüyü aç',menuClose:'Menüyü kapat',changeLang:'Dili İngilizce olarak değiştir',themeToDark:'Koyu moda geç',themeToLight:'Açık moda geç'
+    footerHome:'Ana sayfa',
+    vnBackLink:'Odak alanlarına dön',vnBannerTitle:'Her seçimin<br><em>bir izi var.</em>',vnBannerLead:'Karakterlerin yalnızca ekranda görünmediği; sesleri, suskunlukları ve kararlarınla hafızanda yer ettiği anlatı odaklı deneyimler.',vnBannerTags:'SEÇİMLER · KARAKTERLER · ATMOSFER',
+    vnOverviewLabel:'NEDEN VISUAL NOVEL?',vnOverviewTitle:'Sözcüklerin ve<br><em>suskunlukların</em> ritmi.',vnOverviewLead:'Bir visual novel bizim için yalnızca metin okumak değil; bir karakterin bakışında, duraksamasında ve verdiğin kararın ağırlığında yaşamaktır.',vnOverviewBody:'Aderion Studios’ta diyalogların doğallığına, sahne geçişlerinin temposuna ve oyuncuya gerçekten söz hakkı tanıyan dallanmalara odaklanıyoruz. Küçük bir kararın bile birkaç bölüm sonra bambaşka bir duyguyla geri dönmesini seviyoruz.',
+    vnPillarsLabel:'ÜÇ TEMEL DİREK',vnPillarOneTitle:'Seçimler & Dallanma',vnPillarOneDesc:'Yalnızca sonu değiştiren değil, karakterlerin sana bakışını ve sahnelerin tonunu şekillendiren anlamlı kararlar.',
+    vnPillarTwoTitle:'Karakter Odaklı Anlatı',vnPillarTwoDesc:'Kendi kusurları, mizahı ve kırılganlıklarıyla gerçek hissettiren, hikâye bittiğinde bile akılda kalan karakterler.',
+    vnPillarThreeTitle:'Sanat & Atmosfer',vnPillarThreeDesc:'Işık, renk paleti, ifade çizimleri ve ince ses tasarımıyla her sahnenin duygusunu derinleştiren görsel dünya.',
+    vnNoteLabel:'STÜDYO NOTU',vnNoteTitle:'Yaklaşımımız <em>gelişiyor.</em>',vnNoteText:'Visual Novel projemiz şu an konsept ve anlatı tasarımı aşamasında. Paylaşılan görseller, stüdyonun hedeflediği görsel tonu yansıtan referanslardır.',vnCtaJoin:'Bize Katıl',vnCtaBack:'Odak alanlarına dön',
+    namePlaceholder:'Adın / Name',msgPlaceholder:'Bir merhaba de...',menuOpen:'Menüyü aç',menuClose:'Menüyü kapat',changeLang:'Dili İngilizce olarak değiştir',themeToDark:'Koyu moda geç',themeToLight:'Açık moda geç',
+    lightboxDialog:'Görsel galerisi',lightboxClose:'Galeriyi kapat',lightboxPrev:'Önceki görsel',lightboxNext:'Sonraki görsel'
   },
   en: {
     navStudio:'Studio',navCredits:'Credits',navJoin:'Join Us',navFocus:'What we make',navVisuals:'Visual world',navContact:'Get in touch',
@@ -63,12 +75,24 @@ const translations = {
     contactEyebrow:'LET’S CONNECT',contactTitle:'Good stories<br><em>start together.</em>',
     contactIntro:'Have an idea, a suggestion, or simply something to say? It can all start with a message.',
     contactStatus:'NEW STORIES ARE ON THEIR WAY',formEyebrow:'LEAVE A MESSAGE',formName:'Your name',formEmail:'Email address',formMessage:'Your message',
-    formButton:'Create email draft',formHint:'Your email app will open; you confirm sending the message.',
+    formButton:'Send message',
     footerRights:'All rights reserved.',backTop:'Back to top',
-    copied:'Your message draft was copied. You can share it by email.',mailDraft:'Your email app is opening; please confirm before sending.',
+    formSending:'Sending…',formSent:'Your message has been sent to the studio! We will get back to you soon.',
+    formError:'Could not send message. Please try again later.',
+    formRateLimit:'Too many messages sent in a short time. Please try again soon.',
+    formCopiedLocal:'Without a PHP server, your message and recipient email were copied to the clipboard.',
+    copied:'Your message draft was copied. You can share it by email.',
     copyFailed:'Clipboard access was blocked; copy the text from the dialog.',messageSubject:'Aderion Studios — Contact',
     inviteLabel:'BE PART OF THE SAME STORY',inviteTitle:'Let’s build <em>together.</em>',inviteIntro:'If you love storytelling, bringing characters to life, or making games, we would love to meet you.',inviteJoin:'Join Us',inviteMeet:'Meet the team',
-    namePlaceholder:'Your name',msgPlaceholder:'Say hello...',menuOpen:'Open menu',menuClose:'Close menu',changeLang:'Dili Türkçe olarak değiştir',themeToDark:'Switch to dark mode',themeToLight:'Switch to light mode'
+    footerHome:'Home',
+    vnBackLink:'Back to focus areas',vnBannerTitle:'Every choice<br><em>leaves a trace.</em>',vnBannerLead:'Narrative-driven experiences where characters don’t just appear on screen—they stay in your memory through their voices, silences, and your decisions.',vnBannerTags:'CHOICES · CHARACTERS · ATMOSPHERE',
+    vnOverviewLabel:'WHY VISUAL NOVELS?',vnOverviewTitle:'The rhythm of words<br><em>and</em> silences.',vnOverviewLead:'To us, a visual novel is never just reading lines—it is living inside a character’s glance, a quiet pause, and the weight of a decision.',vnOverviewBody:'At Aderion Studios, we focus on natural dialogue, deliberate scene pacing, and branching paths that give players a genuine voice. Even a small choice should echo back chapters later with a completely different emotion.',
+    vnPillarsLabel:'THREE CORE PILLARS',vnPillarOneTitle:'Choices & Branching',vnPillarOneDesc:'Meaningful decisions that don’t just alter an ending, but reshape how characters see you and how scenes unfold.',
+    vnPillarTwoTitle:'Character-Driven Storytelling',vnPillarTwoDesc:'Characters with their own flaws, humor, and quiet vulnerabilities—people who feel real long after the credits roll.',
+    vnPillarThreeTitle:'Art & Atmosphere',vnPillarThreeDesc:'A visual world where lighting, color palette, expressive sprites, and subtle sound design deepen every scene.',
+    vnNoteLabel:'STUDIO NOTE',vnNoteTitle:'Our craft is <em>in motion.</em>',vnNoteText:'Our Visual Novel direction is currently in early concept and narrative design. The artwork shown reflects the visual mood and tone we are aiming for.',vnCtaJoin:'Join Us',vnCtaBack:'Back to focus areas',
+    namePlaceholder:'Your name',msgPlaceholder:'Say hello...',menuOpen:'Open menu',menuClose:'Close menu',changeLang:'Dili Türkçe olarak değiştir',themeToDark:'Switch to dark mode',themeToLight:'Switch to light mode',
+    lightboxDialog:'Image gallery',lightboxClose:'Close gallery',lightboxPrev:'Previous image',lightboxNext:'Next image'
   }
 };
 
@@ -102,8 +126,12 @@ const galleryTrack = document.querySelector('#galleryTrack');
 const galleryPrev = document.querySelector('#galleryPrev');
 const galleryNext = document.querySelector('#galleryNext');
 const galleryIndex = document.querySelector('#galleryIndex');
+const galleryTotal = document.querySelector('#galleryTotal');
 const toast = document.querySelector('#toast');
-const totalGalleryItems = galleryTrack?.querySelectorAll('.gallery-item').length || 0;
+const galleryItems = galleryTrack ? Array.from(galleryTrack.querySelectorAll('.gallery-item')) : [];
+const totalGalleryItems = galleryItems.length;
+const formatGalleryNumber = num => String(num).padStart(2, '0');
+if (galleryTotal) galleryTotal.textContent = formatGalleryNumber(totalGalleryItems);
 
 function setLanguage(language) {
   locale = language;
@@ -190,6 +218,209 @@ window.addEventListener('resize',updateGallery);
 window.addEventListener('load',updateGallery);
 updateGallery();
 
+if (galleryTrack && totalGalleryItems > 0) {
+  const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lightbox = document.createElement('div');
+  lightbox.className = 'lightbox';
+  lightbox.id = 'galleryLightbox';
+  lightbox.setAttribute('role', 'dialog');
+  lightbox.setAttribute('aria-modal', 'true');
+  lightbox.setAttribute('aria-hidden', 'true');
+  lightbox.innerHTML = `
+    <div class="lightbox-backdrop" data-lightbox-close></div>
+    <div class="lightbox-shell">
+      <div class="lightbox-topbar">
+        <div class="lightbox-counter" aria-live="polite">
+          <b id="lightboxCurrent">01</b><span>/</span><span id="lightboxTotal">${formatGalleryNumber(totalGalleryItems)}</span>
+        </div>
+        <button type="button" class="lightbox-close" id="lightboxClose" data-lightbox-close>×</button>
+      </div>
+      <div class="lightbox-stage">
+        <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev">←</button>
+        <figure class="lightbox-figure">
+          <div class="lightbox-media">
+            <img id="lightboxImg" src="" alt="">
+          </div>
+          <figcaption class="lightbox-caption">
+            <span class="lightbox-tag" id="lightboxTag"></span>
+            <span class="lightbox-title" id="lightboxTitle"></span>
+          </figcaption>
+        </figure>
+        <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext">→</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(lightbox);
+
+  const lightboxCurrent = lightbox.querySelector('#lightboxCurrent');
+  const lightboxCloseBtn = lightbox.querySelector('#lightboxClose');
+  const lightboxPrevBtn = lightbox.querySelector('#lightboxPrev');
+  const lightboxNextBtn = lightbox.querySelector('#lightboxNext');
+  const lightboxStage = lightbox.querySelector('.lightbox-stage');
+  const lightboxFigure = lightbox.querySelector('.lightbox-figure');
+  const lightboxImg = lightbox.querySelector('#lightboxImg');
+  const lightboxTag = lightbox.querySelector('#lightboxTag');
+  const lightboxTitle = lightbox.querySelector('#lightboxTitle');
+
+  let activeIndex = 0;
+  let isLightboxOpen = false;
+  let lastFocusedItem = null;
+  let slideAnimation = null;
+  let dragMoved = false;
+  let pointerStartX = 0;
+  let pointerStartY = 0;
+  let trackStartScrollLeft = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  function syncLightboxLabels() {
+    const dict = translations[locale];
+    lightbox.setAttribute('aria-label', dict.lightboxDialog);
+    lightboxCloseBtn.setAttribute('aria-label', dict.lightboxClose);
+    lightboxPrevBtn.setAttribute('aria-label', dict.lightboxPrev);
+    lightboxNextBtn.setAttribute('aria-label', dict.lightboxNext);
+  }
+
+  function renderLightboxItem(index, direction = 0) {
+    const item = galleryItems[index];
+    if (!item) return;
+    const img = item.querySelector('img');
+    const tag = item.querySelector('figcaption span:first-child')?.textContent?.trim() || '';
+    const title = item.querySelector('figcaption span:last-child')?.textContent?.trim() || '';
+
+    lightboxImg.src = img?.currentSrc || img?.getAttribute('src') || '';
+    lightboxImg.alt = img?.getAttribute('alt') || title;
+    lightboxTag.textContent = tag;
+    lightboxTitle.textContent = title;
+    lightboxCurrent.textContent = formatGalleryNumber(index + 1);
+
+    const disableNav = totalGalleryItems <= 1;
+    lightboxPrevBtn.disabled = disableNav;
+    lightboxNextBtn.disabled = disableNav;
+
+    if (direction !== 0 && !prefersReducedMotion() && typeof lightboxFigure.animate === 'function') {
+      slideAnimation?.cancel();
+      const offset = direction > 0 ? 34 : -34;
+      slideAnimation = lightboxFigure.animate(
+        [
+          { opacity: 0, transform: `translateX(${offset}px) scale(0.985)` },
+          { opacity: 1, transform: 'translateX(0) scale(1)' }
+        ],
+        { duration: 260, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+      );
+    }
+  }
+
+  function openLightbox(index) {
+    activeIndex = ((index % totalGalleryItems) + totalGalleryItems) % totalGalleryItems;
+    lastFocusedItem = galleryItems[activeIndex] || document.activeElement;
+    isLightboxOpen = true;
+    syncLightboxLabels();
+    renderLightboxItem(activeIndex, 0);
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lightbox-open');
+    lightboxCloseBtn.focus({ preventScroll: true });
+  }
+
+  function closeLightbox() {
+    if (!isLightboxOpen) return;
+    isLightboxOpen = false;
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lightbox-open');
+    if (lastFocusedItem && typeof lastFocusedItem.focus === 'function') {
+      lastFocusedItem.focus({ preventScroll: true });
+    }
+  }
+
+  function stepLightbox(direction) {
+    if (totalGalleryItems <= 1) return;
+    activeIndex = (activeIndex + direction + totalGalleryItems) % totalGalleryItems;
+    renderLightboxItem(activeIndex, direction);
+  }
+
+  galleryTrack.addEventListener('pointerdown', event => {
+    dragMoved = false;
+    pointerStartX = event.clientX;
+    pointerStartY = event.clientY;
+    trackStartScrollLeft = galleryTrack.scrollLeft;
+  });
+
+  galleryTrack.addEventListener('pointermove', event => {
+    if (
+      Math.abs(event.clientX - pointerStartX) > 6 ||
+      Math.abs(event.clientY - pointerStartY) > 6 ||
+      Math.abs(galleryTrack.scrollLeft - trackStartScrollLeft) > 6
+    ) {
+      dragMoved = true;
+    }
+  });
+
+  galleryItems.forEach((item, index) => {
+    item.setAttribute('tabindex', '0');
+    item.setAttribute('role', 'button');
+    item.setAttribute('aria-haspopup', 'dialog');
+
+    item.addEventListener('click', () => {
+      if (dragMoved) {
+        dragMoved = false;
+        return;
+      }
+      openLightbox(index);
+    });
+
+    item.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openLightbox(index);
+      }
+    });
+  });
+
+  lightboxPrevBtn.addEventListener('click', () => stepLightbox(-1));
+  lightboxNextBtn.addEventListener('click', () => stepLightbox(1));
+  lightbox.addEventListener('click', event => {
+    if (event.target.hasAttribute('data-lightbox-close') || event.target === lightboxStage || event.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  lightboxStage.addEventListener('touchstart', event => {
+    if (event.changedTouches.length !== 1) return;
+    touchStartX = event.changedTouches[0].clientX;
+    touchStartY = event.changedTouches[0].clientY;
+  }, { passive: true });
+
+  lightboxStage.addEventListener('touchend', event => {
+    if (!isLightboxOpen || event.changedTouches.length !== 1) return;
+    const dx = event.changedTouches[0].clientX - touchStartX;
+    const dy = event.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      stepLightbox(dx < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+
+  document.addEventListener('keydown', event => {
+    if (!isLightboxOpen) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeLightbox();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      stepLightbox(-1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      stepLightbox(1);
+    }
+  });
+
+  document.addEventListener('aderion:language', () => {
+    syncLightboxLabels();
+    if (isLightboxOpen) renderLightboxItem(activeIndex, 0);
+  });
+}
+
 let toastTimeout;
 function showToast(message){
   toast.textContent=message;
@@ -217,20 +448,83 @@ document.querySelector('#contactForm')?.addEventListener('submit',async event=>{
   const email=form.elements.email.value.trim();
   const message=form.elements.message.value.trim();
   if(!name||!email||!message)return;
-  const draft=`${translations[locale].messageSubject}\n\n${message}\n\n${name}\n${email}`;
+  const dict=translations[locale];
   const status=document.querySelector('#formStatus');
-  if(CONTACT_EMAIL.trim()){
-    const subject=encodeURIComponent(translations[locale].messageSubject);
-    const body=encodeURIComponent(`${message}\n\n${name}\n${email}`);
-    window.location.href=`mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-    status.textContent=translations[locale].mailDraft;
-    showToast(translations[locale].mailDraft);
-  } else if(await copyText(draft)){
-    status.textContent=translations[locale].copied;
-    showToast(translations[locale].copied);
-  } else {
-    status.textContent=translations[locale].copyFailed;
-    window.prompt(translations[locale].copyFailed,draft);
+  const submitBtn=form.querySelector('[type="submit"]');
+  const submitText=submitBtn?.querySelector('span[data-t="formButton"]');
+  const clipboardText=`To: ${CONTACT_EMAIL}\nSubject: ${dict.messageSubject}\n\n${message}\n\n${name}\n${email}`;
+
+  async function copyFallback(){
+    if(await copyText(clipboardText)){
+      if(status) status.textContent=dict.formCopiedLocal;
+      showToast(dict.formCopiedLocal);
+    } else {
+      if(status) status.textContent=dict.copyFailed;
+      window.prompt(dict.copyFailed,clipboardText);
+    }
+  }
+
+  if(submitBtn){
+    submitBtn.disabled=true;
+    submitBtn.setAttribute('aria-busy','true');
+    if(submitText) submitText.textContent=dict.formSending;
+  }
+  if(status) status.textContent=dict.formSending;
+
+  try{
+    if(location.protocol==='file:'){
+      await copyFallback();
+      return;
+    }
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),15000);
+    let res;
+    try{
+      res=await fetch('api/contact.php',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({name,email,message}),
+        signal:controller.signal
+      });
+    }finally{
+      clearTimeout(timeout);
+    }
+
+    if(res.status===404||res.status===405||res.status===501){
+      await copyFallback();
+      return;
+    }
+
+    let data=null;
+    try{data=await res.json();}catch(_){}
+
+    if(!data){
+      await copyFallback();
+      return;
+    }
+
+    if(res.ok&&data.ok){
+      form.reset();
+      const successMsg=(locale==='tr'&&data.message)?data.message:dict.formSent;
+      if(status) status.textContent=successMsg;
+      showToast(successMsg);
+    }else if(res.status===429){
+      const rateMsg=(locale==='tr'&&data.message)?data.message:dict.formRateLimit;
+      if(status) status.textContent=rateMsg;
+      showToast(rateMsg);
+    }else{
+      const errMsg=(locale==='tr'&&data.message)?data.message:dict.formError;
+      if(status) status.textContent=errMsg;
+      showToast(errMsg);
+    }
+  }catch(_){
+    await copyFallback();
+  }finally{
+    if(submitBtn){
+      submitBtn.disabled=false;
+      submitBtn.removeAttribute('aria-busy');
+      if(submitText) submitText.textContent=translations[locale].formButton;
+    }
   }
 });
 document.querySelectorAll('.footer-year, #footerYear').forEach(el=>el.textContent=new Date().getFullYear());

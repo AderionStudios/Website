@@ -105,12 +105,12 @@
         </div>
 
         <div class="focus-cards">
-          <article class="genre-card genre-novel reveal">
+          <a class="genre-card genre-novel reveal" href="visual-novel.html" aria-label="Visual Novel">
             <img class="genre-img" src="assets/images/vn-moment.webp" loading="lazy" alt="Anime tarzında iki karakterin neşeli, duygusal bir anı">
             <div class="genre-scrim" aria-hidden="true"></div>
             <div class="genre-top"><span>01 <span class="genre-dash">—</span> NARRATIVE</span><span class="genre-top-icon" aria-hidden="true">↗</span></div>
             <div class="genre-bottom"><span class="genre-tag" data-t="novelTag">SEÇİMLER · KARAKTERLER · DUYGULAR</span><h3>Visual Novel</h3><p data-t="novelDescription">Her seçimin başka bir his bıraktığı, karakterlerin hafızada yer ettiği hikâyeler.</p></div>
-          </article>
+          </a>
           <div class="genre-side">
             <article class="genre-card genre-voxel reveal">
               <div class="voxel-art" aria-hidden="true">
@@ -166,7 +166,7 @@
           <figure class="gallery-item"><div class="gallery-image"><img src="assets/images/mood-standing.webp" loading="lazy" alt="Açık fonda üniformalı gümüş saçlı anime karakteri"></div><figcaption><span>05 / COMPOSITION</span><span data-t="galleryFive">Sade kompozisyon</span></figcaption></figure>
         </div>
       </div>
-      <div class="container gallery-bottom"><span data-t="visualsCaption">GÖRSEL REFERANSLAR / PROJE GÖRSELLERİ DEĞİLDİR</span><span class="gallery-count"><b id="galleryIndex">01</b> / 05</span></div>
+      <div class="container gallery-bottom"><span data-t="visualsCaption">GÖRSEL REFERANSLAR / PROJE GÖRSELLERİ DEĞİLDİR</span><span class="gallery-count"><b id="galleryIndex">01</b> / <span id="galleryTotal">05</span></span></div>
     </section>
 
     <section class="invite-strip section-pad" id="community">
@@ -186,8 +186,7 @@
             <label for="contactName" data-t="formName">Adın</label><input id="contactName" name="name" type="text" maxlength="100" required placeholder="Adın / Name" autocomplete="name">
             <label for="contactEmail" data-t="formEmail">E-posta adresin</label><input id="contactEmail" name="email" type="email" maxlength="180" required placeholder="mail@example.com" autocomplete="email">
             <label for="contactMessage" data-t="formMessage">Mesajın</label><textarea id="contactMessage" name="message" rows="4" maxlength="3000" required placeholder="Bir merhaba de..."></textarea>
-            <button type="submit" class="btn form-submit"><span data-t="formButton">Mesaj taslağını hazırla</span><span aria-hidden="true">↗</span></button>
-            <p class="form-hint" data-t="formHint">Bu demo, mesajını cihazında e-posta taslağına dönüştürür veya kopyalar; doğrudan gönderim yapmaz.</p>
+            <button type="submit" class="btn form-submit"><span data-t="formButton">Mesajı gönder</span><span aria-hidden="true">↗</span></button>
             <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
           </form>
         </div>
