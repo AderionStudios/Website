@@ -1,382 +1,200 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ADERION STUDIO — Bağımsız Oyun Stüdyosu</title>
-  <meta name="description" content="Aderion Studio; anlatı odaklı atmosferi hassas mühendislikle buluşturan bağımsız oyunlar tasarlar. Modern oyun portalı ve stüdyo platformu.">
-  <meta name="theme-color" content="#F2DDCD">
-
-  <meta property="og:title" content="ADERION STUDIO — Bağımsız Oyun Stüdyosu">
-  <meta property="og:description" content="Farklı disiplinler. Ortak bir oyun dünyası. Anlatı odaklı atmosferi hassas mühendislikle buluşturan bağımsız oyunlar tasarlıyoruz.">
-  <meta property="og:image" content="https://flaouve.dev/assets/img/team/logo-full.png">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://flaouve.dev/index.html">
-  <meta property="og:site_name" content="Aderion Studio">
-  <meta property="og:locale" content="tr_TR">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="ADERION STUDIO — Bağımsız Oyun Stüdyosu">
-  <meta name="twitter:description" content="Farklı disiplinler. Ortak bir oyun dünyası. Gizemli görsel roman yapımlarımız ve stüdyo projelerimizi keşfedin.">
-  <meta name="twitter:image" content="https://flaouve.dev/assets/img/team/logo-full.png">
-
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/team/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/team/favicon-16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/team/apple-touch-icon.png">
-  <link rel="icon" type="image/svg+xml" href="assets/img/team/logo-mark.svg">
-  <link rel="stylesheet" href="assets/css/variables.css">
-  <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="stylesheet" href="assets/css/responsive.css">
-  <link rel="stylesheet" href="assets/css/theme.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f8fc">
+  <meta name="description" content="Aderion Studios — Visual Novel, Voxel ve hikâye odaklı 2D oyun dünyaları kurmak üzere yola çıkan bağımsız oyun stüdyosu.">
+  <meta property="og:title" content="Aderion Studios — Hikâyelerin içine doğru">
+  <meta property="og:description" content="Visual Novel, Voxel ve hikâye odaklı 2D oyunlar. Küçük bir kıvılcımla başlayan dünyalar.">
+  <title>Aderion Studios — Hikâyelerin İçine Doğru</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+  <script src="assets/theme-init.js"></script><link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/main.js" defer></script>
 </head>
-<body>
-  <!-- Atmosferik Işık Küreleri -->
-  <div class="theme-atmosphere" aria-hidden="true">
-    <div class="theme-glow-orb theme-orb-top"></div>
-    <div class="theme-glow-orb theme-orb-right"></div>
-    <div class="theme-glow-orb theme-orb-bottom"></div>
-  </div>
+<body data-page="home">
+  <a class="skip-link" href="#main">İçeriğe geç</a>
+  <div class="page-progress" aria-hidden="true"><div id="progressBar"></div></div>
 
-  <!-- Yüzen Şık Navbar -->
-  <header class="site-header">
-    <div class="header-inner">
-      <a href="index.html" class="brand-pill" aria-current="page">
-        <img src="assets/img/team/logo-mark.svg" alt="Aderion Studio Logo" class="brand-logo" width="26" height="26">
-        <span class="brand-name" data-i18n="nav.studio_name">ADERION STUDIO</span>
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-shell">
+      <a class="brand" href="#top" aria-label="Aderion Studios ana sayfa">
+        <img class="brand-mark brand-mark-image" src="assets/images/aderion-logo.png" alt="Aderion Studios logo" width="46" height="46">
+        <span class="brand-copy"><strong>ADERION</strong><small>STUDIOS<span class="brand-period">.</span></small></span>
       </a>
 
-      <button
-        type="button"
-        class="menu-toggle"
-        data-menu-toggle
-        aria-expanded="false"
-        aria-controls="nav-drawer"
-        data-i18n-aria="nav.menu_toggle"
-        aria-label="Menüyü aç/kapat"
-      >☰</button>
-
-      <nav id="nav-drawer" class="site-nav" data-nav-drawer aria-label="Ana gezinme">
-        <div class="nav-links">
-          <a href="#about" class="nav-link" data-i18n="nav.about">HAKKIMIZDA</a>
-          <a href="credit.html" class="nav-link" data-i18n="nav.credit">CREDIT</a>
-        </div>
-        <button
-          type="button"
-          class="theme-switch"
-          data-theme-toggle
-          data-i18n-aria="nav.theme_toggle"
-          aria-label="Karanlık temaya geç"
-          title="Temayı Değiştir (Açık / Koyu)"
-        >
-          <span class="theme-icon" data-theme-icon aria-hidden="true">🌙</span>
-        </button>
-        <button
-          type="button"
-          class="lang-switch"
-          data-lang-toggle
-          data-i18n-aria="nav.lang_label"
-          aria-label="Dili değiştir"
-        >
-          <span data-lang-opt="tr">TR</span>
-          <span style="opacity: 0.4;">/</span>
-          <span data-lang-opt="en">EN</span>
-        </button>
-        <a href="games.html" class="cta-pill" data-i18n="nav.cta_projects">PROJELERİMİZİ GÖRÜN ↗</a>
+      <nav class="desktop-nav" aria-label="Ana menü">
+        <a href="studio.html" data-t="navStudio">Stüdyo</a>
+        <a href="#focus" data-t="navFocus">Neler yapıyoruz?</a>
+        <a href="#visuals" data-t="navVisuals">Görsel dünya</a>
+        <a href="credits.html" data-t="navCredits">Ekip</a>
+        <a href="join.html" data-t="navJoin">Bize katıl</a>
       </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Koyu moda geç" aria-pressed="false" title="Koyu moda geç"><svg class="theme-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 14.1A8.5 8.5 0 0 1 9.9 3.4 8.5 8.5 0 1 0 20.6 14.1Z"/></svg><svg class="theme-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button><button class="lang-btn" id="langBtn" type="button" aria-label="Dili İngilizce olarak değiştir" title="Language / Dil">EN <span aria-hidden="true">↗</span></button>
+        <a class="nav-contact" href="#contact"><span data-t="navContact">İletişim</span><span aria-hidden="true">↗</span></a>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-controls="mobileMenu" aria-expanded="false" aria-label="Menüyü aç">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
+    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobil menü" inert>
+      <a href="studio.html" data-t="navStudio">Stüdyo</a>
+      <a href="#focus" data-t="navFocus">Neler yapıyoruz?</a>
+      <a href="#visuals" data-t="navVisuals">Görsel dünya</a>
+      <a href="credits.html" data-t="navCredits">Ekip</a>
+      <a href="join.html" data-t="navJoin">Bize katıl</a>
+      <a href="#contact" data-t="navContact">İletişim</a>
+      <p>ADERION STUDIOS · INDEPENDENT GAME STUDIO</p>
+    </nav>
   </header>
 
-  <main id="main-content">
-    <!-- Hero Bölümü -->
-    <section class="hero-section">
-      <div class="hero-grid">
-        <!-- Sol: Manifesto ve Aksiyonlar -->
-        <article class="hero-manifesto">
-          <div class="theme-hero-pill-badge">
-            <span class="theme-pulse-indicator"></span>
-            <span data-i18n="hero.eyebrow">BAĞIMSIZ OYUN STÜDYOSU / 2026</span>
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
+      <div class="container hero-layout">
+        <div class="hero-content">
+          <div class="eyebrow hero-eyebrow"><span class="eyebrow-line"></span><span data-t="heroEyebrow">BAĞIMSIZ OYUN STÜDYOSU</span><span class="eyebrow-dot"></span><span>EST. 2026</span></div>
+          <h1 data-t-html="heroTitle">Hikâyelerin<br><span class="headline-nowrap">içine <em>doğru.</em></span></h1>
+          <p class="hero-lead" data-t="heroLead">Bazen bir karakter, bazen küçücük bir seçim... Biz, uzun süre akılda kalan oyun dünyaları kurmak için yola çıktık.</p>
+          <div class="hero-cta-row">
+            <a class="btn btn-dark" href="#focus"><span data-t="heroButton">Dünyamızı keşfet</span><span class="btn-arrow" aria-hidden="true">↗</span></a>
+            <a class="text-link" href="studio.html"><span data-t="heroSecondary">Bizi tanı</span><span aria-hidden="true">→</span></a>
           </div>
-
-          <h1 class="hero-title">
-            <span class="title-fill" data-i18n="hero.title_fill">AYNI DEĞİLİZ.</span><br>
-            <span class="title-stroke" data-i18n="hero.title_stroke">BİRLİKTEYİZ.</span>
-          </h1>
-
-          <p class="hero-description" data-i18n="hero.description">
-            Farklı disiplinler. Ortak bir oyun dünyası. Anlatı odaklı atmosferi hassas mühendislikle buluşturan bağımsız oyunlar tasarlıyoruz.
-          </p>
-
-          <div class="hero-actions">
-            <button
-              type="button"
-              class="btn-primary"
-              data-trailer-trigger="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?rel=0"
-              data-i18n="hero.cta_trailer"
-            >FRAGMANI İZLE</button>
-            <a href="games.html" class="btn-secondary" data-i18n="hero.cta_catalog">OYUN KATALOĞU ↗</a>
-          </div>
-        </article>
-
-        <!-- Sağ: Hero Showcase Kartı -->
-        <figure class="hero-artwork">
-          <div class="theme-artwork-wrapper">
-            <div class="theme-art-tags-top">
-              <span class="theme-chip-featured" data-lang-tr="ÖNE ÇIKAN YAPIM" data-lang-en="FEATURED PRODUCTION">ÖNE ÇIKAN YAPIM</span>
-              <span class="theme-chip-platform" data-lang-tr="PC &amp; KONSOL" data-lang-en="PC &amp; CONSOLE">PC &amp; KONSOL</span>
-            </div>
-
-            <img
-              src="assets/img/hero/game-redacted.webp"
-              alt="[REDACTED] — Gizemli Görsel Roman Vitrini"
-              width="1199"
-              height="1312"
-              decoding="async"
-            >
-
-            <figcaption class="artwork-caption">
-              <span class="artwork-tag" data-lang-tr="ÖNE ÇIKAN GÖRSEL ROMAN" data-lang-en="FEATURED VISUAL NOVEL">ÖNE ÇIKAN GÖRSEL ROMAN</span>
-              <strong class="artwork-title" data-i18n="hero.featured_title">[REDACTED]</strong>
-              <span class="artwork-meta" data-i18n="hero.featured_meta">Gizemli Görsel Roman (Visual Novel) — Geliştirme Aşamasında</span>
-            </figcaption>
-          </div>
-        </figure>
-      </div>
-    </section>
-
-    <!-- Platform & Özellik Rozetleri Şeridi -->
-    <section class="theme-platforms-section" aria-label="Desteklenen Teknolojiler">
-      <div class="theme-platforms-bar">
-        <span class="theme-platform-badge" data-lang-tr="🎮 STEAM &amp; PC" data-lang-en="🎮 STEAM &amp; PC">🎮 STEAM &amp; PC</span>
-        <span class="theme-platform-badge" data-lang-tr="⚡ UNITY 6.3 LTS &amp; REN'PY" data-lang-en="⚡ UNITY 6.3 LTS &amp; REN'PY">⚡ UNITY 6.3 LTS &amp; REN'PY</span>
-        <span class="theme-platform-badge" data-lang-tr="📖 GÖRSEL ROMAN (VISUAL NOVEL)" data-lang-en="📖 VISUAL NOVEL">📖 GÖRSEL ROMAN (VISUAL NOVEL)</span>
-        <span class="theme-platform-badge" data-lang-tr="📜 ZENGİN ANLATI" data-lang-en="📜 RICH NARRATIVE">📜 ZENGİN ANLATI</span>
-        <span class="theme-platform-badge" data-lang-tr="🎧 ÖZGÜN SES &amp; MÜZİK" data-lang-en="🎧 BESPOKE AUDIO &amp; OST">🎧 ÖZGÜN SES &amp; MÜZİK</span>
-        <span class="theme-platform-badge" data-lang-tr="🌐 TOPLULUK ODAKLI" data-lang-en="🌐 COMMUNITY DRIVEN">🌐 TOPLULUK ODAKLI</span>
-      </div>
-    </section>
-
-    <!-- Bento Grid Bölümü (Core Pillars Asimetrik Izgara) -->
-    <section class="theme-bento-section">
-      <div class="theme-section-intro">
-        <div class="theme-hero-pill-badge">
-          <span>💎</span>
-          <span data-lang-tr="STÜDYOMUZUN TEMEL SÜTUNLARI" data-lang-en="OUR STUDIO PILLARS">STÜDYOMUZUN TEMEL SÜTUNLARI</span>
+          <div class="hero-badges" aria-label="Odak alanlarımız"><span>VISUAL NOVEL</span><span>VOXEL</span><span>2D STORIES</span></div>
         </div>
-        <h2 class="theme-section-title" data-lang-tr="Hayal Gücünü Gerçeğe Dönüştüren Disiplinler" data-lang-en="Disciplines Bringing Vision to Life">
-          Hayal Gücünü Gerçeğe Dönüştüren Disiplinler
-        </h2>
-        <p class="theme-section-subtitle" data-lang-tr="Aderion Studio, bağımsız oyun üretimini dört ana uzmanlık odağında kusursuzlaştırır." data-lang-en="Aderion Studio crafts independent game worlds across four core disciplines.">
-          Aderion Studio, bağımsız oyun üretimini dört ana uzmanlık odağında kusursuzlaştırır.
-        </p>
+        <div class="hero-media" aria-label="Anime illüstrasyonu">
+          <div class="hero-media-glow" aria-hidden="true"></div>
+          <div class="hero-image-wrap">
+            <img src="assets/images/hero.webp" alt="Gümüş saçlı anime karakterinin pastel tonlarda illüstrasyonu" fetchpriority="high">
+          </div>
+          <div class="hero-media-caption"><span class="caption-corner" aria-hidden="true">✳</span><span>AN ARTISTIC POINT OF VIEW <span class="slash">/</span> 001</span></div>
+          <div class="hero-paper-stamp" aria-hidden="true"><span>WE LOVE</span><b>STORIES</b><span>↗</span></div>
+        </div>
       </div>
+      <div class="container hero-bottom"><span data-t="heroBottom">DUYGUSU OLAN DÜNYALAR TASARLIYORUZ.</span><span class="hero-bottom-right">SCROLL TO EXPLORE <span>↓</span></span></div>
+    </section>
 
-      <div class="theme-bento-grid">
-        <!-- Bento 1 (Geniş 7 Kolon) -->
-        <article class="theme-bento-card theme-bento-card-wide-left">
-          <div class="theme-bento-header">
-            <span class="theme-bento-num-chip" data-lang-tr="ANLATI &amp; DÜNYA" data-lang-en="NARRATIVE &amp; LORE">ANLATI &amp; DÜNYA</span>
-            <span class="theme-bento-icon" aria-hidden="true">📖</span>
-          </div>
-          <div class="theme-bento-body">
-            <h3 class="theme-bento-title" data-i18n="strip.col1_title">Anlatı &amp; Dünya İnşası</h3>
-            <p class="theme-bento-desc" data-i18n="strip.col1_desc">
-              Çatallanan hikayeler, çevresel anlatım ve yaşayan mitolojiler.
-            </p>
-          </div>
-          <div class="theme-bento-footer">
-            <a href="games.html" class="theme-bento-action-pill" data-lang-tr="Detaylı Keşfet ↗" data-lang-en="Explore More ↗">Detaylı Keşfet ↗</a>
-          </div>
-        </article>
-
-        <!-- Bento 2 (5 Kolon) -->
-        <article class="theme-bento-card theme-bento-card-right">
-          <div class="theme-bento-header">
-            <span class="theme-bento-num-chip" data-lang-tr="GÖRSEL SANAT" data-lang-en="VISUAL ART">GÖRSEL SANAT</span>
-            <span class="theme-bento-icon" aria-hidden="true">🎨</span>
-          </div>
-          <div class="theme-bento-body">
-            <h3 class="theme-bento-title" data-i18n="strip.col2_title">Editoryal &amp; Sinematik Atmosfer</h3>
-            <p class="theme-bento-desc" data-i18n="strip.col2_desc">
-              Yüksek kontrastlı ışık, el işçiliği konseptler ve özgün ses tasarımı.
-            </p>
-          </div>
-          <div class="theme-bento-footer">
-            <a href="games.html" class="theme-bento-action-pill" data-lang-tr="Sanat Galerisi ↗" data-lang-en="Art Gallery ↗">Sanat Galerisi ↗</a>
-          </div>
-        </article>
-
-        <!-- Bento 3 (6 Kolon) -->
-        <article class="theme-bento-card theme-bento-card-half">
-          <div class="theme-bento-header">
-            <span class="theme-bento-num-chip" data-lang-tr="MÜHENDİSLİK" data-lang-en="ENGINEERING">MÜHENDİSLİK</span>
-            <span class="theme-bento-icon" aria-hidden="true">⚙️</span>
-          </div>
-          <div class="theme-bento-body">
-            <h3 class="theme-bento-title" data-i18n="strip.col3_title">Özel Sistemler &amp; Performans</h3>
-            <p class="theme-bento-desc" data-i18n="strip.col3_desc">
-              Akıcı kare hızları, modüler araçlar ve duyarlı oynanış mekanikleri.
-            </p>
-          </div>
-          <div class="theme-bento-footer">
-            <a href="games.html" class="theme-bento-action-pill" data-lang-tr="Teknoloji &amp; Araçlar ↗" data-lang-en="Tech &amp; Systems ↗">Teknoloji &amp; Araçlar ↗</a>
-          </div>
-        </article>
-
-        <!-- Bento 4 (6 Kolon) -->
-        <article class="theme-bento-card theme-bento-card-half">
-          <div class="theme-bento-header">
-            <span class="theme-bento-num-chip" data-lang-tr="STÜDYO EKİBİ" data-lang-en="STUDIO TEAM">STÜDYO EKİBİ</span>
-            <span class="theme-bento-icon" aria-hidden="true">👥</span>
-          </div>
-          <div class="theme-bento-body">
-            <h3 class="theme-bento-title" data-i18n="strip.col4_title">Aderion Çekirdek Kadro, Tek Vizyon</h3>
-            <p class="theme-bento-desc" data-i18n="strip.col4_desc">
-              Bağımsız, şeffaf ve oyuncu odaklı stüdyo üretimi.
-            </p>
-          </div>
-          <div class="theme-bento-footer">
-            <a href="credit.html" class="theme-bento-action-pill" data-lang-tr="Ekip Künyesi ↗" data-lang-en="Studio Credits ↗">Ekip Künyesi ↗</a>
-          </div>
-        </article>
+    <section class="studio section-pad" id="studio">
+      <div class="container studio-grid">
+        <div class="section-heading reveal">
+          <div class="eyebrow"><span class="section-index">01 /</span><span data-t="studioEyebrow">KİMİZ?</span></div>
+          <h2 data-t-html="studioTitle">Biraz hayal gücü.<br>Biraz <em>merak.</em><br>Bolca hikâye.</h2>
+        </div>
+        <div class="studio-text reveal">
+          <div class="mini-cross" aria-hidden="true">✳</div>
+          <p class="large-copy" data-t="studioText">Aderion Studios, oyuncunun yalnızca izleyici değil, hikâyenin bir parçası olduğu deneyimler üretme fikriyle yola çıkan bağımsız bir oyun stüdyosu.</p>
+          <p class="muted-copy" data-t="studioSub">Henüz yolun başındayız. Karakterleri, atmosferi ve küçük detayları önemseyen Visual Novel, Voxel ve 2D hikâye odaklı oyunlar geliştirmeyi hedefliyoruz.</p>
+          <a class="underlined-link" href="studio.html"><span data-t="studioMore">Yaklaşımımızı öğren</span><span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </section>
 
-    <!-- Tek ve Birleşik Topluluk & Sosyal Kanallar Bölümü -->
-    <section id="about" class="editorial-section">
+    <section class="focus section-pad" id="focus">
       <div class="container">
-        <div class="theme-section-intro">
-          <div class="theme-hero-pill-badge">
-            <span>🌐</span>
-            <span data-lang-tr="RESMİ TOPLULUK &amp; SOSYAL KANALLAR" data-lang-en="OFFICIAL COMMUNITY &amp; SOCIAL CHANNELS">RESMİ TOPLULUK &amp; SOSYAL KANALLAR</span>
+        <div class="focus-heading reveal">
+          <div>
+            <div class="eyebrow"><span class="section-index">02 /</span><span data-t="focusEyebrow">NELERE ODAKLANIYORUZ?</span></div>
+            <h2 data-t-html="focusTitle">Üç farklı yol.<br><em>Tek bir tutku.</em></h2>
           </div>
-          <h2 class="theme-section-title" data-lang-tr="Aderion Studios Topluluğuna Katılın" data-lang-en="Join the Aderion Studios Community">
-            Aderion Studios Topluluğuna Katılın
-          </h2>
-          <p class="theme-section-subtitle" data-lang-tr="Oyunlarımız, duyurularımız ve stüdyomuz hakkındaki her şeye doğrudan ulaşabileceğiniz resmi kanallarımız." data-lang-en="Connect with our studio, follow game reveals, and join the conversation across our official platforms.">
-            Oyunlarımız, duyurularımız ve stüdyomuz hakkındaki her şeye doğrudan ulaşabileceğiniz resmi kanallarımız.
-          </p>
+          <p data-t="focusIntro">Birbirinden farklı görünebilirler, ama hepsinin merkezinde aynı şey var: oyuncunun içinde kaybolmak isteyeceği bir dünya.</p>
         </div>
 
-        <div class="social-grid">
-          <a href="https://www.youtube.com/@AderionStudios" target="_blank" rel="noopener noreferrer" class="social-card" data-platform="youtube" title="Aderion Studios YouTube Kanalı">
-            <div class="theme-social-card-top">
-              <div class="theme-social-avatar" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        <div class="focus-cards">
+          <article class="genre-card genre-novel reveal">
+            <img class="genre-img" src="assets/images/vn-moment.webp" loading="lazy" alt="Anime tarzında iki karakterin neşeli, duygusal bir anı">
+            <div class="genre-scrim" aria-hidden="true"></div>
+            <div class="genre-top"><span>01 <span class="genre-dash">—</span> NARRATIVE</span><span class="genre-top-icon" aria-hidden="true">↗</span></div>
+            <div class="genre-bottom"><span class="genre-tag" data-t="novelTag">SEÇİMLER · KARAKTERLER · DUYGULAR</span><h3>Visual Novel</h3><p data-t="novelDescription">Her seçimin başka bir his bıraktığı, karakterlerin hafızada yer ettiği hikâyeler.</p></div>
+          </article>
+          <div class="genre-side">
+            <article class="genre-card genre-voxel reveal">
+              <div class="voxel-art" aria-hidden="true">
+                <svg viewBox="0 0 500 290" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+                  <defs><pattern id="tinyGrid" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M22 0H0V22" fill="none" stroke="#a8b4d1" stroke-width=".7" opacity=".42"/></pattern></defs>
+                  <rect width="500" height="290" fill="url(#tinyGrid)" opacity=".45"/>
+                  <g transform="translate(87,2)">
+                    <g transform="translate(0,84)"><path d="m75 66 90-47 90 47-90 47Z" fill="#dae7fa"/><path d="m75 66 90 47v62l-90-48Z" fill="#a1b7d8"/><path d="m165 113 90-47v61l-90 48Z" fill="#7999c5"/></g>
+                    <g transform="translate(20,50)"><path d="m75 66 90-47 90 47-90 47Z" fill="#f2f6ff"/><path d="m75 66 90 47v62l-90-48Z" fill="#b3c9ea"/><path d="m165 113 90-47v61l-90 48Z" fill="#8faed5"/></g>
+                    <g transform="translate(40,16)"><path d="m75 66 90-47 90 47-90 47Z" fill="#e1ecff"/><path d="m75 66 90 47v62l-90-48Z" fill="#90add5"/><path d="m165 113 90-47v61l-90 48Z" fill="#668abd"/></g>
+                    <g transform="translate(131,54)"><path d="m75 66 48-25 48 25-48 25Z" fill="#f7e6cf"/><path d="m75 66 48 25v34l-48-25Z" fill="#d8bda0"/><path d="m123 91 48-25v34l-48 25Z" fill="#bc9d89"/></g>
+                  </g>
+                  <path d="m61 85 8-8m-8 0 8 8M420 28l9-9m-9 0 9 9" stroke="#6e8cbd" stroke-width="1.5" opacity=".7"/>
+                </svg>
               </div>
-              <span class="theme-social-arrow" aria-hidden="true">↗</span>
-            </div>
-            <div class="social-card-inner">
-              <span class="social-platform">YOUTUBE</span>
-              <strong class="social-handle">@AderionStudios</strong>
-              <span class="social-desc" data-lang-tr="Resmi oyun fragmanları, oynanış videoları ve içerikler" data-lang-en="Official game trailers, gameplay showcases, and video content">
-                Resmi oyun fragmanları, oynanış videoları ve içerikler
-              </span>
-              <span class="theme-social-action-tag" data-lang-tr="Kanala Git ↗" data-lang-en="Visit Channel ↗">Kanala Git ↗</span>
-            </div>
-          </a>
+              <div class="genre-top"><span>02 <span class="genre-dash">—</span> EXPLORATION</span><span class="genre-top-icon" aria-hidden="true">↗</span></div>
+              <div class="genre-bottom"><h3>Voxel <span>Worlds</span></h3><p data-t="voxelDescription">Küçük bloklardan büyük keşiflere açılan, kendine özgü dünyalar.</p></div>
+            </article>
+            <article class="genre-card genre-story reveal">
+              <img class="genre-img" src="assets/images/story-scene.webp" loading="lazy" alt="Mavi ve mor ışıklarla çevrelenmiş anime karakteri">
+              <div class="genre-scrim" aria-hidden="true"></div>
+              <div class="genre-top"><span>03 <span class="genre-dash">—</span> ATMOSPHERE</span><span class="genre-top-icon" aria-hidden="true">↗</span></div>
+              <div class="genre-bottom"><h3>2D <span data-t="storyHeading">Hikâyeler</span></h3><p data-t="storyDescription">Atmosferi ve oynanışı birbirine bağlayan iki boyutlu maceralar.</p></div>
+            </article>
+          </div>
+        </div>
+        <p class="focus-disclaimer" data-t="focusNote">* Bu bölümdeki çizimler oyun ekran görüntüsü değil, stüdyonun görsel yönünü anlatan referanslardır.</p>
+      </div>
+    </section>
 
-          <a href="https://x.com/aderionstudios" target="_blank" rel="noopener noreferrer" class="social-card" data-platform="x" title="Aderion Studios X (Twitter) Hesabı">
-            <div class="theme-social-card-top">
-              <div class="theme-social-avatar" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              </div>
-              <span class="theme-social-arrow" aria-hidden="true">↗</span>
-            </div>
-            <div class="social-card-inner">
-              <span class="social-platform">X (TWITTER)</span>
-              <strong class="social-handle">@aderionstudios</strong>
-              <span class="social-desc" data-lang-tr="Anlık haberler, stüdyo duyuruları ve güncellemeler" data-lang-en="Instant news, studio announcements, and quick updates">
-                Anlık haberler, stüdyo duyuruları ve güncellemeler
-              </span>
-              <span class="theme-social-action-tag" data-lang-tr="Takip Et ↗" data-lang-en="Follow ↗">Takip Et ↗</span>
-            </div>
-          </a>
-
-          <a href="https://www.instagram.com/aderionstudios/" target="_blank" rel="noopener noreferrer" class="social-card" data-platform="instagram" title="Aderion Studios Instagram Sayfası">
-            <div class="theme-social-card-top">
-              <div class="theme-social-avatar" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-              </div>
-              <span class="theme-social-arrow" aria-hidden="true">↗</span>
-            </div>
-            <div class="social-card-inner">
-              <span class="social-platform">INSTAGRAM</span>
-              <strong class="social-handle">@aderionstudios</strong>
-              <span class="social-desc" data-lang-tr="Konsept çizimler, görsel sanat ve stüdyo paylaşımları" data-lang-en="Concept art, visual development, and behind-the-scenes glimpses">
-                Konsept çizimler, görsel sanat ve stüdyo paylaşımları
-              </span>
-              <span class="theme-social-action-tag" data-lang-tr="Göz At ↗" data-lang-en="View Profile ↗">Göz At ↗</span>
-            </div>
-          </a>
-
-          <a href="https://www.reddit.com/r/AderionStudios/" target="_blank" rel="noopener noreferrer" class="social-card" data-platform="reddit" title="Aderion Studios Subreddit Topluluğu">
-            <div class="theme-social-card-top">
-              <div class="theme-social-avatar" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.56 12 8 12.56 8 13.25c0 .69.56 1.25 1.25 1.25.69 0 1.25-.56 1.25-1.25C10.5 12.56 9.94 12 9.25 12zm5.5 0c-.69 0-1.25.56-1.25 1.25 0 .69.56 1.25 1.25 1.25.69 0 1.25-.56 1.25-1.25 0-.69-.56-1.25-1.25-1.25zm-5.464 3.99a.327.327 0 0 0-.231.096.327.327 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.197-2.512-.73a.326.326 0 0 0-.232-.096z"/></svg>
-              </div>
-              <span class="theme-social-arrow" aria-hidden="true">↗</span>
-            </div>
-            <div class="social-card-inner">
-              <span class="social-platform">REDDIT</span>
-              <strong class="social-handle">r/AderionStudios</strong>
-              <span class="social-desc" data-lang-tr="Topluluk tartışmaları, oyuncu teorileri ve geri bildirim" data-lang-en="Community discussions, player theories, and feedback">
-                Topluluk tartışmaları, oyuncu teorileri ve geri bildirim
-              </span>
-              <span class="theme-social-action-tag" data-lang-tr="Tartışmaya Katıl ↗" data-lang-en="Join Subreddit ↗">Tartışmaya Katıl ↗</span>
-            </div>
-          </a>
-
-          <a href="https://www.patreon.com/cw/AderionStudios" target="_blank" rel="noopener noreferrer" class="social-card" data-platform="patreon" title="Aderion Studios Patreon Sayfası">
-            <div class="theme-social-card-top">
-              <div class="theme-social-avatar" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M22.957 7.21c-.004-3.064-2.39-5.575-5.271-6.084C14.07.417 9.876 2.062 8.167 5.093c-2.488 4.41-1.39 9.97 2.457 13.155 3.332 2.76 8.243 2.26 11.002-.99 1.104-1.3 1.332-2.99 1.332-4.708l-.001-5.34zm-21.722 15.65h3.992V.684H1.235v22.176z"/></svg>
-              </div>
-              <span class="theme-social-arrow" aria-hidden="true">↗</span>
-            </div>
-            <div class="social-card-inner">
-              <span class="social-platform">PATREON</span>
-              <strong class="social-handle">AderionStudios</strong>
-              <span class="social-desc" data-lang-tr="Özel stüdyo içerikleri, destekçi avantajları ve erken erişim" data-lang-en="Exclusive studio content, supporter perks, and early access">
-                Özel stüdyo içerikleri, destekçi avantajları ve erken erişim
-              </span>
-              <span class="theme-social-action-tag" data-lang-tr="Destekçi Ol ↗" data-lang-en="Support Us ↗">Destekçi Ol ↗</span>
-            </div>
-          </a>
+    <section class="approach section-pad" id="approach">
+      <div class="container">
+        <div class="approach-top reveal"><div class="eyebrow"><span class="section-index">03 /</span><span data-t="approachEyebrow">BİZİM YAKLAŞIMIMIZ</span></div><h2 data-t-html="approachTitle">Önce his.<br><em>Sonra her şey.</em></h2><p data-t="approachIntro">Yapmak istediğimiz oyunlarda birkaç şeye özellikle önem veriyoruz.</p></div>
+        <div class="principles">
+          <article class="principle reveal"><div class="principle-number">01 <span>✦</span></div><h3 data-t="approachOneTitle">Karakterler önemli.</h3><p data-t="approachOne">İnandığın, merak ettiğin ve hikâyesini gerçekten önemsediğin karakterler yaratmak.</p></article>
+          <article class="principle reveal"><div class="principle-number">02 <span>◇</span></div><h3 data-t="approachTwoTitle">Dünyalar yaşayan yerler.</h3><p data-t="approachTwo">Arka plandaki küçük bir ayrıntının bile anlatacak bir şeyinin olması.</p></article>
+          <article class="principle reveal"><div class="principle-number">03 <span>✳</span></div><h3 data-t="approachThreeTitle">Oyuncu hikâyenin içinde.</h3><p data-t="approachThree">Seçimleri, keşifleri ve hisleriyle deneyimin gerçek bir parçası olması.</p></article>
         </div>
       </div>
+    </section>
+
+    <section class="visuals section-pad" id="visuals">
+      <div class="container visuals-head reveal">
+        <div><div class="eyebrow"><span class="section-index">04 /</span><span data-t="visualsEyebrow">GÖRSEL DÜNYAMIZ</span></div><h2 data-t-html="visualsTitle">Biraz renk.<br>Biraz <em>atmosfer.</em></h2></div>
+        <div class="visuals-head-aside"><p data-t="visualsIntro">Sadelik, karakter ve duygu. Bizi heyecanlandıran çizim diline küçük bir bakış.</p><div class="gallery-controls"><button class="gallery-arrow" type="button" id="galleryPrev" aria-label="Önceki görsel">←</button><button class="gallery-arrow" type="button" id="galleryNext" aria-label="Sonraki görsel">→</button></div></div>
+      </div>
+      <div class="gallery-viewport">
+        <div class="gallery-track" id="galleryTrack" tabindex="0" aria-label="Görsel referans galerisi">
+          <figure class="gallery-item"><div class="gallery-image"><img src="assets/images/mood-portrait.webp" loading="lazy" alt="Gümüş saçlı karakterin mavi kravatlı sade portresi"></div><figcaption><span>01 / CHARACTER</span><span data-t="galleryOne">Karakterin dili</span></figcaption></figure>
+          <figure class="gallery-item"><div class="gallery-image"><img src="assets/images/mood-motion.webp" loading="lazy" alt="Canlı mavi zeminde gümüş saçlı, kulaklıklı anime karakteri"></div><figcaption><span>02 / EXPRESSION</span><span data-t="galleryTwo">Küçük bir an</span></figcaption></figure>
+          <figure class="gallery-item"><div class="gallery-image"><img src="assets/images/mood-smile.webp" loading="lazy" alt="Mavi tonlarda el sallayan gümüş saçlı anime karakteri"></div><figcaption><span>03 / FEELING</span><span data-t="galleryThree">Samimi detaylar</span></figcaption></figure>
+          <figure class="gallery-item"><div class="gallery-image"><img src="assets/images/detail-portrait.webp" loading="lazy" alt="Gümüş saçlı karakterin düşünceli yakın çekim çizimi"></div><figcaption><span>04 / DETAILS</span><span data-t="galleryFour">İfade ve duygu</span></figcaption></figure>
+          <figure class="gallery-item"><div class="gallery-image"><img src="assets/images/mood-standing.webp" loading="lazy" alt="Açık fonda üniformalı gümüş saçlı anime karakteri"></div><figcaption><span>05 / COMPOSITION</span><span data-t="galleryFive">Sade kompozisyon</span></figcaption></figure>
+        </div>
+      </div>
+      <div class="container gallery-bottom"><span data-t="visualsCaption">GÖRSEL REFERANSLAR / PROJE GÖRSELLERİ DEĞİLDİR</span><span class="gallery-count"><b id="galleryIndex">01</b> / 05</span></div>
+    </section>
+
+    <section class="invite-strip section-pad" id="community">
+      <div class="container invite-shell reveal">
+        <div><div class="eyebrow"><span class="section-index">05 /</span><span data-t="inviteLabel">AYNI HİKÂYENİN PARÇASI OL</span></div>
+        <h2 data-t-html="inviteTitle">Bu dünyayı <em>birlikte</em> kuralım.</h2>
+        <p data-t="inviteIntro">Hikâye anlatmayı, karakterlere hayat vermeyi veya oyun geliştirmeyi seviyorsan tanışalım.</p></div>
+        <div class="invite-actions"><a class="btn btn-dark" href="join.html"><span data-t="inviteJoin">Bize Katıl / Join Us</span><span class="btn-arrow">↗</span></a><a class="underlined-link" href="credits.html"><span data-t="inviteMeet">Ekibi tanı</span><span>→</span></a></div>
+      </div>
+    </section>
+
+    <section class="contact section-pad" id="contact">
+      <div class="container contact-layout">
+        <div class="contact-intro reveal"><div class="eyebrow light-eyebrow"><span class="section-index">06 /</span><span data-t="contactEyebrow">BAĞLANTIDA KALALIM</span></div><h2 data-t-html="contactTitle">Güzel hikâyeler<br><em>birlikte başlar.</em></h2><p data-t="contactIntro">Bir fikrin, önerin ya da sadece söylemek istediğin bir şey mi var? Bir mesajla başlayabiliriz.</p><div class="contact-footnote"><span class="status-pulse"></span><span data-t="contactStatus">YENİ HİKÂYELER İÇİN YOLDAYIZ</span></div></div>
+        <div class="contact-form-card reveal"><div class="contact-form-top"><span data-t="formEyebrow">BİR MESAJ BIRAK</span><span aria-hidden="true">✳</span></div>
+          <form id="contactForm" autocomplete="on">
+            <label for="contactName" data-t="formName">Adın</label><input id="contactName" name="name" type="text" maxlength="100" required placeholder="Adın / Name" autocomplete="name">
+            <label for="contactEmail" data-t="formEmail">E-posta adresin</label><input id="contactEmail" name="email" type="email" maxlength="180" required placeholder="mail@example.com" autocomplete="email">
+            <label for="contactMessage" data-t="formMessage">Mesajın</label><textarea id="contactMessage" name="message" rows="4" maxlength="3000" required placeholder="Bir merhaba de..."></textarea>
+            <button type="submit" class="btn form-submit"><span data-t="formButton">Mesaj taslağını hazırla</span><span aria-hidden="true">↗</span></button>
+            <p class="form-hint" data-t="formHint">Bu demo, mesajını cihazında e-posta taslağına dönüştürür veya kopyalar; doğrudan gönderim yapmaz.</p>
+            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+      <div class="container footer-bottom"><a class="footer-brand" href="#top">ADERION<span>®</span></a><p>© <span id="footerYear">2026</span> ADERION STUDIOS. <span data-t="footerRights">Tüm hakları saklıdır.</span></p><div class="footer-inline-links"><a href="studio.html" data-t="navStudio">Stüdyo</a><a href="credits.html" data-t="navCredits">Ekip</a><a href="join.html" data-t="navJoin">Bize katıl</a></div><a class="back-to-top" href="#top"><span data-t="backTop">Yukarı dön</span> ↑</a></div>
     </section>
   </main>
-
-  <!-- Şık Footer -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="theme-footer-brand">
-        <img src="assets/img/team/logo-mark.svg" alt="Aderion Studio Logo" width="22" height="22">
-        <span>ADERION STUDIO</span>
-      </div>
-
-      <div class="theme-footer-links">
-        <a href="index.html" data-lang-tr="Ana Sayfa" data-lang-en="Home">Ana Sayfa</a>
-        <a href="games.html" data-i18n="nav.games">OYUNLAR</a>
-        <a href="credit.html" data-i18n="nav.credit">CREDIT</a>
-        <a href="#about" data-i18n="nav.about">HAKKIMIZDA</a>
-        <span data-i18n="footer.rights">© 2026 Aderion Studio.</span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Video Fragman Modalı -->
-  <div id="media-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true" data-modal>
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h2 id="modal-title" class="modal-title" data-modal-title data-i18n="modal.trailer_title">OYUN FRAGMANI</h2>
-        <button type="button" class="modal-close" data-modal-close data-i18n="modal.close">KAPAT [ESC]</button>
-      </div>
-      <div class="modal-body" data-modal-body></div>
-    </div>
-  </div>
-
-  <script defer src="assets/js/main.js"></script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

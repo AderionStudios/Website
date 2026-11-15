@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /.git/
-Disallow: /.github/
-Disallow: /src/
-
-Sitemap: https://flaouve.dev/sitemap.xml
