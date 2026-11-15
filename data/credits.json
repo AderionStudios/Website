@@ -61,6 +61,31 @@
           "handle": "@flaouve"
         }
       ]
+    },
+    {
+      "id": "art",
+      "code": "03",
+      "badge": "DEP // 03",
+      "title_tr": "SANAT & KONSEPT",
+      "title_en": "ART & CONCEPT",
+      "members": [
+        {
+          "id": "lazona",
+          "discordId": "1218982625423659129",
+          "roleBadge": "ART",
+          "role_tr": "Sanatçı & İllüstratör",
+          "role_en": "Artist & Illustrator",
+          "meta_tr": "Sanat Departmanı",
+          "meta_en": "Art Department",
+          "bubble_tr": "KISS",
+          "bubble_en": "KISS",
+          "pronouns": "he/him",
+          "avatarExt": "png",
+          "bannerExt": "gif",
+          "name": "Lazona",
+          "handle": "@lazona"
+        }
+      ]
     }
   ]
 }
