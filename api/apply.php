@@ -1,8 +1,9 @@
 <?php
 /**
  * ============================================================================
- * ADERION STUDIOS — Production Application Mailer Endpoint
- * Secure, rate-limited, honeypot-protected, zero-external-dependency cPanel mailer.
+ * ADERION STUDIOS — Production Application Mailer Endpoint (SMTP Architecture)
+ * Secure, rate-limited, honeypot-protected, standalone SMTP socket client.
+ * Does NOT rely on PHP mail() function (which is disabled on shared hosts).
  * ============================================================================
  */
 declare(strict_types=1);
@@ -44,18 +45,22 @@ $httpHost = $_SERVER['HTTP_HOST'] ?? '';
 if (!empty($httpOrigin)) {
     $originHost = parse_url($httpOrigin, PHP_URL_HOST);
     $serverHost = explode(':', (string)$httpHost)[0];
-    if ($originHost && !empty($serverHost) && strcasecmp((string)$originHost, (string)$serverHost) !== 0) {
-        jsonResponse(403, false, 'forbidden_origin', 'Geçersiz istek kaynağı.');
+    if ($originHost && !empty($serverHost)) {
+        // Strip leading www. for comparison
+        $cleanOrigin = preg_replace('/^www\./i', '', (string)$originHost);
+        $cleanServer = preg_replace('/^www\./i', '', (string)$serverHost);
+        if (strcasecmp($cleanOrigin, $cleanServer) !== 0) {
+            jsonResponse(403, false, 'forbidden_origin', 'Geçersiz istek kaynağı.');
+        }
     }
 }
 
 // 5. Bot-Trap (Honeypot) Check
-// Hidden input 'website' is invisible to humans. If filled, silently acknowledge to deceive bot.
 if (!empty($_POST['website'])) {
     jsonResponse(200, true, 'success', 'Başvurunuz başarıyla alındı.');
 }
 
-// 6. Rate Limiting via /tmp (45s cooldown per IP)
+// 6. Rate Limiting via local temp file (45s cooldown per IP)
 $clientIp = $_SERVER['HTTP_CF_CONNECTING_IP'] 
     ?? $_SERVER['HTTP_X_FORWARDED_FOR'] 
     ?? $_SERVER['REMOTE_ADDR'] 
@@ -66,9 +71,9 @@ $clientIpClean = preg_replace('/[^a-zA-Z0-9_.-]/', '_', trim($clientIp));
 $tempDir = sys_get_temp_dir();
 $rateFile = $tempDir . '/aderion_apply_' . md5('apply_rate_' . $clientIpClean) . '.tmp';
 $now = time();
-$cooldownSeconds = 45;
+$cooldownSeconds = 30;
 
-if (file_exists($rateFile)) {
+if (@file_exists($rateFile)) {
     $lastTime = (int)@file_get_contents($rateFile);
     if (($now - $lastTime) < $cooldownSeconds) {
         $waitRemaining = $cooldownSeconds - ($now - $lastTime);
@@ -135,13 +140,28 @@ if (mb_strlen($rawMessage, 'UTF-8') > 3000) {
     $rawMessage = mb_substr($rawMessage, 0, 3000, 'UTF-8');
 }
 
-// 8. Construct Professional HTML Email
-$toEmail = 'contact@aderionstudios.com';
-$fromEmail = 'contact@aderionstudios.com';
-$fromName = 'Aderion Studios Web';
+// 8. Load SMTP Configuration
+$configFile = __DIR__ . '/smtp_config.php';
+if (!file_exists($configFile)) {
+    jsonResponse(500, false, 'config_missing', 'SMTP yapılandırma dosyası (api/smtp_config.php) bulunamadı.');
+}
+$smtpConfig = require $configFile;
 
-// Subject with UTF-8 Base64 Encoding
-$subject = "=?UTF-8?B?" . base64_encode("Yeni Ekip Başvurusu: {$name} — {$roleTitle}") . "?=";
+$smtpHost = (string)($smtpConfig['host'] ?? 'mail.aderionstudios.com');
+$smtpPort = (int)($smtpConfig['port'] ?? 465);
+$smtpSecure = (string)($smtpConfig['secure'] ?? 'ssl');
+$smtpUser = (string)($smtpConfig['username'] ?? 'contact@aderionstudios.com');
+$smtpPass = (string)($smtpConfig['password'] ?? '');
+$toEmail = (string)($smtpConfig['to'] ?? 'contact@aderionstudios.com');
+$fromName = (string)($smtpConfig['fromName'] ?? 'Aderion Studios Web');
+
+if (empty($smtpPass) || $smtpPass === 'BURAYA_EPOSTA_SIFRENIZI_YAZIN') {
+    jsonResponse(500, false, 'smtp_credentials_required', 'SMTP e-posta şifresi henüz ayarlanmadı. Lütfen api/smtp_config.php dosyasına contact@aderionstudios.com şifrenizi girin.');
+}
+
+// 9. Construct Professional HTML Email
+$subject = "Yeni Ekip Başvurusu: {$name} — {$roleTitle}";
+$encodedSubject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
 
 $safeName = htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 $safeEmail = htmlspecialchars($cleanEmail, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -222,33 +242,197 @@ $htmlBody = <<<HTML
 </html>
 HTML;
 
-// 9. RFC 2822 MIME Headers
+// 10. Standalone Pure PHP SMTP Socket Client
+class SimpleSmtpClient {
+    private string $host;
+    private int $port;
+    private string $secure;
+    private string $user;
+    private string $pass;
+    private int $timeout;
+    private $socket = null;
+    private string $lastError = '';
+
+    public function __construct(string $host, int $port, string $secure, string $user, string $pass, int $timeout = 15) {
+        $this->host = $host;
+        $this->port = $port;
+        $this->secure = strtolower($secure);
+        $this->user = $user;
+        $this->pass = $pass;
+        $this->timeout = $timeout;
+    }
+
+    public function getLastError(): string {
+        return $this->lastError;
+    }
+
+    private function readResponse(): string {
+        $data = '';
+        while (!@feof($this->socket)) {
+            $str = @fgets($this->socket, 515);
+            if ($str === false) break;
+            $data .= $str;
+            if (isset($str[3]) && $str[3] === ' ') break;
+        }
+        return trim($data);
+    }
+
+    private function sendCmd(string $cmd): string {
+        @fputs($this->socket, $cmd . "\r\n");
+        return $this->readResponse();
+    }
+
+    public function send(string $from, string $to, string $subject, string $htmlBody, array $extraHeaders = []): bool {
+        $prefix = ($this->secure === 'ssl') ? 'ssl://' : '';
+        $target = $prefix . $this->host;
+
+        $context = stream_context_create([
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            ]
+        ]);
+
+        $this->socket = @stream_socket_client(
+            "{$target}:{$this->port}",
+            $errno,
+            $errstr,
+            $this->timeout,
+            STREAM_CLIENT_CONNECT,
+            $context
+        );
+
+        if (!$this->socket) {
+            $this->lastError = "SMTP sunucusuna bağlanılamadı ({$target}:{$this->port}): {$errstr} [Hata Kodu: {$errno}]";
+            return false;
+        }
+
+        @stream_set_timeout($this->socket, $this->timeout);
+        $res = $this->readResponse();
+        if (!str_starts_with($res, '220')) {
+            $this->lastError = "Sunucu karşılama hatası: " . $res;
+            return false;
+        }
+
+        $clientDomain = !empty($_SERVER['HTTP_HOST']) ? explode(':', $_SERVER['HTTP_HOST'])[0] : 'localhost';
+        $res = $this->sendCmd("EHLO {$clientDomain}");
+        if (!str_starts_with($res, '250')) {
+            $res = $this->sendCmd("HELO {$clientDomain}");
+            if (!str_starts_with($res, '250')) {
+                $this->lastError = "EHLO/HELO reddedildi: " . $res;
+                return false;
+            }
+        }
+
+        // STARTTLS negotiation if required
+        if ($this->secure === 'tls') {
+            $res = $this->sendCmd("STARTTLS");
+            if (!str_starts_with($res, '220')) {
+                $this->lastError = "STARTTLS reddedildi: " . $res;
+                return false;
+            }
+            if (!@stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                $this->lastError = "TLS şifreleme el sıkışması başarısız oldu.";
+                return false;
+            }
+            $res = $this->sendCmd("EHLO {$clientDomain}");
+            if (!str_starts_with($res, '250')) {
+                $this->lastError = "TLS sonrası EHLO reddedildi: " . $res;
+                return false;
+            }
+        }
+
+        // Authentication via AUTH LOGIN
+        if (!empty($this->user) && !empty($this->pass)) {
+            $res = $this->sendCmd("AUTH LOGIN");
+            if (!str_starts_with($res, '334')) {
+                $this->lastError = "AUTH LOGIN komutu reddedildi: " . $res;
+                return false;
+            }
+
+            $res = $this->sendCmd(base64_encode($this->user));
+            if (!str_starts_with($res, '334')) {
+                $this->lastError = "Kullanıcı adı kabul edilmedi: " . $res;
+                return false;
+            }
+
+            $res = $this->sendCmd(base64_encode($this->pass));
+            if (!str_starts_with($res, '235')) {
+                $this->lastError = "SMTP Kimlik doğrulama başarısız! E-posta adresi veya şifre hatalı: " . $res;
+                return false;
+            }
+        }
+
+        // MAIL FROM
+        $res = $this->sendCmd("MAIL FROM:<{$from}>");
+        if (!str_starts_with($res, '250')) {
+            $this->lastError = "Gönderici (MAIL FROM) adresi reddedildi: " . $res;
+            return false;
+        }
+
+        // RCPT TO
+        $res = $this->sendCmd("RCPT TO:<{$to}>");
+        if (!str_starts_with($res, '250')) {
+            $this->lastError = "Alıcı (RCPT TO) adresi reddedildi: " . $res;
+            return false;
+        }
+
+        // DATA
+        $res = $this->sendCmd("DATA");
+        if (!str_starts_with($res, '354')) {
+            $this->lastError = "DATA komutu reddedildi: " . $res;
+            return false;
+        }
+
+        $headersStr = implode("\r\n", $extraHeaders);
+        $payload = "Subject: {$subject}\r\n{$headersStr}\r\n\r\n{$htmlBody}\r\n.";
+        $res = $this->sendCmd($payload);
+        if (!str_starts_with($res, '250')) {
+            $this->lastError = "E-posta içeriği sunucu tarafından kabul edilmedi: " . $res;
+            return false;
+        }
+
+        $this->sendCmd("QUIT");
+        @fclose($this->socket);
+        return true;
+    }
+}
+
+// 11. Dispatch Email via SMTP
 $encodedFromName = "=?UTF-8?B?" . base64_encode($fromName) . "?=";
 $encodedReplyName = "=?UTF-8?B?" . base64_encode($name) . "?=";
 
-$headers = [
-    "From: {$encodedFromName} <{$fromEmail}>",
+$extraHeaders = [
+    "From: {$encodedFromName} <{$smtpUser}>",
     "Reply-To: {$encodedReplyName} <{$cleanEmail}>",
-    "Return-Path: <{$fromEmail}>",
+    "Return-Path: <{$smtpUser}>",
     "MIME-Version: 1.0",
     "Content-Type: text/html; charset=UTF-8",
     "Content-Transfer-Encoding: 8bit",
-    "X-Mailer: AderionStudios-Mailer/2.0",
-    "X-Originating-IP: [{$clientIpClean}]"
+    "X-Mailer: AderionStudios-SMTP/2.0"
 ];
 
-// 10. Dispatch Email via cPanel MTA
-$mailSent = @mail(
-    $toEmail,
-    $subject,
-    $htmlBody,
-    implode("\r\n", $headers),
-    "-f {$fromEmail}"
+$smtpClient = new SimpleSmtpClient(
+    $smtpHost,
+    $smtpPort,
+    $smtpSecure,
+    $smtpUser,
+    $smtpPass,
+    15
 );
 
-if ($mailSent) {
+$success = $smtpClient->send(
+    $smtpUser,
+    $toEmail,
+    $encodedSubject,
+    $htmlBody,
+    $extraHeaders
+);
+
+if ($success) {
     jsonResponse(200, true, 'success', 'Başvurunuz stüdyoya başarıyla iletildi! En kısa sürede e-posta ile dönüş yapacağız.');
 } else {
-    // If mail() returned false (e.g. local test without MTA), return clear diagnostic
-    jsonResponse(500, false, 'send_failed', 'Sunucu e-posta servisi şu anda yanıt veremedi. Lütfen doğrudan contact@aderionstudios.com adresine yazın.');
+    $err = $smtpClient->getLastError();
+    jsonResponse(500, false, 'smtp_error', 'E-posta gönderilirken hata oluştu: ' . $err);
 }
