@@ -57,6 +57,7 @@ jobs:
             "assets/img/team/logo-mark.svg"
             "assets/img/team/logo-mark.png"
             "assets/img/team/logo-full.png"
+            "assets/img/hero/game-redacted.webp"
           )
 
           for file in "${required_files[@]}"; do
