@@ -135,6 +135,48 @@ function setupCreditImages(root){
     if(img.complete && img.naturalWidth===0)next();
   });
 }
+window.handleCreditAvatarError = function(img, discordId, fallbackSrc) {
+  img.onerror = null;
+  if (discordId && /^\d{16,24}$/.test(discordId)) {
+    fetch(`https://japi.rest/discord/v1/user/${discordId}`)
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.data && res.data.avatarURL) {
+          img.src = res.data.avatarURL;
+          return;
+        }
+        img.src = fallbackSrc;
+      })
+      .catch(() => {
+        img.src = fallbackSrc;
+      });
+  } else {
+    img.src = fallbackSrc;
+  }
+};
+
+window.handleCreditBannerError = function(bannerImg, discordId) {
+  bannerImg.onerror = null;
+  bannerImg.style.opacity = '0';
+  if (discordId && /^\d{16,24}$/.test(discordId)) {
+    fetch(`https://japi.rest/discord/v1/user/${discordId}`)
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.data) {
+          const bannerEl = bannerImg.closest('.member-banner');
+          if (res.data.bannerURL) {
+            bannerImg.src = res.data.bannerURL;
+            bannerImg.style.opacity = '1';
+            if (bannerEl) bannerEl.style.backgroundImage = `url('${res.data.bannerURL}')`;
+          } else if (res.data.banner_color) {
+            if (bannerEl) bannerEl.style.backgroundColor = res.data.banner_color;
+          }
+        }
+      })
+      .catch(() => {});
+  }
+};
+
 function renderCreditsFromData(data) {
   const root = document.querySelector('#creditsRoot');
   if (!root || !data || !Array.isArray(data.departments)) return;
@@ -248,13 +290,13 @@ function renderCreditsFromData(data) {
       return `
         <article class="member-card reveal in-view" data-member-id="${escapeHtml(memberId)}">
           <div class="member-banner"${bannerSrc ? ` style="background-image: url('${escapeHtml(bannerSrc)}');"` : ''}>
-            ${bannerSrc ? `<img src="${escapeHtml(bannerSrc)}" alt="${escapeHtml(name)} Banner" class="member-banner-img" loading="lazy" onerror="this.style.opacity='0';">` : ''}
+            ${bannerSrc ? `<img src="${escapeHtml(bannerSrc)}" alt="${escapeHtml(name)} Banner" class="member-banner-img" loading="lazy" onerror="window.handleCreditBannerError(this, '${escapeHtml(discordId)}')">` : ''}
             <span class="member-banner-label">ADERION / CORE TEAM</span>
           </div>
           <div class="member-body">
             <div class="member-head">
               <div class="member-avatar">
-                <img src="${escapeHtml(avatarSrc)}" alt="${escapeHtml(name)}" class="member-avatar-img" width="84" height="84" loading="lazy" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
+                <img src="${escapeHtml(avatarSrc)}" alt="${escapeHtml(name)}" class="member-avatar-img" width="84" height="84" loading="lazy" onerror="window.handleCreditAvatarError(this, '${escapeHtml(discordId)}', '${fallbackAvatar}')">
                 ${decorationHtml}
               </div>
               <span class="member-role-badge">${escapeHtml(roleBadge)}</span>

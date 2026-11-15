@@ -78,13 +78,33 @@ window.ADERION_CREDITS = {
           "role_en": "Artist & Illustrator",
           "meta_tr": "Sanat Departmanı",
           "meta_en": "Art Department",
-          "bubble_tr": "KISS",
-          "bubble_en": "KISS",
           "pronouns": "he/him",
           "avatarExt": "png",
           "bannerExt": "gif",
           "name": "Lazona",
           "handle": "@lazona"
+        }
+      ]
+    },
+    {
+      "id": "dev",
+      "code": "04",
+      "badge": "DEP // 04",
+      "title_tr": "OYUN GELİŞTİRME & YAZILIM",
+      "title_en": "GAME DEVELOPMENT & SYSTEMS",
+      "members": [
+        {
+          "id": "gunepi",
+          "discordId": "1062416790380105738",
+          "roleBadge": "DEV",
+          "role_tr": "Oyun Geliştiricisi",
+          "role_en": "Game Developer",
+          "meta_tr": "Geliştirme Departmanı",
+          "meta_en": "Developer Department",
+          "pronouns": "he/him",
+          "avatarExt": "png",
+          "name": "Gunepi",
+          "handle": "@rovc"
         }
       ]
     }
