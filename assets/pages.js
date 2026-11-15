@@ -35,7 +35,7 @@ const extraTr = {
   experienceBeginner:'Yeni başlıyorum',experienceSome:'Birkaç proje yaptım',experienceExperienced:'Deneyimliyim',
   applyMessage:'Bize kendinden ve üretmek istediklerinden bahset *',
   applyConsent:'Başvuru bilgilerimin değerlendirilmek üzere Aderion Studios’a e-posta ile gönderilmesini kabul ediyorum.',
-  applySubmit:'Başvurumu gönder',applicationSending:'Başvurun gönderiliyor…',applicationSent:'Başvurun e-posta gönderimi için sunucu tarafından kabul edildi. Teşekkürler!',applicationError:'Başvuru gönderilemedi. Lütfen daha sonra tekrar dene veya contact@aderionstudios.com adresine yaz.',applicationLocal:'Bu formun doğrudan gönderimi PHP destekli yayında çalışır. E-posta uygulaman açılıyor; göndermeyi sen tamamlamalısın.',applicationRateLimit:'Kısa sürede çok sayıda başvuru denendi. Bir süre sonra tekrar dene.',applicationSubject:'Aderion Studios — Ön Başvuru',
+  applySubmit:'Başvurumu gönder',applicationSending:'Başvurun gönderiliyor…',applicationSent:'Başvurun e-posta gönderimi için sunucu tarafından kabul edildi. Teşekkürler!',applicationError:'Bir hata oluştu, en yakın sürede güncelleyeceğiz.',applicationLocal:'Bu formun doğrudan gönderimi sunucu bağlantısı gerektirir. E-posta uygulaman açılıyor; göndermeyi sen tamamlamalısın.',applicationRateLimit:'Kısa sürede çok sayıda başvuru denendi. Bir süre sonra tekrar dene.',applicationSubject:'Aderion Studios — Ön Başvuru',
   applicationCopied:'Ön başvuru taslağı panoya kopyalandı. Başvuruyu iletmek için stüdyonun doğrulanmış iletişim kanalına göndermen gerekiyor.',
   applicationMail:'E-posta taslağın açılıyor. Gönderim için e-posta uygulamanda onay vermen gerekir.',
   applicationFailed:'Panoya erişilemiyor. Metni açılan pencereden kopyalayabilirsin.'
@@ -76,7 +76,7 @@ const extraEn = {
   experienceBeginner:'Just starting out',experienceSome:'A few projects completed',experienceExperienced:'Experienced',
   applyMessage:'Tell us about yourself and what you hope to make *',
   applyConsent:'I agree that my application details may be emailed to Aderion Studios for consideration.',
-  applySubmit:'Submit application',applicationSending:'Sending your application…',applicationSent:'The server accepted your application for email delivery. Thank you!',applicationError:'Your application could not be submitted. Please try again or email contact@aderionstudios.com.',applicationLocal:'Direct submission requires PHP hosting. Your email app is opening; you must send the message yourself.',applicationRateLimit:'Too many submissions. Please try again later.',applicationSubject:'Aderion Studios — Expression of Interest',
+  applySubmit:'Submit application',applicationSending:'Sending your application…',applicationSent:'The server accepted your application for email delivery. Thank you!',applicationError:'An error occurred; we will fix it as soon as possible.',applicationLocal:'Direct submission requires a server connection. Your email app is opening; you must send the message yourself.',applicationRateLimit:'Too many submissions. Please try again later.',applicationSubject:'Aderion Studios — Expression of Interest',
   applicationCopied:'Your application draft was copied. To submit it, send it through the studio’s verified contact channel.',
   applicationMail:'Your email draft is opening. Confirm sending in your email application.',
   applicationFailed:'Clipboard access is blocked. Copy the text from the dialog.'
@@ -527,6 +527,9 @@ document.querySelector('#applicationForm')?.addEventListener('submit', async eve
       const successMsg = data.message || dict.applicationSent;
       if (status) status.textContent = successMsg;
       showToast(successMsg);
+    } else if (res.status >= 500 || (data && data.error === 'server_error')) {
+      if (status) status.textContent = dict.applicationError;
+      showToast(dict.applicationError);
     } else {
       const errMsg = (data && data.message) ? data.message : (res.status === 429 ? dict.applicationRateLimit : dict.applicationError);
       if (status) status.textContent = errMsg;

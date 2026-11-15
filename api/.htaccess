@@ -1,5 +1,10 @@
-# Prevent direct browser access to sensitive config files
-<FilesMatch "^(smtp_config\.php|\.env|\.tmp)">
-    Order Allow,Deny
-    Deny from all
+# Prevent direct browser access to sensitive config and log files
+<FilesMatch "^(smtp_config\.php|\.env|\.tmp)|\.log$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Deny from all
+    </IfModule>
 </FilesMatch>

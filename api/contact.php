@@ -8,6 +8,8 @@
  */
 declare(strict_types=1);
 
+require_once __DIR__ . '/error_logger.php';
+
 // 1. Strict Security & Caching Headers
 header('Content-Type: application/json; charset=UTF-8');
 header('X-Content-Type-Options: nosniff');
@@ -132,7 +134,8 @@ if (mb_strlen($rawMessage, 'UTF-8') > 3000) {
 // 9. Load SMTP Configuration
 $configFile = __DIR__ . '/smtp_config.php';
 if (!file_exists($configFile)) {
-    jsonResponse(500, false, 'config_missing', 'SMTP yapılandırma dosyası (api/smtp_config.php) bulunamadı.');
+    logServerError('contact', 'config_missing', 'SMTP configuration file api/smtp_config.php is missing.');
+    jsonResponse(500, false, 'server_error', 'Bir hata oluştu, en yakın sürede güncelleyeceğiz.', ['error' => 'server_error']);
 }
 $smtpConfig = require $configFile;
 
@@ -145,7 +148,12 @@ $toEmail = (string)($smtpConfig['to'] ?? 'contact@aderionstudios.com');
 $fromName = (string)($smtpConfig['fromName'] ?? 'Aderion Studios Web');
 
 if (empty($smtpPass) || $smtpPass === 'BURAYA_EPOSTA_SIFRENIZI_YAZIN') {
-    jsonResponse(500, false, 'smtp_credentials_required', 'SMTP e-posta şifresi henüz ayarlanmadı. Lütfen api/smtp_config.php dosyasına contact@aderionstudios.com şifrenizi girin.');
+    logServerError('contact', 'smtp_credentials_required', 'SMTP password in api/smtp_config.php is not configured.', [
+        'host' => $smtpHost,
+        'port' => $smtpPort,
+        'user' => $smtpUser,
+    ]);
+    jsonResponse(500, false, 'server_error', 'Bir hata oluştu, en yakın sürede güncelleyeceğiz.', ['error' => 'server_error']);
 }
 
 // 10. Construct Professional HTML Email
@@ -403,5 +411,10 @@ if ($success) {
     jsonResponse(200, true, 'success', 'Mesajın stüdyoya başarıyla iletildi! En kısa sürede dönüş yapacağız.');
 } else {
     $err = $smtpClient->getLastError();
-    jsonResponse(500, false, 'smtp_error', 'E-posta gönderilirken hata oluştu: ' . $err);
+    logServerError('contact', 'smtp_error', $err, [
+        'host' => $smtpHost,
+        'port' => $smtpPort,
+        'secure' => $smtpSecure,
+    ]);
+    jsonResponse(500, false, 'server_error', 'Bir hata oluştu, en yakın sürede güncelleyeceğiz.', ['error' => 'server_error']);
 }

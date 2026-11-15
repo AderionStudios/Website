@@ -34,7 +34,7 @@ const translations = {
     formButton:'Mesajı gönder',
     footerRights:'Tüm hakları saklıdır.',backTop:'Yukarı dön',
     formSending:'Gönderiliyor…',formSent:'Mesajın stüdyoya iletildi! En kısa sürede dönüş yapacağız.',
-    formError:'Mesaj gönderilemedi. Lütfen daha sonra tekrar dene.',
+    formError:'Bir hata oluştu, en yakın sürede güncelleyeceğiz.',
     formRateLimit:'Kısa sürede çok sayıda mesaj denendi. Bir süre sonra tekrar dene.',
     formCopiedLocal:'Sunucu bağlantısı olmadan mesajın ve alıcı e-posta adresi panoya kopyalandı.',
     copied:'Mesaj taslağın panoya kopyalandı. E-posta ile paylaşabilirsin.',
@@ -78,9 +78,9 @@ const translations = {
     formButton:'Send message',
     footerRights:'All rights reserved.',backTop:'Back to top',
     formSending:'Sending…',formSent:'Your message has been sent to the studio! We will get back to you soon.',
-    formError:'Could not send message. Please try again later.',
+    formError:'An error occurred; we will fix it as soon as possible.',
     formRateLimit:'Too many messages sent in a short time. Please try again soon.',
-    formCopiedLocal:'Without a PHP server, your message and recipient email were copied to the clipboard.',
+    formCopiedLocal:'Without a server connection, your message and recipient email were copied to the clipboard.',
     copied:'Your message draft was copied. You can share it by email.',
     copyFailed:'Clipboard access was blocked; copy the text from the dialog.',messageSubject:'Aderion Studios — Contact',
     inviteLabel:'BE PART OF THE SAME STORY',inviteTitle:'Let’s build <em>together.</em>',inviteIntro:'If you love storytelling, bringing characters to life, or making games, we would love to meet you.',inviteJoin:'Join Us',inviteMeet:'Meet the team',
@@ -512,6 +512,9 @@ document.querySelector('#contactForm')?.addEventListener('submit',async event=>{
       const rateMsg=(locale==='tr'&&data.message)?data.message:dict.formRateLimit;
       if(status) status.textContent=rateMsg;
       showToast(rateMsg);
+    }else if(res.status>=500||data.error==='server_error'){
+      if(status) status.textContent=dict.formError;
+      showToast(dict.formError);
     }else{
       const errMsg=(locale==='tr'&&data.message)?data.message:dict.formError;
       if(status) status.textContent=errMsg;

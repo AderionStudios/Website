@@ -33,6 +33,17 @@ AddDefaultCharset UTF-8
     </IfModule>
 </FilesMatch>
 
+# Block direct external access to log files (e.g. error.log)
+<FilesMatch "\.log$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
 # ------------------------------------------------------------------------------
 # 2. Rewrite Rules: Dotdir Protection, Source Blocking & HTTPS Enforcement
 # ------------------------------------------------------------------------------

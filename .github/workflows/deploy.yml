@@ -31,4 +31,6 @@ jobs:
             scripts/**
             update-credits.bat
             *.md
+            *.log
+            **/*.log
             api/smtp_config.php
