@@ -1201,6 +1201,7 @@ a {
   bottom: 8px;
   background-color: #1e1f22;
   color: #f2f3f5;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 0.32rem 0.8rem;
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
@@ -1210,6 +1211,11 @@ a {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
   display: flex;
   align-items: center;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.discord-status-bubble .status-bubble-text {
+  color: inherit;
 }
 
 .discord-status-bubble .status-bubble-tail {
@@ -1220,6 +1226,18 @@ a {
   height: 8px;
   background-color: #1e1f22;
   clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  transition: background-color var(--transition-fast);
+}
+
+[data-theme="dark"] .discord-status-bubble {
+  background-color: #FFFFFF;
+  color: #111214;
+  border-color: rgba(0, 0, 0, 0.14);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .discord-status-bubble .status-bubble-tail {
+  background-color: #FFFFFF;
 }
 
 .discord-header-badges {

@@ -3,29 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projeler &amp; Yapımlar — Aderion Studio</title>
-  <meta name="description" content="Aderion Studio bünyesinde geliştirilen bağımsız oyun projeleri. Aktif yapımlarımız ve duyurularımız çok yakında.">
-  <meta name="theme-color" content="#0a0a0a">
+  <title>PROJELER &amp; YAPIMLAR — Aderion Studio</title>
+  <meta name="description" content="Aderion Studio bünyesinde geliştirilen bağımsız oyun projeleri. Aktif yapımlarımız ve duyurularımız.">
+  <meta name="theme-color" content="#F2DDCD">
 
-  <meta property="og:title" content="Projeler &amp; Yapımlar — Aderion Studio">
-  <meta property="og:description" content="Aderion Studio bağımsız oyun projeleri aktif geliştirme aşamasında. Çok yakında burada.">
-  <meta property="og:image" content="https://flaouve.dev/assets/img/team/logo-mark.svg">
+  <meta property="og:title" content="PROJELER &amp; YAPIMLAR — Aderion Studio">
+  <meta property="og:description" content="Aderion Studio bünyesinde geliştirilen bağımsız oyun projeleri. Aktif yapımlarımız ve duyurularımız.">
+  <meta property="og:image" content="https://flaouve.dev/assets/img/hero/concept-hero.svg">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://flaouve.dev/games.html">
   <meta property="og:site_name" content="Aderion Studio">
   <meta property="og:locale" content="tr_TR">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Projeler &amp; Yapımlar — Aderion Studio">
-  <meta name="twitter:description" content="Aderion Studio bağımsız oyun projeleri aktif geliştirme aşamasında. Çok yakında burada.">
-  <meta name="twitter:image" content="https://flaouve.dev/assets/img/team/logo-mark.svg">
+  <meta name="twitter:title" content="PROJELER &amp; YAPIMLAR — Aderion Studio">
+  <meta name="twitter:description" content="Aderion Studio bağımsız oyun yapımları ve Ashes of Veridia.">
+  <meta name="twitter:image" content="https://flaouve.dev/assets/img/hero/concept-hero.svg">
 
   <link rel="icon" type="image/svg+xml" href="assets/img/team/logo-mark.svg">
   <link rel="stylesheet" href="assets/css/variables.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/vrchat-theme.css">
 </head>
 <body>
+  <!-- Atmosferik Işık Küreleri -->
+  <div class="vrc-atmosphere" aria-hidden="true">
+    <div class="vrc-glow-orb vrc-orb-top"></div>
+    <div class="vrc-glow-orb vrc-orb-right"></div>
+    <div class="vrc-glow-orb vrc-orb-bottom"></div>
+  </div>
+
+  <!-- Yüzen Şık Navbar -->
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="brand-pill">
@@ -45,7 +54,7 @@
 
       <nav id="nav-drawer" class="site-nav" data-nav-drawer aria-label="Ana gezinme">
         <div class="nav-links">
-          <a href="index.html" class="nav-link" data-i18n="nav.about">HAKKIMIZDA</a>
+          <a href="index.html#about" class="nav-link" data-i18n="nav.about">HAKKIMIZDA</a>
           <a href="credit.html" class="nav-link" data-i18n="nav.credit">CREDIT</a>
         </div>
         <button
@@ -54,7 +63,7 @@
           data-theme-toggle
           data-i18n-aria="nav.theme_toggle"
           aria-label="Karanlık temaya geç"
-          title="Karanlık temaya geç"
+          title="Temayı Değiştir (Açık / Koyu)"
         >
           <span class="theme-icon" data-theme-icon aria-hidden="true">🌙</span>
         </button>
@@ -64,71 +73,124 @@
           data-lang-toggle
           data-i18n-aria="nav.lang_label"
           aria-label="Dili değiştir"
-        >TR / EN</button>
-        <a href="games.html" class="cta-pill" data-i18n="nav.cta_projects" aria-current="page">PROJELERİ GÖR ↗</a>
+        >
+          <span data-lang-opt="tr">TR</span>
+          <span style="opacity: 0.4;">/</span>
+          <span data-lang-opt="en">EN</span>
+        </button>
+        <a href="games.html" class="cta-pill is-active" data-i18n="nav.cta_projects" aria-current="page">PROJELERİ GÖR ↗</a>
       </nav>
     </div>
   </header>
 
   <main id="main-content">
-    <section class="page-hero">
+    <!-- Sayfa Başlığı -->
+    <section class="page-hero vrc-page-hero">
       <div class="container">
-        <span class="eyebrow-tag" data-i18n="games.coming_eyebrow">PROJELER &amp; YAPIMLAR // ÇOK YAKINDA</span>
+        <div class="vrc-hero-pill-badge">
+          <span class="badge-pulse"></span>
+          <span data-lang-tr="PROJELER &amp; AKTİF YAPIMLAR" data-lang-en="PROJECTS &amp; ACTIVE PRODUCTIONS">PROJELER &amp; AKTİF YAPIMLAR</span>
+        </div>
         <h1 class="page-title">
-          <span class="title-fill" data-i18n="games.coming_title_fill">YENİ DÜNYALAR</span>
+          <span class="title-fill" data-i18n="games.coming_title_fill">YENİ DÜNYALAR</span><br>
           <span class="title-stroke" data-i18n="games.coming_title_stroke">HAZIRLANIYOR.</span>
         </h1>
-        <p class="page-subtitle" data-i18n="games.coming_subtitle">Aderion Studio bünyesinde üzerinde çalıştığımız bağımsız oyun projelerimiz şu anda aktif geliştirme ve prodüksiyon aşamasındadır. İlk duyurularımız çok yakında burada paylaşılacaktır.</p>
+        <p class="page-subtitle" data-i18n="games.coming_subtitle">
+          Aderion Studio bünyesinde üzerinde çalıştığımız bağımsız oyun projelerimiz şu anda aktif geliştirme ve prodüksiyon aşamasındadır. İlk duyurularımız çok yakında burada paylaşılacaktır.
+        </p>
       </div>
     </section>
 
+    <!-- Oyun Vitrini & Prodüksiyon Odağı -->
     <section class="editorial-section">
       <div class="container">
-        <div class="coming-soon-card">
-          <div class="coming-soon-badge">
-            <span class="badge-pulse"></span>
-            <span data-i18n="games.coming_status">DURUM: AKTİF GELİŞTİRME AŞAMASINDA</span>
+        <!-- Amiral Gemisi Oyun Kartı (Ashes of Veridia) -->
+        <article class="coming-soon-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div class="coming-soon-badge">
+              <span class="badge-pulse"></span>
+              <span data-lang-tr="DURUM: AKTİF GELİŞTİRME AŞAMASINDA" data-lang-en="STATUS: IN ACTIVE DEVELOPMENT">DURUM: AKTİF GELİŞTİRME AŞAMASINDA</span>
+            </div>
+            <span class="vrc-chip-platform" style="background: var(--vrc-bg-surface-subtle); color: var(--text-primary); border: 1px solid var(--vrc-border);">
+              PC &amp; KONSOL
+            </span>
           </div>
 
-          <h2 class="coming-soon-heading" data-i18n="games.coming_heading">İlk Yapımımız Üzerinde Titizlikle Çalışıyoruz</h2>
+          <div style="display: grid; grid-template-columns: minmax(300px, 1.2fr) minmax(280px, 1fr); gap: 2rem; align-items: center; margin-block: 0.5rem;">
+            <div>
+              <h2 class="coming-soon-heading" data-lang-tr="Ashes of Veridia — İlk Yapımımız Üzerinde Titizlikle Çalışıyoruz" data-lang-en="Ashes of Veridia — Crafting Our Debut Production With Care">
+                Ashes of Veridia — İlk Yapımımız Üzerinde Titizlikle Çalışıyoruz
+              </h2>
+              <p class="coming-soon-text" style="margin-top: 1rem;" data-i18n="games.coming_text">
+                Hikaye anlatımı, atmosferik ses tasarımı ve özgün mekanikleri bir araya getiren bağımsız oyun projelerimiz stüdyo mutfağında şekilleniyor. Geliştirme süreçleri, ilk ekran görüntüleri ve fragmanlar çok yakında bu sayfada yer alacak.
+              </p>
+              <div class="coming-soon-actions" style="margin-top: 1.5rem;">
+                <button
+                  type="button"
+                  class="btn-primary"
+                  data-trailer-trigger="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?rel=0"
+                  data-i18n="hero.cta_trailer"
+                >FRAGMANI İZLE</button>
+                <a href="index.html#about" class="btn-secondary" data-i18n="games.coming_btn_community">TOPLULUĞA KATIL ↗</a>
+              </div>
+            </div>
 
-          <p class="coming-soon-text" data-i18n="games.coming_text">
-            Hikaye anlatımı, atmosferik ses tasarımı ve özgün mekanikleri bir araya getiren bağımsız oyun projelerimiz stüdyo mutfağında şekilleniyor. Geliştirme süreçleri, ilk ekran görüntüleri ve fragmanlar çok yakında bu sayfada yer alacak.
-          </p>
+            <div style="border-radius: var(--vrc-radius-lg); overflow: hidden; border: 1.5px solid var(--vrc-border); box-shadow: var(--vrc-shadow-sm);">
+              <img
+                src="assets/img/hero/concept-hero.svg"
+                alt="Ashes of Veridia Konsept Çizim"
+                width="800"
+                height="600"
+                style="width: 100%; height: 100%; object-fit: cover;"
+                loading="lazy"
+              >
+            </div>
+          </div>
 
+          <!-- 3 Tasarım Sütunu (Numarasız) -->
           <div class="coming-soon-features">
             <div class="feature-item">
-              <span class="feature-tag" data-i18n="games.feat1_tag">01 // VİZYON</span>
+              <span class="feature-tag" data-lang-tr="VİZYON &amp; ANLATI" data-lang-en="VISION &amp; LORE">VİZYON &amp; ANLATI</span>
               <h3 class="feature-title" data-i18n="games.feat1_title">Bağımsız Ruh, Özgün Hikaye</h3>
               <p class="feature-desc" data-i18n="games.feat1_desc">Derin evrenler ve oyuncuyu içine çeken atmosferik maceralar.</p>
             </div>
+
             <div class="feature-item">
-              <span class="feature-tag" data-i18n="games.feat2_tag">02 // TASARIM</span>
+              <span class="feature-tag" data-lang-tr="ÖZGÜN SANAT &amp; SES" data-lang-en="BESPOKE ART &amp; AUDIO">ÖZGÜN SANAT &amp; SES</span>
               <h3 class="feature-title" data-i18n="games.feat2_title">Özgün Sanat &amp; Ses</h3>
               <p class="feature-desc" data-i18n="games.feat2_desc">El işçiliği görsel estetik ve mekânsal akustik ses dünyası.</p>
             </div>
+
             <div class="feature-item">
-              <span class="feature-tag" data-i18n="games.feat3_tag">03 // MÜHENDİSLİK</span>
+              <span class="feature-tag" data-lang-tr="MODERN SİSTEMLER" data-lang-en="MODERN SYSTEMS">MODERN SİSTEMLER</span>
               <h3 class="feature-title" data-i18n="games.feat3_title">Modern &amp; Akıcı Sistemler</h3>
               <p class="feature-desc" data-i18n="games.feat3_desc">Yüksek performans ve sağlam oyun mimarisi.</p>
             </div>
           </div>
-
-          <div class="coming-soon-actions">
-            <a href="index.html#about" class="btn-primary" data-i18n="games.coming_btn_community">TOPLULUĞA KATIL ↗</a>
-            <a href="credit.html" class="btn-secondary" data-i18n="games.coming_btn_team">EKİBİ TANI ↗</a>
-          </div>
-        </div>
+        </article>
       </div>
     </section>
   </main>
 
+  <!-- Şık Footer -->
   <footer class="site-footer">
     <div class="footer-inner">
-      <span data-i18n="footer.rights">© 2026 Aderion Studio. Tüm hakları saklıdır.</span>
+      <div class="vrc-footer-brand">
+        <img src="assets/img/team/logo-mark.svg" alt="Aderion Studio Logo" width="22" height="22">
+        <span>ADERION STUDIO</span>
+      </div>
+
+      <div class="vrc-footer-links">
+        <a href="index.html" data-lang-tr="Ana Sayfa" data-lang-en="Home">Ana Sayfa</a>
+        <a href="games.html" data-i18n="nav.games">OYUNLAR</a>
+        <a href="credit.html" data-i18n="nav.credit">CREDIT</a>
+        <a href="index.html#about" data-i18n="nav.about">HAKKIMIZDA</a>
+        <span data-i18n="footer.rights">© 2026 Aderion Studio.</span>
+      </div>
     </div>
   </footer>
 
+  <!-- Video Fragman Modalı -->
   <div id="media-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true" data-modal>
     <div class="modal-dialog">
       <div class="modal-header">

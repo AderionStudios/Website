@@ -521,6 +521,10 @@ function applyTranslations() {
             el.textContent = t(key);
         }
     });
+    const bilingualTargets = document.querySelectorAll('[data-lang-tr][data-lang-en]');
+    bilingualTargets.forEach((el) => {
+        el.textContent = currentLocale === 'tr' ? el.dataset.langTr : el.dataset.langEn;
+    });
     const ariaTargets = document.querySelectorAll('[data-i18n-aria]');
     ariaTargets.forEach((el) => {
         const key = el.getAttribute('data-i18n-aria');
