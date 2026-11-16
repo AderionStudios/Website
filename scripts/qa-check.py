@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import ast
 import json
 import re
 import sys
@@ -142,6 +143,28 @@ def check_credits_json(root: Path) -> list[str]:
     errors: list[str] = []
     for dep_idx, dep in enumerate(departments):
         errors.extend(_validate_department(dep_idx, dep))
+    return errors
+
+
+def check_python_syntax(root: Path) -> list[str]:
+    """Validate Python syntax for all scripts/*.py files via ast.parse and compile."""
+    scripts_dir = root / "scripts"
+    if not scripts_dir.is_dir():
+        return ["scripts/ directory is missing."]
+
+    py_files = sorted(path for path in scripts_dir.glob("*.py") if path.is_file())
+    if not py_files:
+        return ["No Python files found in scripts/."]
+
+    errors: list[str] = []
+    for py_path in py_files:
+        try:
+            source = py_path.read_text(encoding="utf-8")
+            tree = ast.parse(source, filename=str(py_path))
+            compile(tree, filename=str(py_path), mode="exec")
+        except (OSError, UnicodeDecodeError, SyntaxError, ValueError) as exc:
+            rel = py_path.relative_to(root)
+            errors.append(f"Python syntax error in {rel}: {exc}")
     return errors
 
 
@@ -341,6 +364,7 @@ def main() -> int:
     errors.extend(check_version(ROOT_DIR))
     errors.extend(check_conflict_markers(ROOT_DIR))
     errors.extend(check_credits_json(ROOT_DIR))
+    errors.extend(check_python_syntax(ROOT_DIR))
 
     html_errors, parsed_html = check_html_links_and_csp(ROOT_DIR)
     errors.extend(html_errors)
@@ -352,7 +376,10 @@ def main() -> int:
             print(f"  - {err}", file=sys.stderr)
         return 1
 
-    print("QA check PASSED: VERSION, conflicts, credits.json, links, CSP, and i18n OK.")
+    print(
+        "QA check PASSED: VERSION, conflicts, credits.json, "
+        "scripts, links, CSP, and i18n OK."
+    )
     return 0
 
 

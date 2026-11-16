@@ -1,0 +1,8 @@
+# Python dev/QA tools used in .github/workflows/deploy.yml.
+# Note: scripts/qa-check.py and scripts/bump-version.py use only the Python
+# standard library (zero third-party runtime dependencies).
+ruff
+flake8
+mypy
+bandit
+semgrep

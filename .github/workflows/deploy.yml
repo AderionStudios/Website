@@ -107,10 +107,12 @@ jobs:
             **/.github/**
             **/node_modules/**
             scripts/**
+            docs/**
             update-credits.bat
             *.md
             *.log
             **/*.log
+            requirements*.txt
             api/smtp_config.php
             api/discord_config.php
             biome.json

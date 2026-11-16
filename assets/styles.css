@@ -658,4 +658,30 @@ a.genre-card:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
 @media(prefers-reduced-motion:reduce){
  .lightbox,.lightbox-shell,.lightbox-close,.lightbox-nav{transition:none}
 }
+/* FOOTER CONNECT STRIP */
+.footer-connect-strip{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:24px 40px}
+.contact .footer-connect-strip{margin-top:76px;padding-top:30px;border-top:1px solid rgba(199,213,238,.15)}
+.contact .footer-connect-strip+.footer-bottom{margin-top:28px;padding-top:24px}
+.sub-footer .footer-connect-strip{margin-top:30px;padding-top:26px;border-top:1px solid rgba(212,229,251,.1)}
+.sub-footer .footer-connect-strip+.sub-footer-base{margin-top:26px}
+.footer-connect-group{display:flex;flex-direction:column;gap:12px}
+.footer-connect-label{font-size:10px;font-weight:800;letter-spacing:.16em;color:#8ea0ba;text-transform:uppercase}
+.footer-connect-links{display:flex;flex-wrap:wrap;gap:9px 10px}
+.footer-connect-links a{display:inline-flex;align-items:center;padding:7px 13px;border-radius:999px;border:1px solid rgba(199,213,238,.18);background:rgba(255,255,255,.04);color:#c7d5ee;font-size:12px;font-weight:600;letter-spacing:.01em;transition:color .18s,border-color .18s,background-color .18s,transform .18s}
+.footer-connect-links a:hover,.footer-connect-links a:focus-visible{color:#fff;border-color:rgba(169,196,242,.55);background:rgba(169,196,242,.12);transform:translateY(-1px)}
+:root[data-theme="dark"] .footer-connect-strip{border-top-color:#2c415b}
+:root[data-theme="dark"] .footer-connect-label{color:#9ab0cc}
+:root[data-theme="dark"] .footer-connect-links a{border-color:#2c415b;background:rgba(255,255,255,.03);color:#d7e4f7}
+:root[data-theme="dark"] .footer-connect-links a:hover,:root[data-theme="dark"] .footer-connect-links a:focus-visible{color:#fff;border-color:#5b7ea8;background:rgba(169,196,242,.14)}
+@media(max-width:760px){
+ .footer-connect-strip{flex-direction:column;gap:22px}
+ .contact .footer-connect-strip{margin-top:52px;padding-top:24px}
+ .contact .footer-connect-strip+.footer-bottom{margin-top:24px;padding-top:22px}
+ .sub-footer .footer-connect-strip{margin-top:24px;padding-top:22px}
+ .sub-footer .footer-connect-strip+.sub-footer-base{margin-top:22px}
+ .footer-connect-links a{font-size:11px;padding:6px 11px}
+}
+@media(prefers-reduced-motion:reduce){
+ .footer-connect-links a{transition:none}
+}
 
