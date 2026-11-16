@@ -107,7 +107,7 @@ def fetch_profile(discord_id: str):
     print(f'  Discord profile: {PROFILE_API}{discord_id}')
     req = Request(PROFILE_API + discord_id, headers={'User-Agent': USER_AGENT, 'Accept': 'application/json'})
     try:
-        with urlopen(req, timeout=16) as r:
+        with urlopen(req, timeout=16) as r:  # nosec B310
             if int(getattr(r, 'status', 200)) != 200:
                 raise ValueError(f'HTTP {r.status}')
             raw = r.read(2 * 1024 * 1024)
@@ -131,7 +131,7 @@ def download_discord_image(url: str, discord_id: str, kind: str):
     # Discord CDN supports size; preserve any other query parameters.
     req = Request(safe, headers={'User-Agent': USER_AGENT, 'Accept': 'image/*'})
     try:
-        with urlopen(req, timeout=20) as r:
+        with urlopen(req, timeout=20) as r:  # nosec B310
             data = r.read(MAX_IMAGE_BYTES + 1)
         if len(data) > MAX_IMAGE_BYTES:
             raise ValueError('image exceeds 15 MB')

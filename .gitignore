@@ -44,4 +44,27 @@ desktop.ini
 # CI staging directory (if tested locally)
 _deploy/
 
+# Python & QA tool caches
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.php-cs-fixer.cache
+.phpunit.result.cache
+.eslintcache
+.stylelintcache
+.semgrep/
+.semgrep_logs/
+vendor/
+
+# Runtime error logs
+error.log
+.error.log
+
+# Local standalone Mini Paint test files
+mini-paint.html
+assets/mini-paint.css
+assets/mini-paint.js
+
 .github/

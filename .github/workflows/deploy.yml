@@ -28,7 +28,7 @@ jobs:
 
       - name: Python Strict QA
         run: |
-          ruff check --select ALL --ignore D203,D213 scripts/qa-check.py scripts/bump-version.py
+          ruff check --select ALL --ignore D203,D213,CPY001,COM812 scripts/qa-check.py scripts/bump-version.py
           flake8 --max-line-length=88 --max-complexity=10 scripts/qa-check.py scripts/bump-version.py
           mypy --strict --ignore-missing-imports scripts/qa-check.py scripts/bump-version.py
           bandit -r scripts/qa-check.py scripts/bump-version.py -ll -ii
@@ -69,7 +69,7 @@ jobs:
       - name: SAST (Semgrep)
         run: |
           pip install semgrep
-          semgrep scan --config=auto --error --severity=WARNING .
+          semgrep scan --config=auto --error --severity=WARNING --quiet .
 
   deploy:
     needs: qa

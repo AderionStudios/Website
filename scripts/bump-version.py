@@ -20,7 +20,7 @@ SEMVER_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse CLI arguments for version bumping."""
     parser = argparse.ArgumentParser(
-        description="Bump VERSION atomically and optionally commit/tag."
+        description="Bump VERSION atomically and optionally commit/tag.",
     )
     parser.add_argument(
         "target",

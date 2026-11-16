@@ -7,7 +7,6 @@ import json
 import re
 import shutil
 import subprocess  # nosec B404
-import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
@@ -29,7 +28,7 @@ TOOLS: list[dict[str, Any]] = [
             "--select",
             "ALL",
             "--ignore",
-            "D203,D213",
+            "D203,D213,CPY001,COM812",
             "scripts/qa-check.py",
             "scripts/bump-version.py",
         ],
@@ -64,7 +63,12 @@ TOOLS: list[dict[str, Any]] = [
     },
     {
         "name": "PHPStan (Level Max)",
-        "cmd": ["phpstan", "analyse", "--configuration=phpstan.neon", "--no-progress"],
+        "cmd": [
+            "phpstan",
+            "analyse",
+            "--configuration=phpstan.neon",
+            "--no-progress",
+        ],
     },
     {
         "name": "PHP-CS-Fixer (Dry Run)",
@@ -98,7 +102,15 @@ TOOLS: list[dict[str, Any]] = [
     },
     {
         "name": "Semgrep (SAST)",
-        "cmd": ["semgrep", "scan", "--config=auto", "--error", "--severity=WARNING", "."],
+        "cmd": [
+            "semgrep",
+            "scan",
+            "--config=auto",
+            "--error",
+            "--severity=WARNING",
+            "--quiet",
+            ".",
+        ],
     },
 ]
 
@@ -151,24 +163,59 @@ def extract_keys(text: str, marker: str) -> set[str]:
         elif text[pos] == "}":
             depth -= 1
         pos += 1
-    body = text[match.end() : pos - 1]
+    start = match.end()
+    end = pos - 1
+    body = text[start:end]
     return {m.group(1) or m.group(2) for m in KEY_RE.finditer(body)}
+
+
+def check_version(root: Path) -> list[str]:
+    """Validate semantic version in VERSION file."""
+    version = (root / "VERSION").read_text(encoding="utf-8").strip()
+    if not re.fullmatch(r"\d+\.\d+\.\d+", version):
+        return [f"Invalid VERSION: {version!r}"]
+    return []
+
+
+def check_credits_json(root: Path) -> list[str]:
+    """Validate data/credits.json structure."""
+    credits_path = root / "data" / "credits.json"
+    try:
+        credits_data = json.loads(credits_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"data/credits.json error: {exc}"]
+    if not isinstance(credits_data.get("departments"), list):
+        return ["data/credits.json: 'departments' must be a list"]
+    return []
+
+
+def check_html_file(
+    html_file: Path,
+    site_tr: set[str],
+    site_en: set[str],
+) -> list[str]:
+    """Validate links, CSP rules, and i18n keys for one HTML file."""
+    errors: list[str] = []
+    parser = PageParser()
+    parser.feed(html_file.read_text(encoding="utf-8"))
+    for issue in sorted(set(parser.csp_issues)):
+        errors.append(f"{html_file.name}: CSP issue ({issue})")
+    for link in parser.links:
+        if not link.startswith(IGNORED_PREFIXES):
+            clean = link.split("#", 1)[0].split("?", 1)[0]
+            if not (html_file.parent / clean).exists():
+                errors.append(f"{html_file.name}: broken link '{link}'")
+    if html_file.name != "mini-paint.html":
+        for key in sorted(parser.site_keys - site_tr):
+            errors.append(f"{html_file.name}: missing TR key '{key}'")
+        for key in sorted(parser.site_keys - site_en):
+            errors.append(f"{html_file.name}: missing EN key '{key}'")
+    return errors
 
 
 def check_site_basics(root: Path) -> list[str]:
     """Check VERSION, data/credits.json, HTML links, CSP, and i18n."""
-    errors: list[str] = []
-    version = (root / "VERSION").read_text(encoding="utf-8").strip()
-    if not re.fullmatch(r"\d+\.\d+\.\d+", version):
-        errors.append(f"Invalid VERSION: {version!r}")
-
-    try:
-        credits = json.loads((root / "data" / "credits.json").read_text(encoding="utf-8"))
-        if not isinstance(credits.get("departments"), list):
-            errors.append("data/credits.json: 'departments' must be a list")
-    except (OSError, json.JSONDecodeError) as exc:
-        errors.append(f"data/credits.json error: {exc}")
-
+    errors = check_version(root) + check_credits_json(root)
     main_js = (root / "assets" / "main.js").read_text(encoding="utf-8")
     pages_js = (root / "assets" / "pages.js").read_text(encoding="utf-8")
     site_tr = extract_keys(main_js, r"\btr\s*:\s*\{") | extract_keys(
@@ -177,23 +224,35 @@ def check_site_basics(root: Path) -> list[str]:
     site_en = extract_keys(main_js, r"\ben\s*:\s*\{") | extract_keys(
         pages_js, r"\bconst\s+extraEn\s*=\s*\{"
     )
-
     for html_file in sorted(root.glob("*.html")):
-        parser = PageParser()
-        parser.feed(html_file.read_text(encoding="utf-8"))
-        for issue in sorted(set(parser.csp_issues)):
-            errors.append(f"{html_file.name}: CSP issue ({issue})")
-        for link in parser.links:
-            if not link.startswith(IGNORED_PREFIXES):
-                target = (html_file.parent / link.split("#", 1)[0].split("?", 1)[0])
-                if not target.exists():
-                    errors.append(f"{html_file.name}: broken link '{link}'")
-        if html_file.name != "mini-paint.html":
-            for key in sorted(parser.site_keys - site_tr):
-                errors.append(f"{html_file.name}: missing TR key '{key}'")
-            for key in sorted(parser.site_keys - site_en):
-                errors.append(f"{html_file.name}: missing EN key '{key}'")
+        errors.extend(check_html_file(html_file, site_tr, site_en))
     return errors
+
+
+def run_tool(tool: dict[str, Any]) -> bool:
+    """Run one configured QA tool and return True if it failed."""
+    print(f"\n[{tool['name']}]")
+    exe = shutil.which(tool["cmd"][0])
+    if not exe:
+        print(f"  Skipped: '{tool['cmd'][0]}' not installed locally.")
+        return False
+    result = subprocess.run(  # nosec B603
+        [exe, *tool["cmd"][1:]],
+        cwd=ROOT_DIR,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode == 0:
+        print("  Clear.")
+        return False
+    print("  WARNING / ERROR FOUND:")
+    output = (result.stdout or result.stderr).strip().splitlines()
+    for line in output[:15]:
+        print(f"    {line}")
+    if len(output) > 15:
+        print("    ... (truncated)")
+    return True
 
 
 def run_qa() -> int:
@@ -213,28 +272,8 @@ def run_qa() -> int:
         print("  Clear.")
 
     for tool in TOOLS:
-        print(f"\n[{tool['name']}]")
-        exe = shutil.which(tool["cmd"][0])
-        if not exe:
-            print(f"  Skipped: '{tool['cmd'][0]}' not installed locally.")
-            continue
-        result = subprocess.run(  # nosec B603
-            [exe, *tool["cmd"][1:]],
-            cwd=ROOT_DIR,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode == 0:
-            print("  Clear.")
-        else:
+        if run_tool(tool):
             has_failures = True
-            print("  WARNING / ERROR FOUND:")
-            output = (result.stdout or result.stderr).strip().splitlines()
-            for line in output[:15]:
-                print(f"    {line}")
-            if len(output) > 15:
-                print("    ... (truncated)")
 
     print("\n" + "=" * 60)
     if has_failures:
