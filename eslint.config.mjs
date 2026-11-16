@@ -1,0 +1,41 @@
+export default [
+  {
+    ignores: ["node_modules/**", "assets/credits-data.js"],
+  },
+  {
+    files: ["assets/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        window: "readonly",
+        document: "readonly",
+        navigator: "readonly",
+        localStorage: "readonly",
+        fetch: "readonly",
+        URL: "readonly",
+        console: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        CustomEvent: "readonly",
+        IntersectionObserver: "readonly",
+        Element: "readonly",
+        Image: "readonly",
+        Map: "readonly",
+        Set: "readonly",
+        Math: "readonly",
+        Date: "readonly",
+        Promise: "readonly",
+        encodeURIComponent: "readonly",
+        structuredClone: "readonly",
+      },
+    },
+    rules: {
+      "no-unused-vars": ["error", { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" }],
+      "no-undef": "error",
+      eqeqeq: ["error", "always"],
+      "no-var": "error",
+      "prefer-const": "error",
+    },
+  },
+];

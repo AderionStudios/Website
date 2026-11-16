@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Aderion Studios">
+    <description>Strict PSR-12 coding standard for Aderion Studios PHP API.</description>
+
+    <file>api</file>
+
+    <exclude-pattern>api/smtp_config\.php$</exclude-pattern>
+    <exclude-pattern>api/discord_config\.php$</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+    <arg name="warning-severity" value="1"/>
+    <arg name="error-severity" value="1"/>
+
+    <rule ref="PSR12"/>
+</ruleset>
