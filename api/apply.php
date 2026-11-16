@@ -9,6 +9,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/error_logger.php';
+require_once __DIR__ . '/mailer_lib.php';
 
 // 1. Strict Security & Caching Headers
 header('Content-Type: application/json; charset=UTF-8');
@@ -62,27 +63,21 @@ if (!empty($_POST['website'])) {
     jsonResponse(200, true, 'success', 'Başvurunuz başarıyla alındı.');
 }
 
-// 6. Rate Limiting via local temp file (45s cooldown per IP)
-$clientIp = $_SERVER['HTTP_CF_CONNECTING_IP'] 
-    ?? $_SERVER['HTTP_X_FORWARDED_FOR'] 
-    ?? $_SERVER['REMOTE_ADDR'] 
-    ?? '127.0.0.1';
-$clientIp = explode(',', (string)$clientIp)[0];
-$clientIpClean = preg_replace('/[^a-zA-Z0-9_.-]/', '_', trim($clientIp));
-
-$tempDir = sys_get_temp_dir();
-$rateFile = $tempDir . '/aderion_apply_' . md5('apply_rate_' . $clientIpClean) . '.tmp';
-$now = time();
-$cooldownSeconds = 30;
-
-if (@file_exists($rateFile)) {
-    $lastTime = (int)@file_get_contents($rateFile);
-    if (($now - $lastTime) < $cooldownSeconds) {
-        $waitRemaining = $cooldownSeconds - ($now - $lastTime);
-        jsonResponse(429, false, 'rate_limited', "Lütfen tekrar göndermeden önce {$waitRemaining} saniye bekleyin.");
+// 6. Rate Limiting (30s cooldown per IP). This is a read-only check; the
+//    cooldown only starts after the input passed validation (see aderionRateMark).
+$ipConfig = [];
+$ipConfigFile = __DIR__ . '/smtp_config.php';
+if (is_file($ipConfigFile)) {
+    $loadedIpConfig = require $ipConfigFile;
+    if (is_array($loadedIpConfig)) {
+        $ipConfig = $loadedIpConfig;
     }
 }
-@file_put_contents($rateFile, (string)$now, LOCK_EX);
+$clientIp = aderionClientIp($ipConfig);
+$waitRemaining = aderionRateRemaining('apply', $clientIp, 30);
+if ($waitRemaining > 0) {
+    jsonResponse(429, false, 'rate_limited', "Lütfen tekrar göndermeden önce {$waitRemaining} saniye bekleyin.");
+}
 
 // 7. Sanitization & Input Validation
 function cleanSingleLine(?string $val, int $max = 120): string {
@@ -95,12 +90,14 @@ function cleanSingleLine(?string $val, int $max = 120): string {
     return $val;
 }
 
-$name = cleanSingleLine($_POST['name'] ?? '', 100);
-$rawEmail = cleanSingleLine($_POST['email'] ?? '', 180);
-$roleKey = cleanSingleLine($_POST['role'] ?? '', 60);
-$portfolio = cleanSingleLine($_POST['portfolio'] ?? '', 500);
-$experienceKey = cleanSingleLine($_POST['experience'] ?? '', 40);
-$rawMessage = trim((string)($_POST['message'] ?? ''));
+// Non-string values (e.g. name[]=x) are treated as empty instead of crashing.
+$postStr = static fn(string $k): string => (isset($_POST[$k]) && is_string($_POST[$k])) ? $_POST[$k] : '';
+$name = cleanSingleLine($postStr('name'), 100);
+$rawEmail = cleanSingleLine($postStr('email'), 180);
+$roleKey = cleanSingleLine($postStr('role'), 60);
+$portfolio = cleanSingleLine($postStr('portfolio'), 500);
+$experienceKey = cleanSingleLine($postStr('experience'), 40);
+$rawMessage = trim($postStr('message'));
 
 // Validate Name
 if (mb_strlen($name, 'UTF-8') < 2) {
@@ -112,6 +109,13 @@ $cleanEmail = filter_var($rawEmail, FILTER_VALIDATE_EMAIL);
 if (!$cleanEmail) {
     jsonResponse(422, false, 'invalid_email', 'Lütfen geçerli bir e-posta adresi girin.');
 }
+
+// Validate Portfolio URL (http/https only; blocks javascript:, data:, etc.)
+$portfolioUrl = aderionNormalizeUrl($portfolio, 500);
+if ($portfolioUrl === null) {
+    jsonResponse(422, false, 'invalid_portfolio', 'Lütfen geçerli bir portföy bağlantısı girin (http:// veya https://).');
+}
+$portfolio = $portfolioUrl;
 
 // Roles Dictionary & Mapping
 $rolesCatalog = [
@@ -141,6 +145,9 @@ if (mb_strlen($rawMessage, 'UTF-8') < 10) {
 if (mb_strlen($rawMessage, 'UTF-8') > 3000) {
     $rawMessage = mb_substr($rawMessage, 0, 3000, 'UTF-8');
 }
+
+// Input is valid: start the cooldown now.
+aderionRateMark('apply', $clientIp);
 
 // 8. Load SMTP Configuration
 $configFile = __DIR__ . '/smtp_config.php';
@@ -250,163 +257,6 @@ $htmlBody = <<<HTML
 </html>
 HTML;
 
-// 10. Standalone Pure PHP SMTP Socket Client
-class SimpleSmtpClient {
-    private string $host;
-    private int $port;
-    private string $secure;
-    private string $user;
-    private string $pass;
-    private int $timeout;
-    private $socket = null;
-    private string $lastError = '';
-
-    public function __construct(string $host, int $port, string $secure, string $user, string $pass, int $timeout = 15) {
-        $this->host = $host;
-        $this->port = $port;
-        $this->secure = strtolower($secure);
-        $this->user = $user;
-        $this->pass = $pass;
-        $this->timeout = $timeout;
-    }
-
-    public function getLastError(): string {
-        return $this->lastError;
-    }
-
-    private function readResponse(): string {
-        $data = '';
-        while (!@feof($this->socket)) {
-            $str = @fgets($this->socket, 515);
-            if ($str === false) break;
-            $data .= $str;
-            if (isset($str[3]) && $str[3] === ' ') break;
-        }
-        return trim($data);
-    }
-
-    private function sendCmd(string $cmd): string {
-        @fputs($this->socket, $cmd . "\r\n");
-        return $this->readResponse();
-    }
-
-    public function send(string $from, string $to, string $subject, string $htmlBody, array $extraHeaders = []): bool {
-        $prefix = ($this->secure === 'ssl') ? 'ssl://' : '';
-        $target = $prefix . $this->host;
-
-        $context = stream_context_create([
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            ]
-        ]);
-
-        $this->socket = @stream_socket_client(
-            "{$target}:{$this->port}",
-            $errno,
-            $errstr,
-            $this->timeout,
-            STREAM_CLIENT_CONNECT,
-            $context
-        );
-
-        if (!$this->socket) {
-            $this->lastError = "SMTP sunucusuna bağlanılamadı ({$target}:{$this->port}): {$errstr} [Hata Kodu: {$errno}]";
-            return false;
-        }
-
-        @stream_set_timeout($this->socket, $this->timeout);
-        $res = $this->readResponse();
-        if (!str_starts_with($res, '220')) {
-            $this->lastError = "Sunucu karşılama hatası: " . $res;
-            return false;
-        }
-
-        $clientDomain = !empty($_SERVER['HTTP_HOST']) ? explode(':', $_SERVER['HTTP_HOST'])[0] : 'localhost';
-        $res = $this->sendCmd("EHLO {$clientDomain}");
-        if (!str_starts_with($res, '250')) {
-            $res = $this->sendCmd("HELO {$clientDomain}");
-            if (!str_starts_with($res, '250')) {
-                $this->lastError = "EHLO/HELO reddedildi: " . $res;
-                return false;
-            }
-        }
-
-        // STARTTLS negotiation if required
-        if ($this->secure === 'tls') {
-            $res = $this->sendCmd("STARTTLS");
-            if (!str_starts_with($res, '220')) {
-                $this->lastError = "STARTTLS reddedildi: " . $res;
-                return false;
-            }
-            if (!@stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
-                $this->lastError = "TLS şifreleme el sıkışması başarısız oldu.";
-                return false;
-            }
-            $res = $this->sendCmd("EHLO {$clientDomain}");
-            if (!str_starts_with($res, '250')) {
-                $this->lastError = "TLS sonrası EHLO reddedildi: " . $res;
-                return false;
-            }
-        }
-
-        // Authentication via AUTH LOGIN
-        if (!empty($this->user) && !empty($this->pass)) {
-            $res = $this->sendCmd("AUTH LOGIN");
-            if (!str_starts_with($res, '334')) {
-                $this->lastError = "AUTH LOGIN komutu reddedildi: " . $res;
-                return false;
-            }
-
-            $res = $this->sendCmd(base64_encode($this->user));
-            if (!str_starts_with($res, '334')) {
-                $this->lastError = "Kullanıcı adı kabul edilmedi: " . $res;
-                return false;
-            }
-
-            $res = $this->sendCmd(base64_encode($this->pass));
-            if (!str_starts_with($res, '235')) {
-                $this->lastError = "SMTP Kimlik doğrulama başarısız! E-posta adresi veya şifre hatalı: " . $res;
-                return false;
-            }
-        }
-
-        // MAIL FROM
-        $res = $this->sendCmd("MAIL FROM:<{$from}>");
-        if (!str_starts_with($res, '250')) {
-            $this->lastError = "Gönderici (MAIL FROM) adresi reddedildi: " . $res;
-            return false;
-        }
-
-        // RCPT TO
-        $res = $this->sendCmd("RCPT TO:<{$to}>");
-        if (!str_starts_with($res, '250')) {
-            $this->lastError = "Alıcı (RCPT TO) adresi reddedildi: " . $res;
-            return false;
-        }
-
-        // DATA
-        $res = $this->sendCmd("DATA");
-        if (!str_starts_with($res, '354')) {
-            $this->lastError = "DATA komutu reddedildi: " . $res;
-            return false;
-        }
-
-        $headersStr = implode("\r\n", $extraHeaders);
-        $payload = "Subject: {$subject}\r\n{$headersStr}\r\n\r\n{$htmlBody}\r\n.";
-        $res = $this->sendCmd($payload);
-        if (!str_starts_with($res, '250')) {
-            $this->lastError = "E-posta içeriği sunucu tarafından kabul edilmedi: " . $res;
-            return false;
-        }
-
-        $this->sendCmd("QUIT");
-        @fclose($this->socket);
-        return true;
-    }
-}
-
 // 11. Dispatch Email via SMTP
 $encodedFromName = "=?UTF-8?B?" . base64_encode($fromName) . "?=";
 $encodedReplyName = "=?UTF-8?B?" . base64_encode($name) . "?=";
@@ -427,7 +277,9 @@ $smtpClient = new SimpleSmtpClient(
     $smtpSecure,
     $smtpUser,
     $smtpPass,
-    15
+    15,
+    (bool)($smtpConfig['verify_tls'] ?? true),
+    (string)($smtpConfig['peer_name'] ?? '')
 );
 
 $success = $smtpClient->send(

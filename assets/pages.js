@@ -97,112 +97,193 @@ const roles = [
 const escapeHtml = value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 let credits = null;
 const safeLink = candidate=>{try{let url=new URL(candidate);return ['https:','http:'].includes(url.protocol)?url.href:null;}catch{return null;}};
-const discordProfileCache = new Map();
+// ---------------------------------------------------------------------------
+// Live Discord profiles.
+// Data comes from our own api/discord.php (server-side cached, token stays on
+// the server). Config in data/credits.json is only the fallback / override:
+//   member.banner  -> pinned banner (any image/GIF URL or local file), wins over Discord
+//   member.bubble_tr/en -> status text shown when the member has no Discord custom status
+// ---------------------------------------------------------------------------
+let liveProfiles = {};
+let liveRefreshStarted = false;
+const LIVE_REFRESH_MS = 90000;
 
-function fetchDiscordProfile(discordId) {
-  if (!discordId || !/^\d{16,24}$/.test(discordId)) {
-    return Promise.resolve(null);
+async function fetchLiveProfiles() {
+  try {
+    const res = await fetch('api/discord.php', { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return (data && data.ok && data.users && typeof data.users === 'object') ? data.users : null;
+  } catch (_) {
+    return null;
   }
-  if (discordProfileCache.has(discordId)) {
-    return discordProfileCache.get(discordId);
-  }
-  const promise = fetch(`https://japi.rest/discord/v1/user/${discordId}`, {
-    headers: { 'Accept': 'application/json' }
-  })
-    .then(r => (r.ok ? r.json() : null))
-    .then(res => (res && res.data ? res.data : null))
-    .catch(() => null);
-  discordProfileCache.set(discordId, promise);
-  return promise;
 }
 
-function hydrateMemberFromDiscord(card, member, fallbackAvatar) {
-  const discordId = String(member.discordId || '').trim();
-  if (!/^\d{16,24}$/.test(discordId)) return;
-
-  const needsName = !member.displayName && !member.name;
-  const needsHandle = !member.handle;
-  const needsAvatar = !member.avatar && !member.avatarExt;
-  const needsBanner = !member.banner && !member.bannerExt;
-
-  if (!needsName && !needsHandle && !needsAvatar && !needsBanner) return;
-
-  fetchDiscordProfile(discordId).then(profile => {
-    if (!profile || !card.isConnected) return;
-
-    if (needsName) {
-      const resolvedName = profile.global_name || profile.displayName || profile.username;
-      const nameEl = card.querySelector('.member-identity h3');
-      if (resolvedName && nameEl) nameEl.textContent = resolvedName;
-    }
-
-    if (needsHandle && profile.username) {
-      const identityEl = card.querySelector('.member-identity');
-      if (identityEl && !identityEl.querySelector('.member-handle')) {
-        const handleEl = document.createElement('span');
-        handleEl.className = 'member-handle';
-        handleEl.textContent = `@${profile.username}`;
-        const pronounsEl = identityEl.querySelector('.member-pronouns');
-        identityEl.insertBefore(handleEl, pronounsEl || null);
-      }
-    }
-
-    if (needsAvatar) {
-      const avatarImg = card.querySelector('.member-avatar-img');
-      if (avatarImg) {
-        avatarImg.src = profile.avatarURL || fallbackAvatar;
-      }
-    }
-
-    if (needsBanner) {
-      const bannerEl = card.querySelector('.member-banner');
-      if (bannerEl) {
-        if (profile.bannerURL) {
-          bannerEl.style.backgroundImage = `url('${profile.bannerURL}')`;
-          let bannerImg = bannerEl.querySelector('.member-banner-img');
-          if (!bannerImg) {
-            bannerImg = document.createElement('img');
-            bannerImg.alt = `${member.displayName || member.name || discordId} Banner`;
-            bannerImg.className = 'member-banner-img';
-            bannerImg.loading = 'lazy';
-            bannerEl.prepend(bannerImg);
-          }
-          bannerImg.src = profile.bannerURL;
-          bannerImg.style.opacity = '1';
-        } else if (profile.banner_color) {
-          bannerEl.style.backgroundColor = profile.banner_color;
+/** Average colour of an image (used when a member has no banner and no accent colour). */
+function dominantColor(url) {
+  return new Promise(resolve => {
+    if (!url) return resolve(null);
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = () => {
+      try {
+        const c = document.createElement('canvas');
+        c.width = c.height = 16;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(im, 0, 0, 16, 16);
+        const d = ctx.getImageData(0, 0, 16, 16).data;
+        let r = 0, g = 0, b = 0, n = 0;
+        for (let i = 0; i < d.length; i += 4) {
+          if (d[i + 3] < 128) continue;
+          r += d[i]; g += d[i + 1]; b += d[i + 2]; n++;
         }
-      }
-    }
+        resolve(n ? `rgb(${Math.round(r / n)}, ${Math.round(g / n)}, ${Math.round(b / n)})` : null);
+      } catch (_) { resolve(null); }
+    };
+    im.onerror = () => resolve(null);
+    im.src = url;
   });
 }
 
-window.handleCreditAvatarError = function(img, discordId, fallbackSrc) {
-  img.onerror = null;
-  fetchDiscordProfile(discordId).then(profile => {
-    if (profile && profile.avatarURL) {
-      img.src = profile.avatarURL;
-      return;
+/** No banner image available: drop the image and show a solid colour instead. */
+function showBannerColor(bannerEl, color, avatarUrl) {
+  bannerEl.querySelector('.member-banner-img')?.remove();
+  bannerEl.style.backgroundImage = 'none';
+  if (color) {
+    bannerEl.style.backgroundColor = color;
+  } else {
+    dominantColor(avatarUrl).then(c => { if (c && bannerEl.isConnected) bannerEl.style.backgroundColor = c; });
+  }
+}
+
+function applyLiveProfile(card, p) {
+  if (!p || !card.isConnected) return;
+
+  const nameEl = card.querySelector('.member-identity h3');
+  const resolvedName = p.globalName || p.username;
+  if (resolvedName && nameEl) nameEl.textContent = resolvedName;
+
+  if (p.username) {
+    const identityEl = card.querySelector('.member-identity');
+    let handleEl = identityEl && identityEl.querySelector('.member-handle');
+    if (identityEl && !handleEl) {
+      handleEl = document.createElement('span');
+      handleEl.className = 'member-handle';
+      identityEl.insertBefore(handleEl, identityEl.querySelector('.member-pronouns') || null);
     }
-    img.src = fallbackSrc;
+    if (handleEl) handleEl.textContent = `@${p.username}`;
+  }
+
+  const avatarImg = card.querySelector('.member-avatar-img');
+  if (avatarImg && p.avatarUrl && avatarImg.getAttribute('src') !== p.avatarUrl) {
+    delete avatarImg.dataset.imgErrorDone;
+    avatarImg.src = p.avatarUrl;
+  }
+
+  // Avatar decoration: Discord is the source of truth.
+  const avatarWrap = card.querySelector('.member-avatar');
+  if (avatarWrap) {
+    let deco = avatarWrap.querySelector('.member-avatar-decoration');
+    if (p.decorationUrl) {
+      if (!deco) {
+        deco = document.createElement('img');
+        deco.alt = '';
+        deco.className = 'member-avatar-decoration';
+        deco.setAttribute('aria-hidden', 'true');
+        deco.dataset.imgError = 'remove';
+        avatarWrap.appendChild(deco);
+      }
+      if (deco.getAttribute('src') !== p.decorationUrl) deco.src = p.decorationUrl;
+    } else if (deco) {
+      deco.remove();
+    }
+  }
+
+  // Banner: pinned config banner > Discord banner (Nitro) > banner colour > avatar colour.
+  const bannerEl = card.querySelector('.member-banner');
+  if (bannerEl && card.dataset.bannerPinned !== '1') {
+    if (p.bannerUrl) {
+      bannerEl.style.backgroundColor = '';
+      bannerEl.style.backgroundImage = `url(${JSON.stringify(p.bannerUrl)})`;
+      let img = bannerEl.querySelector('.member-banner-img');
+      if (!img) {
+        img = document.createElement('img');
+        img.alt = `${resolvedName || ''} Banner`;
+        img.className = 'member-banner-img';
+        img.loading = 'lazy';
+        img.dataset.imgError = 'banner';
+        img.dataset.discordId = card.dataset.discordId || '';
+        bannerEl.prepend(img);
+      }
+      if (img.getAttribute('src') !== p.bannerUrl) {
+        delete img.dataset.imgErrorDone;
+        img.style.opacity = '1';
+        img.src = p.bannerUrl;
+      }
+    } else {
+      showBannerColor(bannerEl, p.bannerColor, p.avatarUrl || (avatarImg && avatarImg.getAttribute('src')));
+    }
+  }
+
+  // Custom status ("🔥 11 oyuna hazır, alright") -> speech bubble.
+  const st = p.status;
+  if (st && (st.text || st.emoji)) {
+    const text = `${st.emoji ? st.emoji + ' ' : ''}${st.text || ''}`.trim();
+    let bubble = card.querySelector('.discord-status-bubble');
+    if (!bubble) {
+      bubble = document.createElement('div');
+      bubble.className = 'discord-status-bubble';
+      const tail = document.createElement('span');
+      tail.className = 'status-bubble-tail';
+      const span = document.createElement('span');
+      span.className = 'status-bubble-text';
+      bubble.append(tail, span);
+      const anchor = card.querySelector('.member-role');
+      if (anchor) anchor.before(bubble); else card.querySelector('.member-body')?.appendChild(bubble);
+    }
+    bubble.dataset.bubbleTr = text;
+    bubble.dataset.bubbleEn = text;
+    const textEl = bubble.querySelector('.status-bubble-text');
+    if (textEl) textEl.textContent = text;
+  }
+}
+
+function applyAllLiveProfiles(root) {
+  const target = root || document.querySelector('#creditsRoot');
+  if (!target) return;
+  target.querySelectorAll('.member-card[data-discord-id]').forEach(card => {
+    const p = liveProfiles[card.dataset.discordId];
+    if (p) applyLiveProfile(card, p);
   });
+}
+
+async function refreshLiveProfiles() {
+  const users = await fetchLiveProfiles();
+  if (users) {
+    liveProfiles = users;
+    applyAllLiveProfiles();
+  }
+}
+
+function startLiveRefresh() {
+  if (liveRefreshStarted) return;
+  liveRefreshStarted = true;
+  refreshLiveProfiles();
+  setInterval(() => { if (!document.hidden) refreshLiveProfiles(); }, LIVE_REFRESH_MS);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshLiveProfiles(); });
+}
+
+// Image failure fallbacks (wired through the data-img-error listener in renderCreditsFromData).
+window.handleCreditAvatarError = function(img, discordId, fallbackSrc) {
+  if (fallbackSrc && img.getAttribute('src') !== fallbackSrc) img.src = fallbackSrc;
 };
 
 window.handleCreditBannerError = function(bannerImg, discordId) {
-  bannerImg.onerror = null;
-  bannerImg.style.opacity = '0';
   const bannerEl = bannerImg.closest('.member-banner');
-  if (bannerEl) bannerEl.style.backgroundImage = '';
-  fetchDiscordProfile(discordId).then(profile => {
-    if (!profile || !bannerEl) return;
-    if (profile.bannerURL) {
-      bannerImg.src = profile.bannerURL;
-      bannerImg.style.opacity = '1';
-      bannerEl.style.backgroundImage = `url('${profile.bannerURL}')`;
-    } else if (profile.banner_color) {
-      bannerEl.style.backgroundColor = profile.banner_color;
-    }
-  });
+  if (!bannerEl) return;
+  const live = liveProfiles[discordId] || {};
+  const avatar = bannerEl.closest('.member-card')?.querySelector('.member-avatar-img');
+  showBannerColor(bannerEl, live.bannerColor, live.avatarUrl || (avatar && avatar.getAttribute('src')));
 };
 
 function renderCreditsFromData(data) {
@@ -220,8 +301,6 @@ function renderCreditsFromData(data) {
   if (countEl) {
     countEl.textContent = `${String(totalMembers).padStart(2, '0')} ${totalMembers === 1 ? 'MEMBER' : 'MEMBERS'}`;
   }
-
-  const pendingHydrations = [];
 
   const deptHtml = data.departments.map(dept => {
     const deptId = dept.id || 'dept-' + (dept.code || '00');
@@ -271,9 +350,9 @@ function renderCreditsFromData(data) {
       // Decoration
       let decorationHtml = '';
       if (member.decoration) {
-        decorationHtml = `<img src="${escapeHtml(member.decoration)}" alt="" class="member-avatar-decoration" aria-hidden="true" onerror="this.remove();">`;
+        decorationHtml = `<img src="${escapeHtml(member.decoration)}" alt="" class="member-avatar-decoration" aria-hidden="true" data-img-error="remove">`;
       } else if (discordId === '966300934202359888' || member.hasDecoration) {
-        decorationHtml = `<img src="assets/images/team/${discordId}_decoration.png" alt="" class="member-avatar-decoration" aria-hidden="true" onerror="this.remove();">`;
+        decorationHtml = `<img src="assets/images/team/${discordId}_decoration.png" alt="" class="member-avatar-decoration" aria-hidden="true" data-img-error="remove">`;
       }
 
       // Status bubble
@@ -322,20 +401,16 @@ function renderCreditsFromData(data) {
 
       const roleLabel = translations[locale]?.creditRole || (locale === 'tr' ? 'STÜDYO ROLÜ' : 'STUDIO ROLE');
 
-      if (discordId) {
-        pendingHydrations.push({ memberId, member, fallbackAvatar });
-      }
-
       return `
-        <article class="member-card reveal in-view" data-member-id="${escapeHtml(memberId)}">
-          <div class="member-banner"${bannerSrc ? ` style="background-image: url('${escapeHtml(bannerSrc)}');"` : ''}>
-            ${bannerSrc ? `<img src="${escapeHtml(bannerSrc)}" alt="${escapeHtml(name)} Banner" class="member-banner-img" loading="lazy" onerror="window.handleCreditBannerError(this, '${escapeHtml(discordId)}')">` : ''}
+        <article class="member-card reveal in-view" data-member-id="${escapeHtml(memberId)}" data-discord-id="${escapeHtml(discordId)}"${member.banner ? ' data-banner-pinned="1"' : ''}>
+          <div class="member-banner"${bannerSrc ? ` data-banner-bg="${escapeHtml(bannerSrc)}"` : ''}>
+            ${bannerSrc ? `<img src="${escapeHtml(bannerSrc)}" alt="${escapeHtml(name)} Banner" class="member-banner-img" loading="lazy" data-img-error="banner" data-discord-id="${escapeHtml(discordId)}">` : ''}
             <span class="member-banner-label">ADERION / CORE TEAM</span>
           </div>
           <div class="member-body">
             <div class="member-head">
               <div class="member-avatar">
-                <img src="${escapeHtml(avatarSrc)}" alt="${escapeHtml(name)}" class="member-avatar-img" width="84" height="84" loading="lazy" onerror="window.handleCreditAvatarError(this, '${escapeHtml(discordId)}', '${escapeHtml(fallbackAvatar)}')">
+                <img src="${escapeHtml(avatarSrc)}" alt="${escapeHtml(name)}" class="member-avatar-img" width="84" height="84" loading="lazy" data-img-error="avatar" data-discord-id="${escapeHtml(discordId)}" data-fallback-src="${escapeHtml(fallbackAvatar)}">
                 ${decorationHtml}
               </div>
               <span class="member-role-badge">${escapeHtml(roleBadge)}</span>
@@ -376,10 +451,31 @@ function renderCreditsFromData(data) {
 
   root.innerHTML = deptHtml;
 
-  pendingHydrations.forEach(({ memberId, member, fallbackAvatar }) => {
-    const card = root.querySelector(`[data-member-id="${CSS.escape(String(memberId))}"]`);
-    if (card) hydrateMemberFromDiscord(card, member, fallbackAvatar);
+  // CSP-friendly replacements for the former inline style="" / onerror="" attributes.
+  root.querySelectorAll('[data-banner-bg]').forEach((el) => {
+    el.style.backgroundImage = `url(${JSON.stringify(el.dataset.bannerBg)})`;
   });
+  if (!root.dataset.imgErrorBound) {
+    root.dataset.imgErrorBound = '1';
+    // 'error' events do not bubble, so listen in the capture phase.
+    root.addEventListener('error', (event) => {
+      const img = event.target;
+      if (!(img instanceof HTMLImageElement) || !img.dataset.imgError) return;
+      const kind = img.dataset.imgError;
+      // Handle each image's failure only once (the old onerror=null guard) to avoid retry loops.
+      if (kind !== 'remove') {
+        if (img.dataset.imgErrorDone) return;
+        img.dataset.imgErrorDone = '1';
+      }
+      const discordId = img.dataset.discordId || '';
+      if (kind === 'remove') img.remove();
+      else if (kind === 'banner') window.handleCreditBannerError(img, discordId);
+      else if (kind === 'avatar') window.handleCreditAvatarError(img, discordId, img.dataset.fallbackSrc || '');
+    }, true);
+  }
+
+  // Re-apply the latest live Discord data after every (re)render (e.g. language switch).
+  applyAllLiveProfiles(root);
 }
 
 function updateStaticCreditsText() {
@@ -426,6 +522,7 @@ async function loadCredits() {
         window.ADERION_CREDITS = data;
         credits = data;
         renderCreditsFromData(data);
+        startLiveRefresh();
         return;
       }
     }
@@ -436,6 +533,7 @@ async function loadCredits() {
   if (window.ADERION_CREDITS && Array.isArray(window.ADERION_CREDITS.departments) && window.ADERION_CREDITS.departments.length > 0) {
     credits = window.ADERION_CREDITS;
     renderCreditsFromData(credits);
+    startLiveRefresh();
   } else {
     root.innerHTML = `<p class="credits-loading">${escapeHtml(locale === 'tr' ? 'Ekip bilgileri yüklenemedi.' : 'Could not load team information.')}</p>`;
   }
