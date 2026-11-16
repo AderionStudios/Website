@@ -47,6 +47,23 @@ const translations = {
     vnPillarTwoTitle:'Karakter Odaklı Anlatı',vnPillarTwoDesc:'Kendi kusurları, mizahı ve kırılganlıklarıyla gerçek hissettiren, hikâye bittiğinde bile akılda kalan karakterler.',
     vnPillarThreeTitle:'Sanat & Atmosfer',vnPillarThreeDesc:'Işık, renk paleti, ifade çizimleri ve ince ses tasarımıyla her sahnenin duygusunu derinleştiren görsel dünya.',
     vnNoteLabel:'STÜDYO NOTU',vnNoteTitle:'Yaklaşımımız <em>gelişiyor.</em>',vnNoteText:'Visual Novel projemiz şu an konsept ve anlatı tasarımı aşamasında. Paylaşılan görseller, stüdyonun hedeflediği görsel tonu yansıtan referanslardır.',vnCtaJoin:'Bize Katıl',vnCtaBack:'Odak alanlarına dön',
+    vnConceptArt:'KONSEPT & GÖRSEL DÜNYA',vnProjectLabel:'YENİ BİR HİKÂYE',vnNameNote:'Proje adı yakında açıklanacak.',
+    vnSections:'Proje bölümleri',vnStory:'Hikâye',vnCharacters:'Karakterler',vnTeam:'Ekip',vnStatus:'Durum',vnScreens:'Oyundan Kareler',
+    vnStoryLabel:'HİKÂYE & DÜNYA',vnStoryTitle:'Her seçimin <em>bir izi var.</em>',
+    vnInConcept:'KONSEPT AŞAMASINDA',vnCharacterNote:'Bu hikâyede kimlerle tanışacağını henüz paylaşmıyoruz. Karakterler ve onlara ait hikâyeler burada yerini alacak.',
+    vnTeamTitle:'Hikâyenin arkasındaki ekip',vnTeamNote:'Aderion Studios ekibi ve stüdyodaki görevleri. Projeye özel katkılar geliştirme sürecinde paylaşılacak.',
+    vnRoleFounder:'Kurucu & Yaratıcı Tasarım',vnRoleTech:'Teknik Yönetim & Altyapı',vnRoleArt:'Sanat & İllüstrasyon',vnRoleDev:'Oyun Geliştirme',
+    vnDevelopment:'Geliştirme durumu',vnInProgress:'Geliştirme aşamasında',
+    vnDevelopmentNote:'Şu anda konsept ve anlatı tasarımı üzerinde çalışıyoruz. Hikâyenin temellerini, karakterleri ve görsel yönünü şekillendiriyoruz; çıkış tarihi henüz açıklanmadı.',
+    vnPhaseOne:'Konsept & Anlatı',vnPhaseNow:'Şu an buradayız',vnPhaseTwo:'Geliştirme',vnPhasePlanned:'Planlanan',vnPhaseThree:'Yayın',vnUnannounced:'Henüz açıklanmadı',
+    vnVisualDiary:'GÖRSEL GÜNLÜK',vnScreensTitle:'Oyundan <em>Kareler</em>',
+    vnGalleryNote:'Oyunun görsel dünyasına bir bakış. Şimdilik konsept referanslarını paylaşıyoruz; oyun içi ekran görüntüleri geliştirme sürecinde eklenecek.',
+    vnGalleryLabel:'Oyundan kareler galerisi',vnShotOneAlt:'İki karakterin birlikte gülümsediği görsel referans',vnShotTwoAlt:'Karakter portresi görsel referansı',vnShotThreeAlt:'Karakter ifadesi görsel referansı',
+    vnReference:'REFERANS',vnGalleryHint:'Bir kareye tıkla, yakından bak.',
+    vnAtGlance:'BİR BAKIŞTA',vnGameInfo:'Oyun bilgileri',vnInConceptSentence:'Konsept & anlatı tasarımı',vnGenres:'Türler',vnNarrative:'Hikâye odaklı',
+    vnFeatures:'Hedeflenen özellikler',vnFeatureChoices:'Anlamlı seçimler',vnFeatureBranching:'Dallanan anlatı',vnFeatureCharacters:'Karakter odaklı hikâye',
+    vnPlaytime:'Oynanış süresi',vnRelease:'Çıkış tarihi',vnPlatforms:'Platformlar',vnDeveloper:'Geliştirici',
+    vnExploreScreens:'Karelere göz at',vnInfoNote:'Bir hikâye adım adım şekilleniyor. Yeni detaylar burada yerini alacak.',
     namePlaceholder:'Adın / Name',msgPlaceholder:'Bir merhaba de...',menuOpen:'Menüyü aç',menuClose:'Menüyü kapat',changeLang:'Dili İngilizce olarak değiştir',themeToDark:'Koyu moda geç',themeToLight:'Açık moda geç',
     lightboxDialog:'Görsel galerisi',lightboxClose:'Galeriyi kapat',lightboxPrev:'Önceki görsel',lightboxNext:'Sonraki görsel'
   },
@@ -91,6 +108,23 @@ const translations = {
     vnPillarTwoTitle:'Character-Driven Storytelling',vnPillarTwoDesc:'Characters with their own flaws, humor, and quiet vulnerabilities—people who feel real long after the credits roll.',
     vnPillarThreeTitle:'Art & Atmosphere',vnPillarThreeDesc:'A visual world where lighting, color palette, expressive sprites, and subtle sound design deepen every scene.',
     vnNoteLabel:'STUDIO NOTE',vnNoteTitle:'Our craft is <em>in motion.</em>',vnNoteText:'Our Visual Novel direction is currently in early concept and narrative design. The artwork shown reflects the visual mood and tone we are aiming for.',vnCtaJoin:'Join Us',vnCtaBack:'Back to focus areas',
+    vnConceptArt:'CONCEPT & VISUAL WORLD',vnProjectLabel:'A NEW STORY',vnNameNote:'Working title — official name to be announced.',
+    vnSections:'Project sections',vnStory:'Story',vnCharacters:'Characters',vnTeam:'Team',vnStatus:'Status',vnScreens:'Screenshots',
+    vnStoryLabel:'STORY & WORLD',vnStoryTitle:'Every choice <em>leaves a trace.</em>',
+    vnInConcept:'IN CONCEPT',vnCharacterNote:'We are not sharing who you will meet in this story just yet. Characters and their stories will take their place here.',
+    vnTeamTitle:'The team behind the story',vnTeamNote:'The Aderion Studios team and their roles at the studio. Project-specific credits will be shared during development.',
+    vnRoleFounder:'Founder & Creative Design',vnRoleTech:'Technical Direction & Infrastructure',vnRoleArt:'Art & Illustration',vnRoleDev:'Game Development',
+    vnDevelopment:'Development status',vnInProgress:'In development',
+    vnDevelopmentNote:'We are currently working on concept and narrative design, shaping the story’s foundations, characters, and visual direction; a release date has not been announced yet.',
+    vnPhaseOne:'Concept & Narrative',vnPhaseNow:'Currently here',vnPhaseTwo:'Development',vnPhasePlanned:'Planned',vnPhaseThree:'Release',vnUnannounced:'To be announced',
+    vnVisualDiary:'VISUAL DIARY',vnScreensTitle:'From the <em>Game</em>',
+    vnGalleryNote:'A glimpse into the game’s visual world. For now we are sharing concept references; in-game screenshots will be added during development.',
+    vnGalleryLabel:'Game screenshots gallery',vnShotOneAlt:'Visual reference of two characters smiling together',vnShotTwoAlt:'Character portrait visual reference',vnShotThreeAlt:'Character expression visual reference',
+    vnReference:'REFERENCE',vnGalleryHint:'Click a frame to take a closer look.',
+    vnAtGlance:'AT A GLANCE',vnGameInfo:'Game info',vnInConceptSentence:'Concept & narrative design',vnGenres:'Genres',vnNarrative:'Story-driven',
+    vnFeatures:'Planned features',vnFeatureChoices:'Meaningful choices',vnFeatureBranching:'Branching narrative',vnFeatureCharacters:'Character-driven story',
+    vnPlaytime:'Playtime',vnRelease:'Release date',vnPlatforms:'Platforms',vnDeveloper:'Developer',
+    vnExploreScreens:'Browse frames',vnInfoNote:'A story is taking shape step by step. New details will appear here.',
     namePlaceholder:'Your name',msgPlaceholder:'Say hello...',menuOpen:'Open menu',menuClose:'Close menu',changeLang:'Dili Türkçe olarak değiştir',themeToDark:'Switch to dark mode',themeToLight:'Switch to light mode',
     lightboxDialog:'Image gallery',lightboxClose:'Close gallery',lightboxPrev:'Previous image',lightboxNext:'Next image'
   }
@@ -98,8 +132,19 @@ const translations = {
 
 const root = document.documentElement;
 root.classList.add('has-js');
-let locale = 'tr';
-try { if (localStorage.getItem('aderion-language') === 'en') locale = 'en'; } catch (_) {}
+function detectBrowserLocale() {
+  try {
+    const saved = localStorage.getItem('aderion-language');
+    if (saved === 'tr' || saved === 'en') return saved;
+  } catch (_) {}
+  const lang = (Array.isArray(navigator.languages) && navigator.languages[0])
+    || navigator.language
+    || navigator.userLanguage
+    || '';
+  return /^tr(?:-|$)/i.test(lang) ? 'tr' : 'en';
+}
+
+let locale = detectBrowserLocale();
 const langBtn = document.querySelector('#langBtn');
 const themeBtn = document.querySelector('#themeToggle');
 function setTheme(theme) {
@@ -133,7 +178,7 @@ const totalGalleryItems = galleryItems.length;
 const formatGalleryNumber = num => String(num).padStart(2, '0');
 if (galleryTotal) galleryTotal.textContent = formatGalleryNumber(totalGalleryItems);
 
-function setLanguage(language) {
+function setLanguage(language, persist = false) {
   locale = language;
   const dictionary = translations[locale];
   root.setAttribute('lang', locale);
@@ -145,6 +190,14 @@ function setLanguage(language) {
     const translated = dictionary[element.dataset.tHtml];
     if (translated !== undefined) element.innerHTML = translated;
   });
+  document.querySelectorAll('[data-t-aria]').forEach(element => {
+    const translated = dictionary[element.dataset.tAria];
+    if (translated !== undefined) element.setAttribute('aria-label', translated);
+  });
+  document.querySelectorAll('[data-t-alt]').forEach(element => {
+    const translated = dictionary[element.dataset.tAlt];
+    if (translated !== undefined) element.setAttribute('alt', translated);
+  });
   langBtn.innerHTML = `${locale === 'tr' ? 'EN' : 'TR'} <span aria-hidden="true">↗</span>`;
   langBtn.setAttribute('aria-label', dictionary.changeLang);
   if (themeBtn) { const label = dictionary[root.dataset.theme === 'dark' ? 'themeToLight' : 'themeToDark']; themeBtn.setAttribute('aria-label', label); themeBtn.title = label; }
@@ -153,11 +206,13 @@ function setLanguage(language) {
   if(document.querySelector('#contactMessage')) document.querySelector('#contactMessage').placeholder = dictionary.msgPlaceholder;
   if(document.querySelector('#formStatus')) document.querySelector('#formStatus').textContent = '';
   document.title = (document.body.dataset.page === 'home' ? (locale === 'tr' ? 'Aderion Studios — Hikâyelerin İçine Doğru' : 'Aderion Studios — Step Into the Story') : (document.body.dataset.pageTitle || document.title));
-  try { localStorage.setItem('aderion-language',locale); } catch (_) {}
+  if (persist) {
+    try { localStorage.setItem('aderion-language',locale); } catch (_) {}
+  }
   document.dispatchEvent(new CustomEvent('aderion:language',{detail:{locale}}));
 }
-langBtn.addEventListener('click',()=>setLanguage(locale === 'tr' ? 'en' : 'tr'));
-setLanguage(locale);
+langBtn.addEventListener('click',()=>setLanguage(locale === 'tr' ? 'en' : 'tr', true));
+setLanguage(locale, false);
 setTheme(root.dataset.theme === 'dark' ? 'dark' : 'light');
 
 function closeMenu(){

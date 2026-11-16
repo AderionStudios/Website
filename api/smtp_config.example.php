@@ -10,7 +10,7 @@
  */
 return [
     // Sunucu adresi: genellikle mail.alanadiniz.com
-    'host'     => 'mail.aderionstudios.com',
+    'host'     => 'localhost',
 
     // SSL için 465, TLS (STARTTLS) için 587
     'port'     => 465,
