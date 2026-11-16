@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ============================================================================
  * ADERION STUDIOS — SMTP Yapılandırma ÖRNEĞİ
@@ -8,6 +9,9 @@
  * GitHub'a / deploy'a GİTMEZ. Gerçek şifreyi asla commit etmeyin.
  * ============================================================================
  */
+
+declare(strict_types=1);
+
 return [
     // Sunucu adresi: genellikle mail.alanadiniz.com
     'host'     => 'localhost',

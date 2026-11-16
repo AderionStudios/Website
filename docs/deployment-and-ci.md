@@ -5,15 +5,17 @@ The repository uses semantic versioning (`VERSION`), automated QA/linting/SAST c
 ## Versioning & Release Tags
 
 - **`VERSION`**: Single-line file at the repository root containing the current `X.Y.Z` semantic version.
-- **`scripts/bump-version.py`**: Atomically updates `VERSION` and optionally commits and tags the release:
+- **`scripts/bump-version.py`**: Reads `VERSION` and increments the semantic version (`patch`, `minor`, or `major`; defaults to `patch`) without running any git commands:
 
 ```bash
-# Bump patch (default), minor, major, or set an explicit X.Y.Z
+# Increment patch (default), minor, or major in VERSION
+python3 scripts/bump-version.py
 python3 scripts/bump-version.py patch
-python3 scripts/bump-version.py minor --commit --tag
+python3 scripts/bump-version.py minor
+python3 scripts/bump-version.py major
 ```
 
-When `--tag` is used, push the commit and tag (`git push origin main --tags`) to trigger the deployment job.
+After updating `VERSION`, commit the change and create/push a matching `vX.Y.Z` tag manually (for example, `git tag vX.Y.Z && git push origin main --tags`) to trigger the deployment job.
 
 ## QA, Linters & SAST
 

@@ -3,5 +3,5 @@ parameters:
     paths:
         - api
     excludePaths:
-        - api/smtp_config.php
-        - api/discord_config.php
+        - api/smtp_config.php (?)
+        - api/discord_config.php (?)

@@ -1,10 +1,12 @@
 <?php
+
 /**
  * ============================================================================
  * ADERION STUDIOS — Shared mailer helpers (SMTP client, client IP, rate limit)
  * Used by api/apply.php and api/contact.php.
  * ============================================================================
  */
+
 declare(strict_types=1);
 
 /**
@@ -14,24 +16,33 @@ declare(strict_types=1);
  * so they are ONLY honoured when smtp_config.php sets 'trust_proxy_header'
  * (e.g. 'HTTP_CF_CONNECTING_IP' when the site really sits behind Cloudflare).
  * Every candidate must be a syntactically valid IP address.
+ *
+ * @param array<mixed, mixed> $config
  */
-function aderionClientIp(array $config = []): string {
-    $remote = (string)($_SERVER['REMOTE_ADDR'] ?? '');
-    $header = (string)($config['trust_proxy_header'] ?? '');
+function aderionClientIp(array $config = []): string
+{
+    $remote = is_string($_SERVER['REMOTE_ADDR'] ?? null) ? $_SERVER['REMOTE_ADDR'] : '';
+    $header = is_string($config['trust_proxy_header'] ?? null) ? $config['trust_proxy_header'] : '';
 
-    if ($header !== '' && preg_match('/^HTTP_[A-Z0-9_]+$/', $header) && !empty($_SERVER[$header])) {
-        $candidate = trim(explode(',', (string)$_SERVER[$header])[0]);
-        if (filter_var($candidate, FILTER_VALIDATE_IP)) {
+    if (
+        $header !== ''
+        && preg_match('/^HTTP_[A-Z0-9_]+$/', $header)
+        && is_string($_SERVER[$header] ?? null)
+        && $_SERVER[$header] !== ''
+    ) {
+        $candidate = trim(explode(',', $_SERVER[$header])[0]);
+        if (filter_var($candidate, FILTER_VALIDATE_IP) !== false) {
             return $candidate;
         }
     }
-    if (filter_var($remote, FILTER_VALIDATE_IP)) {
+    if (filter_var($remote, FILTER_VALIDATE_IP) !== false) {
         return $remote;
     }
     return '0.0.0.0';
 }
 
-function aderionRateFile(string $bucket, string $ip): string {
+function aderionRateFile(string $bucket, string $ip): string
+{
     return sys_get_temp_dir() . '/aderion_' . $bucket . '_' . md5($bucket . '_rate_' . $ip) . '.tmp';
 }
 
@@ -39,10 +50,11 @@ function aderionRateFile(string $bucket, string $ip): string {
  * Returns the number of seconds the client still has to wait (0 = allowed).
  * Read-only: it does NOT start the cooldown (see aderionRateMark()).
  */
-function aderionRateRemaining(string $bucket, string $ip, int $cooldown = 30): int {
+function aderionRateRemaining(string $bucket, string $ip, int $cooldown = 30): int
+{
     $file = aderionRateFile($bucket, $ip);
     if (@file_exists($file)) {
-        $last = (int)@file_get_contents($file);
+        $last = (int) @file_get_contents($file);
         $elapsed = time() - $last;
         if ($elapsed >= 0 && $elapsed < $cooldown) {
             return $cooldown - $elapsed;
@@ -52,12 +64,14 @@ function aderionRateRemaining(string $bucket, string $ip, int $cooldown = 30): i
 }
 
 /** Starts the cooldown. Call only once the input has passed validation. */
-function aderionRateMark(string $bucket, string $ip): void {
-    @file_put_contents(aderionRateFile($bucket, $ip), (string)time(), LOCK_EX);
+function aderionRateMark(string $bucket, string $ip): void
+{
+    @file_put_contents(aderionRateFile($bucket, $ip), (string) time(), LOCK_EX);
 }
 
 /** Strip CR/LF/NUL so a value can never break out of a mail header line. */
-function aderionHeaderSafe(string $value): string {
+function aderionHeaderSafe(string $value): string
+{
     return trim(str_replace(["\r", "\n", "\0"], ' ', $value));
 }
 
@@ -65,7 +79,8 @@ function aderionHeaderSafe(string $value): string {
  * Accepts only absolute http(s) URLs. A bare "example.com/x" gets https://.
  * Returns the normalised URL or null when it is not acceptable.
  */
-function aderionNormalizeUrl(string $raw, int $maxLen = 500): ?string {
+function aderionNormalizeUrl(string $raw, int $maxLen = 500): ?string
+{
     $url = trim($raw);
     if ($url === '' || strlen($url) > $maxLen) {
         return null;
@@ -101,7 +116,8 @@ function aderionNormalizeUrl(string $raw, int $maxLen = 500): ?string {
  *    smuggle extra SMTP commands.
  *  - Every SMTP command argument is checked for CR/LF.
  */
-class SimpleSmtpClient {
+class SimpleSmtpClient
+{
     private string $host;
     private int $port;
     private string $secure;
@@ -110,7 +126,10 @@ class SimpleSmtpClient {
     private int $timeout;
     private bool $verifyTls;
     private string $peerName;
+
+    /** @var resource|null */
     private $socket = null;
+
     private string $lastError = '';
 
     public function __construct(
@@ -133,11 +152,16 @@ class SimpleSmtpClient {
         $this->peerName = $peerName !== '' ? $peerName : $host;
     }
 
-    public function getLastError(): string {
+    public function getLastError(): string
+    {
         return $this->lastError;
     }
 
-    private function readResponse(): string {
+    private function readResponse(): string
+    {
+        if (!is_resource($this->socket)) {
+            return '';
+        }
         $data = '';
         while (!@feof($this->socket)) {
             $str = @fgets($this->socket, 515);
@@ -155,24 +179,31 @@ class SimpleSmtpClient {
         return trim($data);
     }
 
-    private function sendCmd(string $cmd): string {
+    private function sendCmd(string $cmd): string
+    {
+        if (!is_resource($this->socket)) {
+            return '';
+        }
         @fwrite($this->socket, $cmd . "\r\n");
         return $this->readResponse();
     }
 
-    private static function hasLineBreak(string $v): bool {
+    private static function hasLineBreak(string $v): bool
+    {
         return strpbrk($v, "\r\n\0") !== false;
     }
 
     /** Normalise to CRLF and dot-stuff (RFC 5321 §4.5.2). */
-    public static function prepareData(string $data): string {
+    public static function prepareData(string $data): string
+    {
         $data = str_replace(["\r\n", "\r"], "\n", $data);
         $data = str_replace("\n", "\r\n", $data);
         $data = preg_replace('/^\./m', '..', $data) ?? $data;
         return $data;
     }
 
-    private function fail(string $message): bool {
+    private function fail(string $message): bool
+    {
         $this->lastError = $message;
         if (is_resource($this->socket)) {
             @fwrite($this->socket, "QUIT\r\n");
@@ -182,7 +213,16 @@ class SimpleSmtpClient {
         return false;
     }
 
-    public function send(string $from, string $to, string $subject, string $htmlBody, array $extraHeaders = []): bool {
+    /**
+     * @param list<string> $extraHeaders
+     */
+    public function send(
+        string $from,
+        string $to,
+        string $subject,
+        string $htmlBody,
+        array $extraHeaders = []
+    ): bool {
         foreach ([$from, $to, $subject] as $v) {
             if (self::hasLineBreak($v)) {
                 $this->lastError = 'Geçersiz karakter (satır sonu) tespit edildi.';
@@ -190,7 +230,7 @@ class SimpleSmtpClient {
             }
         }
         foreach ($extraHeaders as $h) {
-            if (self::hasLineBreak((string)$h)) {
+            if (self::hasLineBreak($h)) {
                 $this->lastError = 'Geçersiz başlık (satır sonu) tespit edildi.';
                 return false;
             }
@@ -211,7 +251,7 @@ class SimpleSmtpClient {
 
         $errno = 0;
         $errstr = '';
-        $this->socket = @stream_socket_client(
+        $socket = @stream_socket_client(
             "{$target}:{$this->port}",
             $errno,
             $errstr,
@@ -220,10 +260,13 @@ class SimpleSmtpClient {
             $context
         );
 
-        if (!$this->socket) {
-            $this->lastError = "SMTP sunucusuna bağlanılamadı ({$target}:{$this->port}): {$errstr} [Hata Kodu: {$errno}]";
+        if ($socket === false) {
+            $this->socket = null;
+            $this->lastError = "SMTP sunucusuna bağlanılamadı ({$target}:{$this->port}): "
+                . "{$errstr} [Hata Kodu: {$errno}]";
             return false;
         }
+        $this->socket = $socket;
 
         @stream_set_timeout($this->socket, $this->timeout);
         $res = $this->readResponse();
@@ -232,8 +275,9 @@ class SimpleSmtpClient {
         }
 
         $clientDomain = 'localhost';
-        if (!empty($_SERVER['HTTP_HOST'])) {
-            $candidate = explode(':', (string)$_SERVER['HTTP_HOST'])[0];
+        $rawHost = $_SERVER['HTTP_HOST'] ?? null;
+        if (is_string($rawHost) && $rawHost !== '') {
+            $candidate = explode(':', $rawHost)[0];
             if (preg_match('/^[A-Za-z0-9.\-]{1,253}$/', $candidate)) {
                 $clientDomain = $candidate;
             }
@@ -252,7 +296,10 @@ class SimpleSmtpClient {
             if (!str_starts_with($res, '220')) {
                 return $this->fail('STARTTLS reddedildi: ' . $res);
             }
-            if (!@stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+            if (
+                !is_resource($this->socket)
+                || !@stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)
+            ) {
                 return $this->fail('TLS şifreleme el sıkışması başarısız oldu (sertifika doğrulanamadı olabilir).');
             }
             $res = $this->sendCmd("EHLO {$clientDomain}");
@@ -300,7 +347,9 @@ class SimpleSmtpClient {
         }
 
         $this->sendCmd('QUIT');
-        @fclose($this->socket);
+        if (is_resource($this->socket)) {
+            @fclose($this->socket);
+        }
         $this->socket = null;
         return true;
     }

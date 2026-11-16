@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ============================================================================
  * ADERION STUDIOS — Discord canlı profil ayarları (ÖRNEK)
@@ -14,6 +15,9 @@
  *      Lanyard için her ekip üyesinin discord.gg/lanyard sunucusuna katılması gerekir.
  * ============================================================================
  */
+
+declare(strict_types=1);
+
 return [
     // Discord Developer Portal -> Uygulama -> Bot -> Reset Token.
     // Hiçbir "intent" açmaya gerek yok, bot hiçbir sunucuya eklenmek zorunda değil.

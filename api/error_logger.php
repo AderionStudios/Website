@@ -1,16 +1,19 @@
 <?php
+
 /**
  * ============================================================================
  * ADERION STUDIOS — Server Error Logger
  * Appends sanitized single-line error entries to the hidden root file .error.log.
  * ============================================================================
  */
+
 declare(strict_types=1);
 
 /**
  * Sanitize a string for single-line log output by replacing control characters.
  */
-function sanitizeLogValue(string $value): string {
+function sanitizeLogValue(string $value): string
+{
     $clean = preg_replace('/[\x00-\x1F\x7F]+/u', ' ', $value);
     if ($clean === null) {
         $clean = str_replace(["\r", "\n", "\t", "\0"], ' ', $value);
@@ -20,11 +23,16 @@ function sanitizeLogValue(string $value): string {
 
 /**
  * Recursively sanitize context data and redact sensitive keys.
+ *
+ * @param array<mixed, mixed> $context
+ *
+ * @return array<string, mixed>
  */
-function sanitizeLogContext(array $context): array {
+function sanitizeLogContext(array $context): array
+{
     $sanitized = [];
     foreach ($context as $key => $value) {
-        $cleanKey = sanitizeLogValue((string)$key);
+        $cleanKey = sanitizeLogValue((string) $key);
         if (preg_match('/pass(word)?|secret|token|auth/i', $cleanKey)) {
             $sanitized[$cleanKey] = '[REDACTED]';
             continue;
@@ -35,8 +43,10 @@ function sanitizeLogContext(array $context): array {
             $sanitized[$cleanKey] = sanitizeLogValue($value);
         } elseif (is_bool($value) || is_int($value) || is_float($value) || $value === null) {
             $sanitized[$cleanKey] = $value;
+        } elseif ($value instanceof Stringable) {
+            $sanitized[$cleanKey] = sanitizeLogValue((string) $value);
         } else {
-            $sanitized[$cleanKey] = sanitizeLogValue((string)$value);
+            $sanitized[$cleanKey] = '[' . get_debug_type($value) . ']';
         }
     }
     return $sanitized;
@@ -44,8 +54,11 @@ function sanitizeLogContext(array $context): array {
 
 /**
  * Append a sanitized, single-line error entry to the root error.log file.
+ *
+ * @param array<mixed, mixed> $context
  */
-function logServerError(string $source, string $code, string $detail, array $context = []): void {
+function logServerError(string $source, string $code, string $detail, array $context = []): void
+{
     // Dot-file on purpose: the web server denies hidden files (403), whereas a plain
     // "error.log" was found to be publicly downloadable on the live host.
     $logFile = __DIR__ . '/../.error.log';

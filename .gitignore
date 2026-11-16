@@ -1,10 +1,17 @@
-# Node / TypeScript development dependencies
+# Node.js / TypeScript dependencies, caches & coverage
 node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+.parcel-cache/
+coverage/
+.nyc_output/
+*.tsbuildinfo
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-*.tsbuildinfo
+lerna-debug.log*
 
 # NOTE: Do NOT ignore assets/js/ — compiled TypeScript outputs are tracked
 # and/or deployed directly as zero-runtime static assets for cPanel hosting.
@@ -19,13 +26,65 @@ api/smtp_config.php
 # Discord bot token (copy api/discord_config.example.php -> api/discord_config.php)
 api/discord_config.php
 
-# Logs & temporary files
+# Logs, temporary & lock files
 *.log
 *.tmp
 *.temp
+*.lock
 .cache/
 
-# OS metadata
+# Python virtual environments, bytecode & QA/test/coverage caches
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.pytest_cache/
+.tox/
+.nox/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# PHP / Composer / static analysis caches, PHAR binaries & server error logs
+vendor/
+.php-cs-fixer.cache
+.phpunit.result.cache
+.phpcs.cache
+phpcs.cache
+.phpstan.cache/
+phpstan.result.cache
+composer.phar
+phpstan.phar
+phpcs.phar
+phpcbf.phar
+php-cs-fixer.phar
+error.log
+.error.log
+error_log
+php_errors.log
+
+# Linter & SAST caches
+.eslintcache
+.stylelintcache
+.semgrep/
+.semgrep_logs/
+
+# Project-specific atomic & runtime temporary files
+.VERSION.*
+aderion_discord_*.json*
+aderion_apply_*.tmp
+aderion_contact_*.tmp
+
+# OS metadata & file manager artifacts
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -33,38 +92,43 @@ api/discord_config.php
 Thumbs.db
 ehthumbs.db
 desktop.ini
+.directory
+.Trash-*
+.fuse_hidden*
+.nfs*
 
-# Editor & IDE directories
+# Editor, IDE & AI assistant directories/files
 .vscode/
 .idea/
+*.sublime-workspace
+*.sublime-project
+.fleet/
+.zed/
+.cursor/
+.windsurf/
+.claude/
+.gemini/
+.aider*
 *.swp
 *.swo
 *~
 
+# Backups & archives
+*.bak
+*.orig
+*.rej
+*.old
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
 # CI staging directory (if tested locally)
 _deploy/
-
-# Python & QA tool caches
-__pycache__/
-*.py[cod]
-.mypy_cache/
-.ruff_cache/
-.pytest_cache/
-.php-cs-fixer.cache
-.phpunit.result.cache
-.eslintcache
-.stylelintcache
-.semgrep/
-.semgrep_logs/
-vendor/
-
-# Runtime error logs
-error.log
-.error.log
 
 # Local standalone Mini Paint test files
 mini-paint.html
 assets/mini-paint.css
 assets/mini-paint.js
-
-.github/

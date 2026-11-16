@@ -13,5 +13,7 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
         '@PhpCsFixer:risky' => true,
+        'psr_autoloading' => false,
+        'function_declaration' => ['closure_fn_spacing' => 'none'],
     ])
     ->setFinder($finder);

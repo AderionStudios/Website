@@ -1,21 +1,19 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
   "vcs": {
     "enabled": false
   },
   "files": {
     "ignoreUnknown": false,
-    "include": [
+    "includes": [
       "assets/main.js",
       "assets/pages.js",
       "assets/theme-init.js",
-      "data/credits.json"
-    ],
-    "ignore": [
-      "node_modules",
-      "assets/credits-data.js",
-      "api",
-      "scripts"
+      "data/credits.json",
+      "!node_modules",
+      "!assets/credits-data.js",
+      "!api",
+      "!scripts"
     ]
   },
   "formatter": {
@@ -25,10 +23,7 @@
     "lineWidth": 100
   },
   "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true
-    }
+    "enabled": true
   },
   "javascript": {
     "formatter": {

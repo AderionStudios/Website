@@ -1,6 +1,6 @@
 export default [
   {
-    ignores: ["node_modules/**", "assets/credits-data.js"],
+    ignores: ["node_modules/**", "assets/credits-data.js", "assets/mini-paint.js"],
   },
   {
     files: ["assets/**/*.js"],
@@ -17,6 +17,14 @@ export default [
         console: "readonly",
         setTimeout: "readonly",
         clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
+        getComputedStyle: "readonly",
+        location: "readonly",
+        AbortController: "readonly",
+        FormData: "readonly",
+        HTMLImageElement: "readonly",
+        Option: "readonly",
         CustomEvent: "readonly",
         IntersectionObserver: "readonly",
         Element: "readonly",
@@ -28,6 +36,10 @@ export default [
         Promise: "readonly",
         encodeURIComponent: "readonly",
         structuredClone: "readonly",
+        translations: "readonly",
+        locale: "writable",
+        showToast: "readonly",
+        setLanguage: "readonly",
       },
     },
     rules: {
