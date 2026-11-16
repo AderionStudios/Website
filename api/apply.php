@@ -1,11 +1,15 @@
 <?php
 /**
  * ============================================================================
- * ADERION STUDIOS — Production Application Mailer Endpoint
- * Secure, rate-limited, honeypot-protected, zero-external-dependency cPanel mailer.
+ * ADERION STUDIOS — Production Application Mailer Endpoint (SMTP Architecture)
+ * Secure, rate-limited, honeypot-protected, standalone SMTP socket client.
+ * Does NOT rely on PHP mail() function (which is disabled on shared hosts).
  * ============================================================================
  */
 declare(strict_types=1);
+
+require_once __DIR__ . '/error_logger.php';
+require_once __DIR__ . '/mailer_lib.php';
 
 // 1. Strict Security & Caching Headers
 header('Content-Type: application/json; charset=UTF-8');
@@ -44,38 +48,36 @@ $httpHost = $_SERVER['HTTP_HOST'] ?? '';
 if (!empty($httpOrigin)) {
     $originHost = parse_url($httpOrigin, PHP_URL_HOST);
     $serverHost = explode(':', (string)$httpHost)[0];
-    if ($originHost && !empty($serverHost) && strcasecmp((string)$originHost, (string)$serverHost) !== 0) {
-        jsonResponse(403, false, 'forbidden_origin', 'Geçersiz istek kaynağı.');
+    if ($originHost && !empty($serverHost)) {
+        // Strip leading www. for comparison
+        $cleanOrigin = preg_replace('/^www\./i', '', (string)$originHost);
+        $cleanServer = preg_replace('/^www\./i', '', (string)$serverHost);
+        if (strcasecmp($cleanOrigin, $cleanServer) !== 0) {
+            jsonResponse(403, false, 'forbidden_origin', 'Geçersiz istek kaynağı.');
+        }
     }
 }
 
 // 5. Bot-Trap (Honeypot) Check
-// Hidden input 'website' is invisible to humans. If filled, silently acknowledge to deceive bot.
 if (!empty($_POST['website'])) {
     jsonResponse(200, true, 'success', 'Başvurunuz başarıyla alındı.');
 }
 
-// 6. Rate Limiting via /tmp (45s cooldown per IP)
-$clientIp = $_SERVER['HTTP_CF_CONNECTING_IP'] 
-    ?? $_SERVER['HTTP_X_FORWARDED_FOR'] 
-    ?? $_SERVER['REMOTE_ADDR'] 
-    ?? '127.0.0.1';
-$clientIp = explode(',', (string)$clientIp)[0];
-$clientIpClean = preg_replace('/[^a-zA-Z0-9_.-]/', '_', trim($clientIp));
-
-$tempDir = sys_get_temp_dir();
-$rateFile = $tempDir . '/aderion_apply_' . md5('apply_rate_' . $clientIpClean) . '.tmp';
-$now = time();
-$cooldownSeconds = 45;
-
-if (file_exists($rateFile)) {
-    $lastTime = (int)@file_get_contents($rateFile);
-    if (($now - $lastTime) < $cooldownSeconds) {
-        $waitRemaining = $cooldownSeconds - ($now - $lastTime);
-        jsonResponse(429, false, 'rate_limited', "Lütfen tekrar göndermeden önce {$waitRemaining} saniye bekleyin.");
+// 6. Rate Limiting (30s cooldown per IP). This is a read-only check; the
+//    cooldown only starts after the input passed validation (see aderionRateMark).
+$ipConfig = [];
+$ipConfigFile = __DIR__ . '/smtp_config.php';
+if (is_file($ipConfigFile)) {
+    $loadedIpConfig = require $ipConfigFile;
+    if (is_array($loadedIpConfig)) {
+        $ipConfig = $loadedIpConfig;
     }
 }
-@file_put_contents($rateFile, (string)$now, LOCK_EX);
+$clientIp = aderionClientIp($ipConfig);
+$waitRemaining = aderionRateRemaining('apply', $clientIp, 30);
+if ($waitRemaining > 0) {
+    jsonResponse(429, false, 'rate_limited', "Lütfen tekrar göndermeden önce {$waitRemaining} saniye bekleyin.");
+}
 
 // 7. Sanitization & Input Validation
 function cleanSingleLine(?string $val, int $max = 120): string {
@@ -88,12 +90,14 @@ function cleanSingleLine(?string $val, int $max = 120): string {
     return $val;
 }
 
-$name = cleanSingleLine($_POST['name'] ?? '', 100);
-$rawEmail = cleanSingleLine($_POST['email'] ?? '', 180);
-$roleKey = cleanSingleLine($_POST['role'] ?? '', 60);
-$portfolio = cleanSingleLine($_POST['portfolio'] ?? '', 500);
-$experienceKey = cleanSingleLine($_POST['experience'] ?? '', 40);
-$rawMessage = trim((string)($_POST['message'] ?? ''));
+// Non-string values (e.g. name[]=x) are treated as empty instead of crashing.
+$postStr = static fn(string $k): string => (isset($_POST[$k]) && is_string($_POST[$k])) ? $_POST[$k] : '';
+$name = cleanSingleLine($postStr('name'), 100);
+$rawEmail = cleanSingleLine($postStr('email'), 180);
+$roleKey = cleanSingleLine($postStr('role'), 60);
+$portfolio = cleanSingleLine($postStr('portfolio'), 500);
+$experienceKey = cleanSingleLine($postStr('experience'), 40);
+$rawMessage = trim($postStr('message'));
 
 // Validate Name
 if (mb_strlen($name, 'UTF-8') < 2) {
@@ -105,6 +109,13 @@ $cleanEmail = filter_var($rawEmail, FILTER_VALIDATE_EMAIL);
 if (!$cleanEmail) {
     jsonResponse(422, false, 'invalid_email', 'Lütfen geçerli bir e-posta adresi girin.');
 }
+
+// Validate Portfolio URL (http/https only; blocks javascript:, data:, etc.)
+$portfolioUrl = aderionNormalizeUrl($portfolio, 500);
+if ($portfolioUrl === null) {
+    jsonResponse(422, false, 'invalid_portfolio', 'Lütfen geçerli bir portföy bağlantısı girin (http:// veya https://).');
+}
+$portfolio = $portfolioUrl;
 
 // Roles Dictionary & Mapping
 $rolesCatalog = [
@@ -135,13 +146,37 @@ if (mb_strlen($rawMessage, 'UTF-8') > 3000) {
     $rawMessage = mb_substr($rawMessage, 0, 3000, 'UTF-8');
 }
 
-// 8. Construct Professional HTML Email
-$toEmail = 'contact@aderionstudios.com';
-$fromEmail = 'contact@aderionstudios.com';
-$fromName = 'Aderion Studios Web';
+// Input is valid: start the cooldown now.
+aderionRateMark('apply', $clientIp);
 
-// Subject with UTF-8 Base64 Encoding
-$subject = "=?UTF-8?B?" . base64_encode("Yeni Ekip Başvurusu: {$name} — {$roleTitle}") . "?=";
+// 8. Load SMTP Configuration
+$configFile = __DIR__ . '/smtp_config.php';
+if (!file_exists($configFile)) {
+    logServerError('apply', 'config_missing', 'SMTP configuration file api/smtp_config.php is missing.');
+    jsonResponse(500, false, 'server_error', 'Bir hata oluştu, en yakın sürede güncelleyeceğiz.', ['error' => 'server_error']);
+}
+$smtpConfig = require $configFile;
+
+$smtpHost = (string)($smtpConfig['host'] ?? 'mail.aderionstudios.com');
+$smtpPort = (int)($smtpConfig['port'] ?? 465);
+$smtpSecure = (string)($smtpConfig['secure'] ?? 'ssl');
+$smtpUser = (string)($smtpConfig['username'] ?? 'contact@aderionstudios.com');
+$smtpPass = (string)($smtpConfig['password'] ?? '');
+$toEmail = (string)($smtpConfig['to'] ?? 'contact@aderionstudios.com');
+$fromName = (string)($smtpConfig['fromName'] ?? 'Aderion Studios Web');
+
+if (empty($smtpPass) || $smtpPass === 'BURAYA_EPOSTA_SIFRENIZI_YAZIN') {
+    logServerError('apply', 'smtp_credentials_required', 'SMTP password in api/smtp_config.php is not configured.', [
+        'host' => $smtpHost,
+        'port' => $smtpPort,
+        'user' => $smtpUser,
+    ]);
+    jsonResponse(500, false, 'server_error', 'Bir hata oluştu, en yakın sürede güncelleyeceğiz.', ['error' => 'server_error']);
+}
+
+// 9. Construct Professional HTML Email
+$subject = "Yeni Ekip Başvurusu: {$name} — {$roleTitle}";
+$encodedSubject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
 
 $safeName = htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 $safeEmail = htmlspecialchars($cleanEmail, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -222,33 +257,47 @@ $htmlBody = <<<HTML
 </html>
 HTML;
 
-// 9. RFC 2822 MIME Headers
+// 11. Dispatch Email via SMTP
 $encodedFromName = "=?UTF-8?B?" . base64_encode($fromName) . "?=";
 $encodedReplyName = "=?UTF-8?B?" . base64_encode($name) . "?=";
 
-$headers = [
-    "From: {$encodedFromName} <{$fromEmail}>",
+$extraHeaders = [
+    "From: {$encodedFromName} <{$smtpUser}>",
     "Reply-To: {$encodedReplyName} <{$cleanEmail}>",
-    "Return-Path: <{$fromEmail}>",
+    "Return-Path: <{$smtpUser}>",
     "MIME-Version: 1.0",
     "Content-Type: text/html; charset=UTF-8",
     "Content-Transfer-Encoding: 8bit",
-    "X-Mailer: AderionStudios-Mailer/2.0",
-    "X-Originating-IP: [{$clientIpClean}]"
+    "X-Mailer: AderionStudios-SMTP/2.0"
 ];
 
-// 10. Dispatch Email via cPanel MTA
-$mailSent = @mail(
-    $toEmail,
-    $subject,
-    $htmlBody,
-    implode("\r\n", $headers),
-    "-f {$fromEmail}"
+$smtpClient = new SimpleSmtpClient(
+    $smtpHost,
+    $smtpPort,
+    $smtpSecure,
+    $smtpUser,
+    $smtpPass,
+    15,
+    (bool)($smtpConfig['verify_tls'] ?? true),
+    (string)($smtpConfig['peer_name'] ?? '')
 );
 
-if ($mailSent) {
+$success = $smtpClient->send(
+    $smtpUser,
+    $toEmail,
+    $encodedSubject,
+    $htmlBody,
+    $extraHeaders
+);
+
+if ($success) {
     jsonResponse(200, true, 'success', 'Başvurunuz stüdyoya başarıyla iletildi! En kısa sürede e-posta ile dönüş yapacağız.');
 } else {
-    // If mail() returned false (e.g. local test without MTA), return clear diagnostic
-    jsonResponse(500, false, 'send_failed', 'Sunucu e-posta servisi şu anda yanıt veremedi. Lütfen doğrudan contact@aderionstudios.com adresine yazın.');
+    $err = $smtpClient->getLastError();
+    logServerError('apply', 'smtp_error', $err, [
+        'host' => $smtpHost,
+        'port' => $smtpPort,
+        'secure' => $smtpSecure,
+    ]);
+    jsonResponse(500, false, 'server_error', 'Bir hata oluştu, en yakın sürede güncelleyeceğiz.', ['error' => 'server_error']);
 }

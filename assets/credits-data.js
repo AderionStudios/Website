@@ -58,8 +58,53 @@ window.ADERION_CREDITS = {
           },
           "avatarExt": "png",
           "bannerExt": "png",
-          "name": "Flaouve",
+          "name": "Luvie✦˚✴",
           "handle": "@flaouve"
+        }
+      ]
+    },
+    {
+      "id": "art",
+      "code": "03",
+      "badge": "DEP // 03",
+      "title_tr": "SANAT & KONSEPT",
+      "title_en": "ART & CONCEPT",
+      "members": [
+        {
+          "id": "lazona",
+          "discordId": "1218982625423659129",
+          "roleBadge": "ART",
+          "role_tr": "Sanatçı & İllüstratör",
+          "role_en": "Artist & Illustrator",
+          "meta_tr": "Sanat Departmanı",
+          "meta_en": "Art Department",
+          "pronouns": "he/him",
+          "avatarExt": "png",
+          "bannerExt": "gif",
+          "name": "Lazona",
+          "handle": "@lazona"
+        }
+      ]
+    },
+    {
+      "id": "dev",
+      "code": "04",
+      "badge": "DEP // 04",
+      "title_tr": "OYUN GELİŞTİRME & YAZILIM",
+      "title_en": "GAME DEVELOPMENT & SYSTEMS",
+      "members": [
+        {
+          "id": "gunepi",
+          "discordId": "1062416790380105738",
+          "roleBadge": "DEV",
+          "role_tr": "Oyun Geliştiricisi",
+          "role_en": "Game Developer",
+          "meta_tr": "Geliştirme Departmanı",
+          "meta_en": "Developer Department",
+          "pronouns": "he/him",
+          "avatarExt": "png",
+          "name": "Gunepi",
+          "handle": "@rovc"
         }
       ]
     }

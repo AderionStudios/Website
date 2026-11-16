@@ -18,7 +18,6 @@ const extraTr = {
   studioCtaLabel:'BU HİKÂYEDE BİR YERİN VAR',studioCtaTitle:'Yeni dünyalar <em>birlikte</em> kurulur.',studioCtaText:'Sanat, hikâye veya geliştirme tarafında katkı vermek ister misin?',
   creditsEyebrow:'STÜDYO KÜNYESİ',creditsTitle:'Dünyaların <em>arkasındaki</em><br>insanlar.',
   creditsIntro:'Aderion’u şekillendiren ekip. Farklı uzmanlıklar, ortak bir dünya kurma isteği.',creditsRoster:'EKİP / CREDITS',creditsLoading:'Ekip bilgileri yükleniyor…',
-  creditsSourceNote:'Üyeler ve roller data/credits.json üzerinden gösterilir. Avatarlar önce yerel dosyalardan, ardından GitHub yedeğinden yüklenir.',
   creditsCtaLabel:'EKİBİN BİR PARÇASI OL',creditsCtaTitle:'Sıradaki hikâyeyi <em>birlikte</em> yazalım.',
   creditRole:'STÜDYO ROLÜ',creditProfile:'Discord profili',creditMembers:'ÜYE',creditSource:'Profil bağlantıları',
   joinEyebrow:'JOIN US / BİZE KATIL',joinTitle:'Birlikte<br><em>üretelim.</em>',
@@ -36,7 +35,7 @@ const extraTr = {
   experienceBeginner:'Yeni başlıyorum',experienceSome:'Birkaç proje yaptım',experienceExperienced:'Deneyimliyim',
   applyMessage:'Bize kendinden ve üretmek istediklerinden bahset *',
   applyConsent:'Başvuru bilgilerimin değerlendirilmek üzere Aderion Studios’a e-posta ile gönderilmesini kabul ediyorum.',
-  applySubmit:'Başvurumu gönder',applicationSending:'Başvurun gönderiliyor…',applicationSent:'Başvurun e-posta gönderimi için sunucu tarafından kabul edildi. Teşekkürler!',applicationError:'Başvuru gönderilemedi. Lütfen daha sonra tekrar dene veya contact@aderionstudios.com adresine yaz.',applicationLocal:'Bu formun doğrudan gönderimi PHP destekli yayında çalışır. E-posta uygulaman açılıyor; göndermeyi sen tamamlamalısın.',applicationRateLimit:'Kısa sürede çok sayıda başvuru denendi. Bir süre sonra tekrar dene.',applicationSubject:'Aderion Studios — Ön Başvuru',
+  applySubmit:'Başvurumu gönder',applicationSending:'Başvurun gönderiliyor…',applicationSent:'Başvurun e-posta gönderimi için sunucu tarafından kabul edildi. Teşekkürler!',applicationError:'Bir hata oluştu, en yakın sürede güncelleyeceğiz.',applicationLocal:'Bu formun doğrudan gönderimi sunucu bağlantısı gerektirir. E-posta uygulaman açılıyor; göndermeyi sen tamamlamalısın.',applicationRateLimit:'Kısa sürede çok sayıda başvuru denendi. Bir süre sonra tekrar dene.',applicationSubject:'Aderion Studios — Ön Başvuru',
   applicationCopied:'Ön başvuru taslağı panoya kopyalandı. Başvuruyu iletmek için stüdyonun doğrulanmış iletişim kanalına göndermen gerekiyor.',
   applicationMail:'E-posta taslağın açılıyor. Gönderim için e-posta uygulamanda onay vermen gerekir.',
   applicationFailed:'Panoya erişilemiyor. Metni açılan pencereden kopyalayabilirsin.'
@@ -60,7 +59,6 @@ const extraEn = {
   studioCtaLabel:'THERE IS A PLACE FOR YOU IN THIS STORY',studioCtaTitle:'New worlds are built <em>together.</em>',studioCtaText:'Want to contribute through art, storytelling, or development?',
   creditsEyebrow:'STUDIO CREDITS',creditsTitle:'The people <em>behind</em><br>the worlds.',
   creditsIntro:'The people shaping Aderion. Different skills, the same drive to build worlds.',creditsRoster:'TEAM / CREDITS',creditsLoading:'Loading team information…',
-  creditsSourceNote:'Team profiles are read from data/credits.json. Images load from local files first, then fall back to GitHub mirrors.',
   creditsCtaLabel:'BE PART OF THE TEAM',creditsCtaTitle:'Let’s write the next story <em>together.</em>',
   creditRole:'STUDIO ROLE',creditProfile:'Discord profile',creditMembers:'MEMBER',creditSource:'Profile links',
   joinEyebrow:'JOIN US / CREATE WITH US',joinTitle:'Let’s make<br><em>something.</em>',
@@ -78,7 +76,7 @@ const extraEn = {
   experienceBeginner:'Just starting out',experienceSome:'A few projects completed',experienceExperienced:'Experienced',
   applyMessage:'Tell us about yourself and what you hope to make *',
   applyConsent:'I agree that my application details may be emailed to Aderion Studios for consideration.',
-  applySubmit:'Submit application',applicationSending:'Sending your application…',applicationSent:'The server accepted your application for email delivery. Thank you!',applicationError:'Your application could not be submitted. Please try again or email contact@aderionstudios.com.',applicationLocal:'Direct submission requires PHP hosting. Your email app is opening; you must send the message yourself.',applicationRateLimit:'Too many submissions. Please try again later.',applicationSubject:'Aderion Studios — Expression of Interest',
+  applySubmit:'Submit application',applicationSending:'Sending your application…',applicationSent:'The server accepted your application for email delivery. Thank you!',applicationError:'An error occurred; we will fix it as soon as possible.',applicationLocal:'Direct submission requires a server connection. Your email app is opening; you must send the message yourself.',applicationRateLimit:'Too many submissions. Please try again later.',applicationSubject:'Aderion Studios — Expression of Interest',
   applicationCopied:'Your application draft was copied. To submit it, send it through the studio’s verified contact channel.',
   applicationMail:'Your email draft is opening. Confirm sending in your email application.',
   applicationFailed:'Clipboard access is blocked. Copy the text from the dialog.'
@@ -97,74 +95,448 @@ const roles = [
   {id:'sound',category:'audio',code:'AUDIO / 01',tr:'Besteci & Ses Tasarımcısı',en:'Composer & Sound Designer',descTr:'Sahnenin duygusunu taşıyan müzikler, atmosferler ve sade ses efektleri.',descEn:'Compose music, atmospheres, and sound effects that support the emotional tone.',skills:'OST · Ambience · SFX'}
 ];
 const escapeHtml = value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-let credits = window.ADERION_CREDITS || {departments:[]};
+let credits = null;
 const safeLink = candidate=>{try{let url=new URL(candidate);return ['https:','http:'].includes(url.protocol)?url.href:null;}catch{return null;}};
-// Credits images are stored locally after running update-credits.bat.
-// Avoid hardcoded GitHub cache URLs: those files may not exist in the repository.
-function creditMediaCandidates(member,kind){
-  const explicit=typeof member[kind]==='string'?member[kind].trim():'';
-  const id=String(member.discordId||'');
-  const urls=[];
-  if(explicit && (/^https:\/\//i.test(explicit)||/^assets\/images\/team\/[\w.-]+$/.test(explicit))){
-    urls.push(explicit);
+// ---------------------------------------------------------------------------
+// Live Discord profiles.
+// Data comes from our own api/discord.php (server-side cached, token stays on
+// the server). Config in data/credits.json is only the fallback / override:
+//   member.banner  -> pinned banner (any image/GIF URL or local file), wins over Discord
+//   member.bubble_tr/en -> status text shown when the member has no Discord custom status
+// ---------------------------------------------------------------------------
+let liveProfiles = {};
+let liveRefreshStarted = false;
+const LIVE_REFRESH_MS = 90000;
+
+async function fetchLiveProfiles() {
+  try {
+    const res = await fetch('api/discord.php', { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return (data && data.ok && data.users && typeof data.users === 'object') ? data.users : null;
+  } catch (_) {
+    return null;
   }
-  if(/^\d{16,24}$/.test(id)){
-    const preferred=String(member[kind+'Ext']||'').toLowerCase();
-    const extensions=[preferred,'png','gif','webp','jpg'].filter((ext,i,arr)=>
-      ['png','gif','webp','jpg'].includes(ext)&&arr.indexOf(ext)===i);
-    extensions.forEach(ext=>urls.push(`assets/images/team/${id}_${kind}.${ext}`));
-  }
-  return [...new Set(urls)];
 }
-function creditImgHtml(member,kind){
-  const candidates=creditMediaCandidates(member,kind);
-  if(!candidates.length)return '';
-  return `<img src="${escapeHtml(candidates[0])}" data-credit-media="${escapeHtml(JSON.stringify(candidates))}" data-credit-media-index="0" alt="" loading="lazy" class="member-external-media" referrerpolicy="no-referrer">`;
-}
-function setupCreditImages(root){
-  root.querySelectorAll('[data-credit-media]').forEach(img=>{
-    const sources=JSON.parse(img.dataset.creditMedia);
-    const next=()=>{
-      const nextIndex=Number(img.dataset.creditMediaIndex||0)+1;
-      if(nextIndex>=sources.length){img.hidden=true;return;}
-      img.dataset.creditMediaIndex=String(nextIndex);
-      img.src=sources[nextIndex];
+
+/** Average colour of an image (used when a member has no banner and no accent colour). */
+function dominantColor(url) {
+  return new Promise(resolve => {
+    if (!url) return resolve(null);
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = () => {
+      try {
+        const c = document.createElement('canvas');
+        c.width = c.height = 16;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(im, 0, 0, 16, 16);
+        const d = ctx.getImageData(0, 0, 16, 16).data;
+        let r = 0, g = 0, b = 0, n = 0;
+        for (let i = 0; i < d.length; i += 4) {
+          if (d[i + 3] < 128) continue;
+          r += d[i]; g += d[i + 1]; b += d[i + 2]; n++;
+        }
+        resolve(n ? `rgb(${Math.round(r / n)}, ${Math.round(g / n)}, ${Math.round(b / n)})` : null);
+      } catch (_) { resolve(null); }
     };
-    img.addEventListener('error',next);
-    // A cached image can fail before the listener has been installed.
-    if(img.complete && img.naturalWidth===0)next();
+    im.onerror = () => resolve(null);
+    im.src = url;
   });
 }
-function renderCredits(){
-  const root=document.querySelector('#creditsRoot');
-  if(!root)return;
-  const roleNodes = root.querySelectorAll('[data-role-tr]');
-  if(roleNodes.length > 0) {
-    roleNodes.forEach(el => {
-      el.textContent = locale === 'tr' ? el.dataset.roleTr : el.dataset.roleEn;
-    });
-    root.querySelectorAll('[data-meta-tr]').forEach(el => {
-      el.textContent = locale === 'tr' ? el.dataset.metaTr : el.dataset.metaEn;
-    });
-    root.querySelectorAll('[data-bubble-tr]').forEach(el => {
-      const textEl = el.querySelector('.status-bubble-text');
-      if (textEl) {
-        textEl.textContent = locale === 'tr' ? el.dataset.bubbleTr : el.dataset.bubbleEn;
-      }
-    });
-    root.querySelectorAll('[data-lang-tr]').forEach(el => {
-      el.textContent = locale === 'tr' ? el.dataset.langTr : el.dataset.langEn;
-    });
-    const profileLabel = translations[locale]?.creditProfile || (locale === 'tr' ? 'Discord Profili' : 'Discord Profile');
-    root.querySelectorAll('[data-t="creditProfile"]').forEach(el => {
-      el.textContent = profileLabel + ' ↗';
-    });
-    return;
+
+/** No banner image available: drop the image and show a solid colour instead. */
+function showBannerColor(bannerEl, color, avatarUrl) {
+  bannerEl.querySelector('.member-banner-img')?.remove();
+  bannerEl.style.backgroundImage = 'none';
+  if (color) {
+    bannerEl.style.backgroundColor = color;
+  } else {
+    dominantColor(avatarUrl).then(c => { if (c && bannerEl.isConnected) bannerEl.style.backgroundColor = c; });
   }
 }
-async function loadCredits(){
- if(!document.querySelector('#creditsRoot'))return;
- renderCredits();
+
+function applyLiveProfile(card, p) {
+  if (!p || !card.isConnected) return;
+
+  const nameEl = card.querySelector('.member-identity h3');
+  const resolvedName = p.globalName || p.username;
+  if (resolvedName && nameEl) nameEl.textContent = resolvedName;
+
+  if (p.username) {
+    const identityEl = card.querySelector('.member-identity');
+    let handleEl = identityEl && identityEl.querySelector('.member-handle');
+    if (identityEl && !handleEl) {
+      handleEl = document.createElement('span');
+      handleEl.className = 'member-handle';
+      identityEl.insertBefore(handleEl, identityEl.querySelector('.member-pronouns') || null);
+    }
+    if (handleEl) handleEl.textContent = `@${p.username}`;
+  }
+
+  const avatarImg = card.querySelector('.member-avatar-img');
+  if (avatarImg && p.avatarUrl && avatarImg.getAttribute('src') !== p.avatarUrl) {
+    delete avatarImg.dataset.imgErrorDone;
+    avatarImg.src = p.avatarUrl;
+  }
+
+  // Avatar decoration: Discord is the source of truth.
+  const avatarWrap = card.querySelector('.member-avatar');
+  if (avatarWrap) {
+    let deco = avatarWrap.querySelector('.member-avatar-decoration');
+    if (p.decorationUrl) {
+      if (!deco) {
+        deco = document.createElement('img');
+        deco.alt = '';
+        deco.className = 'member-avatar-decoration';
+        deco.setAttribute('aria-hidden', 'true');
+        deco.dataset.imgError = 'remove';
+        avatarWrap.appendChild(deco);
+      }
+      if (deco.getAttribute('src') !== p.decorationUrl) deco.src = p.decorationUrl;
+    } else if (deco) {
+      deco.remove();
+    }
+  }
+
+  // Banner: pinned config banner > Discord banner (Nitro) > banner colour > avatar colour.
+  const bannerEl = card.querySelector('.member-banner');
+  if (bannerEl && card.dataset.bannerPinned !== '1') {
+    if (p.bannerUrl) {
+      bannerEl.style.backgroundColor = '';
+      bannerEl.style.backgroundImage = `url(${JSON.stringify(p.bannerUrl)})`;
+      let img = bannerEl.querySelector('.member-banner-img');
+      if (!img) {
+        img = document.createElement('img');
+        img.alt = `${resolvedName || ''} Banner`;
+        img.className = 'member-banner-img';
+        img.loading = 'lazy';
+        img.dataset.imgError = 'banner';
+        img.dataset.discordId = card.dataset.discordId || '';
+        bannerEl.prepend(img);
+      }
+      if (img.getAttribute('src') !== p.bannerUrl) {
+        delete img.dataset.imgErrorDone;
+        img.style.opacity = '1';
+        img.src = p.bannerUrl;
+      }
+    } else {
+      showBannerColor(bannerEl, p.bannerColor, p.avatarUrl || (avatarImg && avatarImg.getAttribute('src')));
+    }
+  }
+
+  // Custom status ("🔥 11 oyuna hazır, alright") -> speech bubble.
+  const st = p.status;
+  if (st && (st.text || st.emoji)) {
+    const text = `${st.emoji ? st.emoji + ' ' : ''}${st.text || ''}`.trim();
+    let bubble = card.querySelector('.discord-status-bubble');
+    if (!bubble) {
+      bubble = document.createElement('div');
+      bubble.className = 'discord-status-bubble';
+      const tail = document.createElement('span');
+      tail.className = 'status-bubble-tail';
+      const span = document.createElement('span');
+      span.className = 'status-bubble-text';
+      bubble.append(tail, span);
+      const anchor = card.querySelector('.member-role');
+      if (anchor) anchor.before(bubble); else card.querySelector('.member-body')?.appendChild(bubble);
+    }
+    bubble.dataset.bubbleTr = text;
+    bubble.dataset.bubbleEn = text;
+    const textEl = bubble.querySelector('.status-bubble-text');
+    if (textEl) textEl.textContent = text;
+  }
+}
+
+function applyAllLiveProfiles(root) {
+  const target = root || document.querySelector('#creditsRoot');
+  if (!target) return;
+  target.querySelectorAll('.member-card[data-discord-id]').forEach(card => {
+    const p = liveProfiles[card.dataset.discordId];
+    if (p) applyLiveProfile(card, p);
+  });
+}
+
+async function refreshLiveProfiles() {
+  const users = await fetchLiveProfiles();
+  if (users) {
+    liveProfiles = users;
+    applyAllLiveProfiles();
+  }
+}
+
+function startLiveRefresh() {
+  if (liveRefreshStarted) return;
+  liveRefreshStarted = true;
+  refreshLiveProfiles();
+  setInterval(() => { if (!document.hidden) refreshLiveProfiles(); }, LIVE_REFRESH_MS);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshLiveProfiles(); });
+}
+
+// Image failure fallbacks (wired through the data-img-error listener in renderCreditsFromData).
+window.handleCreditAvatarError = function(img, discordId, fallbackSrc) {
+  if (fallbackSrc && img.getAttribute('src') !== fallbackSrc) img.src = fallbackSrc;
+};
+
+window.handleCreditBannerError = function(bannerImg, discordId) {
+  const bannerEl = bannerImg.closest('.member-banner');
+  if (!bannerEl) return;
+  const live = liveProfiles[discordId] || {};
+  const avatar = bannerEl.closest('.member-card')?.querySelector('.member-avatar-img');
+  showBannerColor(bannerEl, live.bannerColor, live.avatarUrl || (avatar && avatar.getAttribute('src')));
+};
+
+function renderCreditsFromData(data) {
+  const root = document.querySelector('#creditsRoot');
+  if (!root || !data || !Array.isArray(data.departments)) return;
+
+  let totalMembers = 0;
+  data.departments.forEach(dept => {
+    if (Array.isArray(dept.members)) {
+      totalMembers += dept.members.length;
+    }
+  });
+
+  const countEl = document.getElementById('creditsCount');
+  if (countEl) {
+    countEl.textContent = `${String(totalMembers).padStart(2, '0')} ${totalMembers === 1 ? 'MEMBER' : 'MEMBERS'}`;
+  }
+
+  const deptHtml = data.departments.map(dept => {
+    const deptId = dept.id || 'dept-' + (dept.code || '00');
+    const badgeText = dept.badge || (dept.code ? `DEP // ${dept.code}` : 'DEP');
+    const titleTr = dept.title_tr || '';
+    const titleEn = dept.title_en || dept.title_tr || '';
+    const currentTitle = locale === 'tr' ? titleTr : titleEn;
+    const memberCount = (dept.members || []).length;
+    const memberLabel = memberCount === 1 ? '01 MEMBER' : `${String(memberCount).padStart(2, '0')} MEMBERS`;
+
+    const membersHtml = (dept.members || []).map(member => {
+      const discordId = String(member.discordId || '').trim();
+      const memberId = member.id || discordId;
+      const name = member.displayName || member.name || memberId;
+      const handle = member.handle || '';
+      const roleBadge = member.roleBadge || 'MEMBER';
+
+      const roleTr = member.role_tr || '';
+      const roleEn = member.role_en || roleTr;
+      const currentRole = locale === 'tr' ? roleTr : roleEn;
+
+      const metaTr = member.meta_tr || '';
+      const metaEn = member.meta_en || metaTr;
+      const currentMeta = locale === 'tr' ? metaTr : metaEn;
+
+      const bubbleTr = member.bubble_tr || member.bubble || '';
+      const bubbleEn = member.bubble_en || bubbleTr;
+      const currentBubble = locale === 'tr' ? bubbleTr : bubbleEn;
+
+      // Banner URL (only request local file if explicitly configured or bannerExt is known)
+      let bannerSrc = member.banner || '';
+      if (!bannerSrc && discordId && member.bannerExt) {
+        bannerSrc = `assets/images/team/${discordId}_banner.${member.bannerExt}`;
+      }
+
+      // Avatar URL
+      let fallbackAvatar = 'assets/img/team/avatar-default.svg';
+      if (memberId === 'stettin') fallbackAvatar = 'assets/img/team/avatar-stettin.svg';
+      if (memberId === 'flaouve') fallbackAvatar = 'assets/img/team/avatar-flaouve.svg';
+
+      let avatarSrc = member.avatar || '';
+      if (!avatarSrc && discordId && member.avatarExt) {
+        avatarSrc = `assets/images/team/${discordId}_avatar.${member.avatarExt}`;
+      }
+      if (!avatarSrc) avatarSrc = fallbackAvatar;
+
+      // Decoration
+      let decorationHtml = '';
+      if (member.decoration) {
+        decorationHtml = `<img src="${escapeHtml(member.decoration)}" alt="" class="member-avatar-decoration" aria-hidden="true" data-img-error="remove">`;
+      } else if (discordId === '966300934202359888' || member.hasDecoration) {
+        decorationHtml = `<img src="assets/images/team/${discordId}_decoration.png" alt="" class="member-avatar-decoration" aria-hidden="true" data-img-error="remove">`;
+      }
+
+      // Status bubble
+      let bubbleHtml = '';
+      if (currentBubble) {
+        bubbleHtml = `
+          <div class="discord-status-bubble" data-bubble-tr="${escapeHtml(bubbleTr)}" data-bubble-en="${escapeHtml(bubbleEn)}">
+            <span class="status-bubble-tail"></span>
+            <span class="status-bubble-text">${escapeHtml(currentBubble)}</span>
+          </div>`;
+      }
+
+      // Pronouns
+      let pronounsHtml = '';
+      if (member.pronouns) {
+        pronounsHtml = `<span class="member-pronouns">• ${escapeHtml(member.pronouns)}</span>`;
+      }
+
+      // Discord button
+      let discordBtnHtml = '';
+      if (discordId) {
+        const profileLabel = translations[locale]?.creditProfile || (locale === 'tr' ? 'Discord Profili' : 'Discord Profile');
+        discordBtnHtml = `
+          <a class="member-discord" target="_blank" rel="noopener noreferrer" href="https://discord.com/users/${escapeHtml(discordId)}">
+            <svg class="discord-icon-svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+            <span data-t="creditProfile">${escapeHtml(profileLabel)} ↗</span>
+          </a>`;
+      }
+
+      // Social links
+      let linksHtml = '';
+      if (member.links && typeof member.links === 'object') {
+        const linkItems = Object.entries(member.links)
+          .map(([k, u]) => {
+            const href = safeLink(u);
+            return href ? `<a target="_blank" rel="noopener noreferrer" href="${escapeHtml(href)}">${escapeHtml(k)} ↗</a>` : '';
+          })
+          .filter(Boolean)
+          .join('');
+        if (linkItems) {
+          linksHtml = `<div class="member-socials">${linkItems}</div>`;
+        }
+      }
+
+      const roleLabel = translations[locale]?.creditRole || (locale === 'tr' ? 'STÜDYO ROLÜ' : 'STUDIO ROLE');
+
+      return `
+        <article class="member-card reveal in-view" data-member-id="${escapeHtml(memberId)}" data-discord-id="${escapeHtml(discordId)}"${member.banner ? ' data-banner-pinned="1"' : ''}>
+          <div class="member-banner"${bannerSrc ? ` data-banner-bg="${escapeHtml(bannerSrc)}"` : ''}>
+            ${bannerSrc ? `<img src="${escapeHtml(bannerSrc)}" alt="${escapeHtml(name)} Banner" class="member-banner-img" loading="lazy" data-img-error="banner" data-discord-id="${escapeHtml(discordId)}">` : ''}
+            <span class="member-banner-label">ADERION / CORE TEAM</span>
+          </div>
+          <div class="member-body">
+            <div class="member-head">
+              <div class="member-avatar">
+                <img src="${escapeHtml(avatarSrc)}" alt="${escapeHtml(name)}" class="member-avatar-img" width="84" height="84" loading="lazy" data-img-error="avatar" data-discord-id="${escapeHtml(discordId)}" data-fallback-src="${escapeHtml(fallbackAvatar)}">
+                ${decorationHtml}
+              </div>
+              <span class="member-role-badge">${escapeHtml(roleBadge)}</span>
+            </div>
+            <div class="member-identity">
+              <h3>${escapeHtml(name)}</h3>
+              ${handle ? `<span class="member-handle">${escapeHtml(handle)}</span>` : ''}
+              ${pronounsHtml}
+            </div>
+            ${bubbleHtml}
+            <div class="member-role">
+              <small data-t="creditRole">${escapeHtml(roleLabel)}</small>
+              <strong data-role-tr="${escapeHtml(roleTr)}" data-role-en="${escapeHtml(roleEn)}">${escapeHtml(currentRole)}</strong>
+              ${currentMeta ? `<span data-meta-tr="${escapeHtml(metaTr)}" data-meta-en="${escapeHtml(metaEn)}">${escapeHtml(currentMeta)}</span>` : ''}
+            </div>
+            <div class="member-actions">
+              ${discordBtnHtml}
+              ${linksHtml}
+            </div>
+          </div>
+        </article>`;
+    }).join('');
+
+    return `
+      <section class="credit-department" aria-labelledby="dept-${escapeHtml(deptId)}-heading">
+        <div class="department-heading">
+          <div>
+            <span class="department-index" data-lang-tr="${escapeHtml(badgeText)}" data-lang-en="${escapeHtml(badgeText)}">${escapeHtml(badgeText)}</span>
+            <h2 id="dept-${escapeHtml(deptId)}-heading" data-lang-tr="${escapeHtml(titleTr)}" data-lang-en="${escapeHtml(titleEn)}">${escapeHtml(currentTitle)}</h2>
+          </div>
+          <span class="department-count">${escapeHtml(memberLabel)}</span>
+        </div>
+        <div class="member-grid">
+          ${membersHtml}
+        </div>
+      </section>`;
+  }).join('');
+
+  root.innerHTML = deptHtml;
+
+  // CSP-friendly replacements for the former inline style="" / onerror="" attributes.
+  root.querySelectorAll('[data-banner-bg]').forEach((el) => {
+    el.style.backgroundImage = `url(${JSON.stringify(el.dataset.bannerBg)})`;
+  });
+  if (!root.dataset.imgErrorBound) {
+    root.dataset.imgErrorBound = '1';
+    // 'error' events do not bubble, so listen in the capture phase.
+    root.addEventListener('error', (event) => {
+      const img = event.target;
+      if (!(img instanceof HTMLImageElement) || !img.dataset.imgError) return;
+      const kind = img.dataset.imgError;
+      // Handle each image's failure only once (the old onerror=null guard) to avoid retry loops.
+      if (kind !== 'remove') {
+        if (img.dataset.imgErrorDone) return;
+        img.dataset.imgErrorDone = '1';
+      }
+      const discordId = img.dataset.discordId || '';
+      if (kind === 'remove') img.remove();
+      else if (kind === 'banner') window.handleCreditBannerError(img, discordId);
+      else if (kind === 'avatar') window.handleCreditAvatarError(img, discordId, img.dataset.fallbackSrc || '');
+    }, true);
+  }
+
+  // Re-apply the latest live Discord data after every (re)render (e.g. language switch).
+  applyAllLiveProfiles(root);
+}
+
+function updateStaticCreditsText() {
+  const root = document.querySelector('#creditsRoot');
+  if (!root) return;
+  root.querySelectorAll('[data-role-tr]').forEach(el => {
+    el.textContent = locale === 'tr' ? el.dataset.roleTr : el.dataset.roleEn;
+  });
+  root.querySelectorAll('[data-meta-tr]').forEach(el => {
+    el.textContent = locale === 'tr' ? el.dataset.metaTr : el.dataset.metaEn;
+  });
+  root.querySelectorAll('[data-bubble-tr]').forEach(el => {
+    const textEl = el.querySelector('.status-bubble-text');
+    if (textEl) {
+      textEl.textContent = locale === 'tr' ? el.dataset.bubbleTr : el.dataset.bubbleEn;
+    }
+  });
+  root.querySelectorAll('[data-lang-tr]').forEach(el => {
+    el.textContent = locale === 'tr' ? el.dataset.langTr : el.dataset.langEn;
+  });
+  const profileLabel = translations[locale]?.creditProfile || (locale === 'tr' ? 'Discord Profili' : 'Discord Profile');
+  root.querySelectorAll('[data-t="creditProfile"]').forEach(el => {
+    el.textContent = profileLabel + ' ↗';
+  });
+}
+
+function renderCredits() {
+  const root = document.querySelector('#creditsRoot');
+  if (!root) return;
+  if (credits && Array.isArray(credits.departments) && credits.departments.length > 0) {
+    renderCreditsFromData(credits);
+  }
+}
+
+async function loadCredits() {
+  const root = document.querySelector('#creditsRoot');
+  if (!root) return;
+
+  try {
+    const res = await fetch(`data/credits.json?v=${Date.now()}`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.departments)) {
+        window.ADERION_CREDITS = data;
+        credits = data;
+        renderCreditsFromData(data);
+        startLiveRefresh();
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn('Could not load data/credits.json dynamically:', err);
+  }
+
+  if (window.ADERION_CREDITS && Array.isArray(window.ADERION_CREDITS.departments) && window.ADERION_CREDITS.departments.length > 0) {
+    credits = window.ADERION_CREDITS;
+    renderCreditsFromData(credits);
+    startLiveRefresh();
+  } else {
+    root.innerHTML = `<p class="credits-loading">${escapeHtml(locale === 'tr' ? 'Ekip bilgileri yüklenemedi.' : 'Could not load team information.')}</p>`;
+  }
 }
 function renderRoles(){
  const root=document.querySelector('#rolesRoot');if(!root)return;
@@ -253,6 +625,9 @@ document.querySelector('#applicationForm')?.addEventListener('submit', async eve
       const successMsg = data.message || dict.applicationSent;
       if (status) status.textContent = successMsg;
       showToast(successMsg);
+    } else if (res.status >= 500 || (data && data.error === 'server_error')) {
+      if (status) status.textContent = dict.applicationError;
+      showToast(dict.applicationError);
     } else {
       const errMsg = (data && data.message) ? data.message : (res.status === 429 ? dict.applicationRateLimit : dict.applicationError);
       if (status) status.textContent = errMsg;
