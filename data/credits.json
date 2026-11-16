@@ -81,7 +81,11 @@
           "avatarExt": "png",
           "bannerExt": "gif",
           "name": "Lazona",
-          "handle": "@lazona"
+          "handle": "@lazona",
+          "links": {
+            "steam": "http://steamcommunity.com/profiles/76561199358717571",
+            "roblox": "https://www.roblox.com/users/2759450679/profile"
+          }
         }
       ]
     },
@@ -103,7 +107,11 @@
           "pronouns": "he/him",
           "avatarExt": "png",
           "name": "Gunepi",
-          "handle": "@rovc"
+          "handle": "@rovc",
+          "links": {
+            "github": "https://github.com/Rovc-11",
+            "steam": "https://steamcommunity.com/id/gunepi/"
+          }
         }
       ]
     }
