@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f9fc">
+  <meta name="description" content="Aderion Studios Visual Novel odağı: seçimler, karakter odaklı anlatı, sanat ve atmosfer.">
+  <title>Visual Novel — Aderion Studios</title>
+  <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+  <script src="assets/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/visual-novel.css">
+  <script src="assets/main.js" defer></script>
+</head>
+<body data-page="visual-novel" data-page-title="Visual Novel — Aderion Studios">
+<a class="skip-link" href="#main">İçeriğe geç</a>
+<div class="page-progress" aria-hidden="true"><div id="progressBar"></div></div>
+<header class="site-header" id="siteHeader">
+  <div class="container nav-shell">
+    <a class="brand" href="index.html" aria-label="Aderion Studios ana sayfa">
+      <img class="brand-mark brand-mark-image" src="assets/images/aderion-logo.png" alt="Aderion Studios logo" width="46" height="46">
+      <span class="brand-copy"><strong>ADERION</strong><small>STUDIOS<span class="brand-period">.</span></small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Ana menü">
+      <a href="studio.html" data-t="navStudio">Stüdyo</a>
+      <a href="index.html#focus" class="active" data-t="navFocus">Neler yapıyoruz?</a>
+      <a href="index.html#visuals" data-t="navVisuals">Görsel dünya</a>
+      <a href="credits.html" data-t="navCredits">Ekip</a>
+      <a href="join.html" data-t="navJoin">Bize Katıl</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Koyu moda geç" aria-pressed="false" title="Koyu moda geç">
+        <svg class="theme-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 14.1A8.5 8.5 0 0 1 9.9 3.4 8.5 8.5 0 1 0 20.6 14.1Z"/></svg>
+        <svg class="theme-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button class="lang-btn" id="langBtn" type="button" aria-label="Dili İngilizce olarak değiştir">EN <span aria-hidden="true">↗</span></button>
+      <a class="nav-contact" href="index.html#contact"><span data-t="navContact">İletişim</span><span aria-hidden="true">↗</span></a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-controls="mobileMenu" aria-expanded="false" aria-label="Menüyü aç"><span></span><span></span></button>
+    </div>
+  </div>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobil menü" inert>
+    <a href="studio.html" data-t="navStudio">Stüdyo</a>
+    <a href="index.html#focus" data-t="navFocus">Neler yapıyoruz?</a>
+    <a href="index.html#visuals" data-t="navVisuals">Görsel dünya</a>
+    <a href="credits.html" data-t="navCredits">Ekip</a>
+    <a href="join.html" data-t="navJoin">Bize Katıl</a>
+    <a href="index.html#contact" data-t="navContact">İletişim</a>
+    <p>ADERION STUDIOS · INDEPENDENT GAME STUDIO</p>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="vn-cover" aria-labelledby="vn-title">
+    <img class="vn-cover-image" src="assets/images/vn-moment.webp" alt="" fetchpriority="high" width="1080" height="1542">
+    <div class="vn-cover-shade" aria-hidden="true"></div>
+    <div class="container vn-cover-content">
+      <a class="vn-back-link" href="index.html#focus">← <span data-t="vnBackLink">Odak alanlarına dön</span></a>
+      <span class="vn-cover-note" data-t="vnConceptArt">KONSEPT &amp; GÖRSEL DÜNYA</span>
+    </div>
+  </section>
+
+  <div class="container vn-project">
+    <header class="vn-identity">
+      <img class="vn-project-logo" src="assets/images/aderion-logo.png" alt="Aderion Studios" width="220" height="220">
+      <div class="vn-identity-copy">
+        <div class="eyebrow"><span class="section-index">01 /</span><span data-t="vnProjectLabel">YENİ BİR HİKÂYE</span></div>
+        <h1 id="vn-title">A Story with<em> Dennis</em></h1>
+        <p class="vn-project-name" data-t="vnNameNote">Proje adı yakında açıklanacak.</p>
+        <p class="vn-summary" data-t="vnBannerLead">Karakterlerin yalnızca ekranda görünmediği; sesleri, suskunlukları ve kararlarınla hafızanda yer ettiği anlatı odaklı deneyimler.</p>
+      </div>
+    </header>
+
+    <div class="vn-layout">
+      <div class="vn-content">
+        <nav class="vn-section-nav" aria-label="Proje bölümleri" data-t-aria="vnSections">
+          <a href="#hikaye" data-t="vnStory">Hikâye</a>
+          <a href="#karakterler" data-t="vnCharacters">Karakterler</a>
+          <a href="#ekip" data-t="vnTeam">Ekip</a>
+          <a href="#durum" data-t="vnStatus">Durum</a>
+          <a href="#oyundan-kareler" data-t="vnScreens">Oyundan Kareler</a>
+        </nav>
+
+        <section class="vn-detail" id="hikaye" aria-labelledby="story-title">
+          <div class="eyebrow"><span class="section-index">02 /</span><span data-t="vnStoryLabel">HİKÂYE &amp; DÜNYA</span></div>
+          <h2 id="story-title" data-t-html="vnStoryTitle">Her seçimin <em>bir izi var.</em></h2>
+          <p class="vn-detail-lead" data-t="vnOverviewLead">Bir visual novel bizim için yalnızca metin okumak değil; bir karakterin bakışında, duraksamasında ve verdiğin kararın ağırlığında yaşamaktır.</p>
+          <p data-t="vnOverviewBody">Aderion Studios’ta diyalogların doğallığına, sahne geçişlerinin temposuna ve oyuncuya gerçekten söz hakkı tanıyan dallanmalara odaklanıyoruz. Küçük bir kararın bile birkaç bölüm sonra bambaşka bir duyguyla geri dönmesini seviyoruz.</p>
+        </section>
+
+        <section class="vn-detail" id="karakterler" aria-labelledby="characters-title">
+          <div class="vn-detail-heading"><h2 id="characters-title" data-t="vnCharacters">Karakterler</h2><span class="vn-small-tag" data-t="vnInConcept">KONSEPT AŞAMASINDA</span></div>
+          <p data-t="vnPillarTwoDesc">Kendi kusurları, mizahı ve kırılganlıklarıyla gerçek hissettiren, hikâye bittiğinde bile akılda kalan karakterler.</p>
+          <div class="vn-character-note"><span aria-hidden="true">✦</span><p data-t="vnCharacterNote">Bu hikâyede kimlerle tanışacağını henüz paylaşmıyoruz. Karakterler ve onlara ait hikâyeler burada yerini alacak.</p></div>
+        </section>
+
+        <section class="vn-detail" id="ekip" aria-labelledby="team-title">
+          <div class="vn-detail-heading"><h2 id="team-title" data-t="vnTeamTitle">Hikâyenin arkasındaki ekip</h2></div>
+          <p data-t="vnTeamNote">Aderion Studios ekibi ve stüdyodaki görevleri. Projeye özel katkılar geliştirme sürecinde paylaşılacak.</p>
+          <div class="vn-team-grid">
+            <a class="vn-person" href="credits.html"><img src="assets/images/team/296189055379570688_avatar.gif" alt="" width="48" height="48" loading="lazy"><span><strong>Stettin</strong><small data-t="vnRoleFounder">Kurucu &amp; Yaratıcı Tasarım</small></span><span aria-hidden="true">↗</span></a>
+            <a class="vn-person" href="credits.html"><img src="assets/images/team/966300934202359888_avatar.png" alt="" width="48" height="48" loading="lazy"><span><strong>Luvie</strong><small data-t="vnRoleTech">Teknik Yönetim &amp; Altyapı</small></span><span aria-hidden="true">↗</span></a>
+            <a class="vn-person" href="credits.html"><img src="assets/images/team/1218982625423659129_avatar.png" alt="" width="48" height="48" loading="lazy"><span><strong>Lazona</strong><small data-t="vnRoleArt">Sanat &amp; İllüstrasyon</small></span><span aria-hidden="true">↗</span></a>
+            <a class="vn-person" href="credits.html"><img src="assets/images/team/1062416790380105738_avatar.png" alt="" width="48" height="48" loading="lazy"><span><strong>Gunepi</strong><small data-t="vnRoleDev">Oyun Geliştirme</small></span><span aria-hidden="true">↗</span></a>
+          </div>
+        </section>
+
+        <section class="vn-detail" id="durum" aria-labelledby="status-title">
+          <div class="vn-detail-heading"><h2 id="status-title" data-t="vnDevelopment">Geliştirme durumu</h2><span class="vn-status"><i aria-hidden="true"></i><span data-t="vnInProgress">Geliştirme aşamasında</span></span></div>
+          <p data-t="vnDevelopmentNote">Şu anda konsept ve anlatı tasarımı üzerinde çalışıyoruz. Hikâyenin temellerini, karakterleri ve görsel yönünü şekillendiriyoruz; çıkış tarihi henüz açıklanmadı.</p>
+          <ol class="vn-roadmap">
+            <li class="is-current" aria-current="step"><span>01</span><strong data-t="vnPhaseOne">Konsept &amp; Anlatı</strong><small data-t="vnPhaseNow">Şu an buradayız</small></li>
+            <li><span>02</span><strong data-t="vnPhaseTwo">Geliştirme</strong><small data-t="vnPhasePlanned">Planlanan</small></li>
+            <li><span>03</span><strong data-t="vnPhaseThree">Yayın</strong><small data-t="vnUnannounced">Henüz açıklanmadı</small></li>
+          </ol>
+        </section>
+
+        <section class="vn-screens" id="oyundan-kareler" aria-labelledby="screens-title">
+          <div class="eyebrow"><span class="section-index">03 /</span><span data-t="vnVisualDiary">GÖRSEL GÜNLÜK</span></div>
+          <div class="vn-detail-heading"><h2 id="screens-title" data-t-html="vnScreensTitle">Oyundan <em>Kareler</em></h2><div class="gallery-controls"><button class="gallery-arrow" id="galleryPrev" type="button" aria-label="Önceki görsel" data-t-aria="lightboxPrev">←</button><button class="gallery-arrow" id="galleryNext" type="button" aria-label="Sonraki görsel" data-t-aria="lightboxNext">→</button></div></div>
+          <p class="vn-gallery-note" data-t="vnGalleryNote">Oyunun görsel dünyasına bir bakış. Şimdilik konsept referanslarını paylaşıyoruz; oyun içi ekran görüntüleri geliştirme sürecinde eklenecek.</p>
+          <div class="gallery-track vn-gallery-track" id="galleryTrack" tabindex="0" aria-label="Oyundan kareler galerisi" data-t-aria="vnGalleryLabel">
+            <figure class="gallery-item"><div class="gallery-image"><img src="assets/images/vn-moment.webp" alt="İki karakterin birlikte gülümsediği görsel referans" data-t-alt="vnShotOneAlt" width="1080" height="1542" loading="lazy"></div><figcaption><span>01 / <b data-t="vnReference">REFERANS</b></span><span data-t="galleryTwo">Küçük bir an</span></figcaption></figure>
+            <figure class="gallery-item"><div class="gallery-image"><img src="assets/images/detail-portrait.webp" alt="Karakter portresi görsel referansı" data-t-alt="vnShotTwoAlt" loading="lazy"></div><figcaption><span>02 / <b data-t="vnReference">REFERANS</b></span><span data-t="galleryThree">Samimi detaylar</span></figcaption></figure>
+            <figure class="gallery-item"><div class="gallery-image"><img src="assets/images/mood-smile.webp" alt="Karakter ifadesi görsel referansı" data-t-alt="vnShotThreeAlt" loading="lazy"></div><figcaption><span>03 / <b data-t="vnReference">REFERANS</b></span><span data-t="galleryFour">İfade ve duygu</span></figcaption></figure>
+          </div>
+          <div class="vn-gallery-footer"><span data-t="vnGalleryHint">Bir kareye tıkla, yakından bak.</span><span class="gallery-count"><b id="galleryIndex">01</b> / <span id="galleryTotal">03</span></span></div>
+        </section>
+      </div>
+
+      <aside class="vn-sidebar" aria-labelledby="facts-title">
+        <div class="vn-facts">
+          <div class="eyebrow" data-t="vnAtGlance">BİR BAKIŞTA</div>
+          <h2 id="facts-title" data-t="vnGameInfo">Oyun bilgileri</h2>
+          <dl>
+            <div><dt data-t="vnStatus">Durum</dt><dd class="vn-status"><i aria-hidden="true"></i><span data-t="vnInConceptSentence">Konsept &amp; anlatı tasarımı</span></dd></div>
+            <div><dt data-t="vnGenres">Türler</dt><dd class="vn-tags"><span>Visual Novel</span><span data-t="vnNarrative">Hikâye odaklı</span></dd></div>
+            <div><dt data-t="vnFeatures">Hedeflenen özellikler</dt><dd><ul class="vn-feature-list"><li data-t="vnFeatureChoices">Anlamlı seçimler</li><li data-t="vnFeatureBranching">Dallanan anlatı</li><li data-t="vnFeatureCharacters">Karakter odaklı hikâye</li></ul></dd></div>
+            <div><dt data-t="vnPlaytime">Oynanış süresi</dt><dd data-t="vnUnannounced">Henüz açıklanmadı</dd></div>
+            <div><dt data-t="vnRelease">Çıkış tarihi</dt><dd data-t="vnUnannounced">Henüz açıklanmadı</dd></div>
+            <div><dt data-t="vnPlatforms">Platformlar</dt><dd data-t="vnUnannounced">Henüz açıklanmadı</dd></div>
+            <div><dt data-t="vnDeveloper">Geliştirici</dt><dd>Aderion Studios</dd></div>
+          </dl>
+          <a class="vn-facts-link" href="#oyundan-kareler"><span data-t="vnExploreScreens">Karelere göz at</span><span aria-hidden="true">↘</span></a>
+        </div>
+        <p class="vn-sidebar-note" data-t="vnInfoNote">Bir hikâye adım adım şekilleniyor. Yeni detaylar burada yerini alacak.</p>
+      </aside>
+    </div>
+  </div>
+
+  <section class="sub-cta-band">
+    <div class="container sub-cta-inner reveal">
+      <div>
+        <div class="eyebrow light-eyebrow"><span data-t="vnNoteLabel">STÜDYO NOTU</span></div>
+        <h2 data-t-html="vnNoteTitle">Yaklaşımımız <em>gelişiyor.</em></h2>
+        <p data-t="vnNoteText">Visual Novel projemiz şu an konsept ve anlatı tasarımı aşamasında. Paylaşılan görseller, stüdyonun hedeflediği görsel tonu yansıtan referanslardır.</p>
+      </div>
+      <div class="vn-cta-actions">
+        <a class="btn btn-light" href="join.html"><span data-t="vnCtaJoin">Bize Katıl</span><span>↗</span></a>
+        <a class="btn btn-outline-light" href="index.html#focus"><span data-t="vnCtaBack">Odak alanlarına dön</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="sub-footer">
+  <div class="container sub-footer-top">
+    <a href="index.html" class="footer-brand">ADERION<span>®</span></a>
+    <div>
+      <a href="index.html" data-t="footerHome">Ana sayfa</a>
+      <a href="studio.html" data-t="navStudio">Stüdyo</a>
+      <a href="credits.html" data-t="navCredits">Ekip</a>
+      <a href="join.html" data-t="navJoin">Bize Katıl</a>
+    </div>
+  </div>
+  <div class="container sub-footer-base">
+    <span>© <span class="footer-year">2026</span> ADERION STUDIOS</span>
+    <span data-t="footerRights">Tüm hakları saklıdır.</span>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
