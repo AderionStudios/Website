@@ -14,6 +14,11 @@ pnpm-debug.log*
 .env.*
 !.env.example
 
+# Real SMTP credentials (copy api/smtp_config.example.php -> api/smtp_config.php)
+api/smtp_config.php
+# Discord bot token (copy api/discord_config.example.php -> api/discord_config.php)
+api/discord_config.php
+
 # Logs & temporary files
 *.log
 *.tmp
@@ -38,3 +43,5 @@ desktop.ini
 
 # CI staging directory (if tested locally)
 _deploy/
+
+.github/

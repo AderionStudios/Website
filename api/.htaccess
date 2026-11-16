@@ -1,5 +1,5 @@
 # Prevent direct browser access to sensitive config and log files
-<FilesMatch "^(smtp_config\.php|\.env|\.tmp)|\.log$">
+<FilesMatch "^(smtp_config\.php|discord_config\.php|\.env|\.tmp)|\.log$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>

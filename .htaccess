@@ -1,6 +1,5 @@
 # ==============================================================================
-# FLAOUVE Studio — Apache / cPanel Security, Performance & Caching Configuration
-# Reference: SECURITY.md, ARCHITECTURE.md, ROADMAP.md (Faz 5)
+# ADERION STUDIOS — Apache / cPanel Security, Performance & Caching Configuration
 # ==============================================================================
 
 # Disable directory browsing & set default charset / index
@@ -49,6 +48,12 @@ AddDefaultCharset UTF-8
 # ------------------------------------------------------------------------------
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Legacy duplicate page: credit.html -> credits.html (permanent)
+    RewriteRule ^credit\.html$ /credits.html [R=301,L]
+
+    # Never serve log files (belt and braces; the FilesMatch rule above was not effective on the live host)
+    RewriteRule \.log$ - [F,L]
 
     # Block access to hidden directories (.git, .github, etc.) while allowing
     # /.well-known/ for cPanel AutoSSL / Let's Encrypt domain validation
@@ -114,6 +119,9 @@ AddDefaultCharset UTF-8
 
     # Restrict powerful browser features not required by a static studio site
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()"
+    # Content-Security-Policy: no inline scripts/styles are used by the site.
+    # Allowed externals: Google Fonts (css+font), no third-party API calls from the browser (Discord data comes via api/discord.php), https images (Discord CDN avatars/banners).
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
 
     # Optional HSTS — uncomment once HTTPS / AutoSSL is verified on all subdomains
     # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"

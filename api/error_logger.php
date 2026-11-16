@@ -2,7 +2,7 @@
 /**
  * ============================================================================
  * ADERION STUDIOS — Server Error Logger
- * Appends sanitized single-line error entries to root error.log.
+ * Appends sanitized single-line error entries to the hidden root file .error.log.
  * ============================================================================
  */
 declare(strict_types=1);
@@ -46,7 +46,9 @@ function sanitizeLogContext(array $context): array {
  * Append a sanitized, single-line error entry to the root error.log file.
  */
 function logServerError(string $source, string $code, string $detail, array $context = []): void {
-    $logFile = __DIR__ . '/../error.log';
+    // Dot-file on purpose: the web server denies hidden files (403), whereas a plain
+    // "error.log" was found to be publicly downloadable on the live host.
+    $logFile = __DIR__ . '/../.error.log';
     $timestamp = date('Y-m-d H:i:s P');
     $safeSource = sanitizeLogValue($source);
     $safeCode = sanitizeLogValue($code);
