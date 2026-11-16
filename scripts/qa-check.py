@@ -184,7 +184,7 @@ TOOLS: tuple[ToolSpec, ...] = (
         cmd=(
             "semgrep",
             "scan",
-            "--config=auto",
+            "--config=p/default",
             "--error",
             "--severity=WARNING",
             "--quiet",
@@ -602,13 +602,19 @@ def _check_relative_links(
     return errors
 
 
+class I18nBundles(NamedTuple):
+    """Container for site and paint translation key sets."""
+
+    site_tr: set[str]
+    site_en: set[str]
+    paint_tr: set[str]
+    paint_en: set[str]
+
+
 def check_html_file(
     html_file: Path,
     root: Path,
-    site_tr: set[str],
-    site_en: set[str],
-    paint_tr: set[str] | None = None,
-    paint_en: set[str] | None = None,
+    bundles: I18nBundles,
 ) -> list[str]:
     """Validate links, CSP rules, and i18n keys for one HTML file."""
     if not html_file.is_file():
@@ -623,24 +629,22 @@ def check_html_file(
     )
     errors.extend(_check_relative_links(html_file, root, parser.links))
     if html_file.name == "mini-paint.html":
-        target_tr = paint_tr if paint_tr is not None else set()
-        target_en = paint_en if paint_en is not None else set()
         errors.extend(
             f"{html_file.name}: missing TR key '{key}'"
-            for key in sorted(parser.paint_keys - target_tr)
+            for key in sorted(parser.paint_keys - bundles.paint_tr)
         )
         errors.extend(
             f"{html_file.name}: missing EN key '{key}'"
-            for key in sorted(parser.paint_keys - target_en)
+            for key in sorted(parser.paint_keys - bundles.paint_en)
         )
     else:
         errors.extend(
             f"{html_file.name}: missing TR key '{key}'"
-            for key in sorted(parser.site_keys - site_tr)
+            for key in sorted(parser.site_keys - bundles.site_tr)
         )
         errors.extend(
             f"{html_file.name}: missing EN key '{key}'"
-            for key in sorted(parser.site_keys - site_en)
+            for key in sorted(parser.site_keys - bundles.site_en)
         )
     return errors
 
@@ -730,17 +734,15 @@ def check_site_basics(root: Path) -> list[str]:
     if not paint_errors:
         errors.extend(_check_i18n_parity(paint_tr, paint_en, scope="mini-paint"))
 
+    bundles = I18nBundles(
+        site_tr=site_tr,
+        site_en=site_en,
+        paint_tr=paint_tr,
+        paint_en=paint_en,
+    )
+
     for rel_html in SITE_HTML_FILES:
-        errors.extend(
-            check_html_file(
-                root / rel_html,
-                root,
-                site_tr,
-                site_en,
-                paint_tr,
-                paint_en,
-            )
-        )
+        errors.extend(check_html_file(root / rel_html, root, bundles))
     return errors
 
 

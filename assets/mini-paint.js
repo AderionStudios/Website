@@ -1,6 +1,4 @@
 (() => {
-  'use strict';
-
   const LANG_STORAGE_KEY = 'aderion-language';
 
   const I18N = {
@@ -48,7 +46,8 @@
       toolFillTitle: 'Boya Kovası / Doldur (G)',
       toolEyedropper: 'Damlalık',
       toolEyedropperTitle: 'Damlalık / Renk Seç (I)',
-      stageHint: 'Kısayollar: <b>Ctrl+Z</b> Geri Al · <b>Ctrl+Y</b> İleri Al · <b>[ / ]</b> Boyut · Kalem arkasını çevirince otomatik <b>Silgi</b> aktif olur',
+      stageHint:
+        'Kısayollar: <b>Ctrl+Z</b> Geri Al · <b>Ctrl+Y</b> İleri Al · <b>[ / ]</b> Boyut · Kalem arkasını çevirince otomatik <b>Silgi</b> aktif olur',
       panelTelemetry: 'Tablet Telemetrisi',
       statusReady: 'Hazır',
       statusDrawing: 'Çiziliyor',
@@ -68,7 +67,7 @@
       curveLinear: 'Doğrusal',
       curveFirm: 'Sert',
       panelPalette: 'Renk Paleti',
-      colorPickerAria: 'Renk Seçici'
+      colorPickerAria: 'Renk Seçici',
     },
     en: {
       title: 'Drawing Studio — Aderion Studios',
@@ -114,7 +113,8 @@
       toolFillTitle: 'Paint Bucket / Fill (G)',
       toolEyedropper: 'Picker',
       toolEyedropperTitle: 'Eyedropper / Color Picker (I)',
-      stageHint: 'Shortcuts: <b>Ctrl+Z</b> Undo · <b>Ctrl+Y</b> Redo · <b>[ / ]</b> Size · Flipping the stylus automatically activates <b>Eraser</b>',
+      stageHint:
+        'Shortcuts: <b>Ctrl+Z</b> Undo · <b>Ctrl+Y</b> Redo · <b>[ / ]</b> Size · Flipping the stylus automatically activates <b>Eraser</b>',
       panelTelemetry: 'Tablet Telemetry',
       statusReady: 'Ready',
       statusDrawing: 'Drawing',
@@ -134,8 +134,8 @@
       curveLinear: 'Linear',
       curveFirm: 'Firm',
       panelPalette: 'Color Palette',
-      colorPickerAria: 'Color Picker'
-    }
+      colorPickerAria: 'Color Picker',
+    },
   };
 
   function detectBrowserLocale() {
@@ -146,7 +146,8 @@
       }
     } catch (_) {}
 
-    const navLang = (Array.isArray(navigator.languages) && navigator.languages[0]) || navigator.language || '';
+    const navLang =
+      (Array.isArray(navigator.languages) && navigator.languages[0]) || navigator.language || '';
     return /^tr(?:-|$)/i.test(navLang) ? 'tr' : 'en';
   }
 
@@ -222,13 +223,31 @@
     lastRadius: 6,
     history: [],
     historyIndex: -1,
-    maxHistory: 40
+    maxHistory: 40,
   };
 
   const SWATCHES = [
-    '#0f172a', '#1e293b', '#64748b', '#cbd5e1', '#ffffff', '#ef4444', '#f97316',
-    '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#14b8a6', '#06b6d4', '#3b82f6',
-    '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#78350f'
+    '#0f172a',
+    '#1e293b',
+    '#64748b',
+    '#cbd5e1',
+    '#ffffff',
+    '#ef4444',
+    '#f97316',
+    '#f59e0b',
+    '#eab308',
+    '#84cc16',
+    '#22c55e',
+    '#14b8a6',
+    '#06b6d4',
+    '#3b82f6',
+    '#6366f1',
+    '#8b5cf6',
+    '#a855f7',
+    '#d946ef',
+    '#ec4899',
+    '#f43f5e',
+    '#78350f',
   ];
 
   // UI Elements
@@ -266,7 +285,7 @@
     for (const hex of SWATCHES) {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'swatch' + (hex.toLowerCase() === state.color.toLowerCase() ? ' active' : '');
+      btn.className = `swatch${hex.toLowerCase() === state.color.toLowerCase() ? ' active' : ''}`;
       btn.style.background = hex;
       btn.title = hex.toUpperCase();
       btn.addEventListener('click', () => setColor(hex));
@@ -333,7 +352,7 @@
     const scaleY = CANVAS_H / rect.height;
     return {
       x: (e.clientX - rect.left) * scaleX,
-      y: (e.clientY - rect.top) * scaleY
+      y: (e.clientY - rect.top) * scaleY,
     };
   }
 
@@ -342,9 +361,9 @@
   }
 
   const PRESSURE_CURVES = {
-    soft: (p) => Math.pow(p, 0.65),
+    soft: (p) => p ** 0.65,
     linear: (p) => p,
-    firm: (p) => Math.pow(p, 1.65)
+    firm: (p) => p ** 1.65,
   };
 
   function applyPressureCurve(p) {
@@ -472,7 +491,8 @@
 
     const radius = Math.max(1, state.size / 2);
     previewCtx.save();
-    previewCtx.strokeStyle = state.bgMode === 'dark' ? 'rgba(255,255,255,0.75)' : 'rgba(15,23,42,0.75)';
+    previewCtx.strokeStyle =
+      state.bgMode === 'dark' ? 'rgba(255,255,255,0.75)' : 'rgba(15,23,42,0.75)';
     previewCtx.lineWidth = 1.25;
     previewCtx.beginPath();
 
@@ -485,15 +505,16 @@
     previewCtx.stroke();
 
     // Subtle outer contrast ring
-    previewCtx.strokeStyle = state.bgMode === 'dark' ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.65)';
+    previewCtx.strokeStyle =
+      state.bgMode === 'dark' ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.65)';
     previewCtx.lineWidth = 0.8;
     previewCtx.stroke();
     previewCtx.restore();
   }
 
   function getCalligraphyMetrics(e) {
-    const tx = e ? (e.tiltX || 0) : 0;
-    const ty = e ? (e.tiltY || 0) : 0;
+    const tx = e ? e.tiltX || 0 : 0;
+    const ty = e ? e.tiltY || 0 : 0;
     const hasTilt = Math.abs(tx) > 2 || Math.abs(ty) > 2;
     const angle = hasTilt ? Math.atan2(ty, tx) : -Math.PI / 4;
     const tiltMag = hasTilt ? Math.min(1, Math.hypot(tx, ty) / 60) : 0.35;
@@ -732,7 +753,7 @@
     return {
       r: (num >> 16) & 255,
       g: (num >> 8) & 255,
-      b: num & 255
+      b: num & 255,
     };
   }
 
@@ -742,7 +763,7 @@
   }
 
   function rgbToHex(r, g, b) {
-    return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
+    return `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
   }
 
   // Pointer Event Handlers
@@ -782,18 +803,55 @@
     const alpha = getDynamicAlpha(pressure);
     state.lastRadius = radius;
 
-    if (state.activeDrawTool === 'pen' || state.activeDrawTool === 'soft' || state.activeDrawTool === 'calligraphy') {
+    if (
+      state.activeDrawTool === 'pen' ||
+      state.activeDrawTool === 'soft' ||
+      state.activeDrawTool === 'calligraphy'
+    ) {
       strokeCanvas.style.opacity = String(state.opacity);
       strokeCtx.clearRect(0, 0, CANVAS_W, CANVAS_H);
       if (state.activeDrawTool === 'pen') {
-        stampPenSegment(strokeCtx, pt.x, pt.y, pt.x, pt.y, radius, radius, state.color, alpha, false);
+        stampPenSegment(
+          strokeCtx,
+          pt.x,
+          pt.y,
+          pt.x,
+          pt.y,
+          radius,
+          radius,
+          state.color,
+          alpha,
+          false,
+        );
       } else if (state.activeDrawTool === 'soft') {
         stampSoftSegment(strokeCtx, pt.x, pt.y, pt.x, pt.y, radius, radius, state.color, alpha);
       } else {
-        stampCalligraphySegment(strokeCtx, pt.x, pt.y, pt.x, pt.y, radius, radius, state.color, alpha, e);
+        stampCalligraphySegment(
+          strokeCtx,
+          pt.x,
+          pt.y,
+          pt.x,
+          pt.y,
+          radius,
+          radius,
+          state.color,
+          alpha,
+          e,
+        );
       }
     } else if (state.activeDrawTool === 'eraser') {
-      stampPenSegment(paintCtx, pt.x, pt.y, pt.x, pt.y, radius, radius, '#000', state.opacity, true);
+      stampPenSegment(
+        paintCtx,
+        pt.x,
+        pt.y,
+        pt.x,
+        pt.y,
+        radius,
+        radius,
+        '#000',
+        state.opacity,
+        true,
+      );
     }
 
     updateTelemetry(e, inverted);
@@ -828,13 +886,56 @@
       const alpha = getDynamicAlpha(pressure);
 
       if (drawTool === 'pen') {
-        stampPenSegment(strokeCtx, state.lastX, state.lastY, x, y, state.lastRadius, radius, state.color, alpha, false);
+        stampPenSegment(
+          strokeCtx,
+          state.lastX,
+          state.lastY,
+          x,
+          y,
+          state.lastRadius,
+          radius,
+          state.color,
+          alpha,
+          false,
+        );
       } else if (drawTool === 'soft') {
-        stampSoftSegment(strokeCtx, state.lastX, state.lastY, x, y, state.lastRadius, radius, state.color, alpha);
+        stampSoftSegment(
+          strokeCtx,
+          state.lastX,
+          state.lastY,
+          x,
+          y,
+          state.lastRadius,
+          radius,
+          state.color,
+          alpha,
+        );
       } else if (drawTool === 'calligraphy') {
-        stampCalligraphySegment(strokeCtx, state.lastX, state.lastY, x, y, state.lastRadius, radius, state.color, alpha, ev);
+        stampCalligraphySegment(
+          strokeCtx,
+          state.lastX,
+          state.lastY,
+          x,
+          y,
+          state.lastRadius,
+          radius,
+          state.color,
+          alpha,
+          ev,
+        );
       } else if (drawTool === 'eraser') {
-        stampPenSegment(paintCtx, state.lastX, state.lastY, x, y, state.lastRadius, radius, '#000', state.opacity, true);
+        stampPenSegment(
+          paintCtx,
+          state.lastX,
+          state.lastY,
+          x,
+          y,
+          state.lastRadius,
+          radius,
+          '#000',
+          state.opacity,
+          true,
+        );
       } else if (drawTool === 'line' || drawTool === 'rect' || drawTool === 'circle') {
         previewCtx.clearRect(0, 0, CANVAS_W, CANVAS_H);
         drawShape(previewCtx, drawTool, state.startX, state.startY, p.x, p.y, true);
@@ -902,7 +1003,9 @@
   bgButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       state.bgMode = btn.dataset.bg;
-      bgButtons.forEach((b) => b.classList.toggle('active', b === btn));
+      bgButtons.forEach((b) => {
+        b.classList.toggle('active', b === btn);
+      });
       frame.classList.remove('bg-light', 'bg-dark', 'bg-transparent');
       frame.classList.add(`bg-${state.bgMode}`);
     });
@@ -935,7 +1038,9 @@
   curveButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       state.pressureCurve = btn.dataset.curve || 'linear';
-      curveButtons.forEach((b) => b.classList.toggle('active', b === btn));
+      curveButtons.forEach((b) => {
+        b.classList.toggle('active', b === btn);
+      });
     });
   });
 
