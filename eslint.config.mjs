@@ -1,6 +1,6 @@
 export default [
   {
-    ignores: ["node_modules/**", "assets/credits-data.js", "assets/mini-paint.js"],
+    ignores: ["node_modules/**", "assets/credits-data.js"],
   },
   {
     files: ["assets/**/*.js"],
@@ -34,6 +34,7 @@ export default [
         Math: "readonly",
         Date: "readonly",
         Promise: "readonly",
+        Uint8Array: "readonly",
         encodeURIComponent: "readonly",
         structuredClone: "readonly",
         translations: "readonly",

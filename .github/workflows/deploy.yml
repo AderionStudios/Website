@@ -63,7 +63,7 @@ jobs:
           eslint . --max-warnings=0
           stylelint "assets/*.css" --max-warnings=0
           if [ -f tsconfig.json ]; then npx tsc --noEmit --strict; fi
-          htmlhint index.html visual-novel.html studio.html credits.html join.html
+          htmlhint index.html visual-novel.html studio.html credits.html join.html mini-paint.html
           xmllint --noout sitemap.xml
 
       - name: SAST (Semgrep)

@@ -23,10 +23,12 @@ SITE_HTML_FILES: tuple[str, ...] = (
     "studio.html",
     "credits.html",
     "join.html",
+    "mini-paint.html",
 )
 SITE_CSS_FILES: tuple[str, ...] = (
     "assets/styles.css",
     "assets/visual-novel.css",
+    "assets/mini-paint.css",
 )
 PYTHON_QA_FILES: tuple[str, ...] = (
     "scripts/qa-check.py",
@@ -200,6 +202,7 @@ class PageParser(HTMLParser):
         super().__init__()
         self.links: list[str] = []
         self.site_keys: set[str] = set()
+        self.paint_keys: set[str] = set()
         self.csp_issues: list[str] = []
 
     def handle_starttag(
@@ -228,6 +231,8 @@ class PageParser(HTMLParser):
             self._inspect_url_attr(key, value)
         elif key in I18N_ATTRS and value:
             self.site_keys.add(value)
+        elif key.startswith("data-i18n") and value:
+            self.paint_keys.add(value)
 
     def _inspect_url_attr(self, key: str, value: str) -> None:
         """Record URL link or flag javascript: URLs as CSP violations."""
@@ -602,6 +607,8 @@ def check_html_file(
     root: Path,
     site_tr: set[str],
     site_en: set[str],
+    paint_tr: set[str] | None = None,
+    paint_en: set[str] | None = None,
 ) -> list[str]:
     """Validate links, CSP rules, and i18n keys for one HTML file."""
     if not html_file.is_file():
@@ -615,15 +622,45 @@ def check_html_file(
         for issue in sorted(set(parser.csp_issues))
     )
     errors.extend(_check_relative_links(html_file, root, parser.links))
-    errors.extend(
-        f"{html_file.name}: missing TR key '{key}'"
-        for key in sorted(parser.site_keys - site_tr)
-    )
-    errors.extend(
-        f"{html_file.name}: missing EN key '{key}'"
-        for key in sorted(parser.site_keys - site_en)
-    )
+    if html_file.name == "mini-paint.html":
+        target_tr = paint_tr if paint_tr is not None else set()
+        target_en = paint_en if paint_en is not None else set()
+        errors.extend(
+            f"{html_file.name}: missing TR key '{key}'"
+            for key in sorted(parser.paint_keys - target_tr)
+        )
+        errors.extend(
+            f"{html_file.name}: missing EN key '{key}'"
+            for key in sorted(parser.paint_keys - target_en)
+        )
+    else:
+        errors.extend(
+            f"{html_file.name}: missing TR key '{key}'"
+            for key in sorted(parser.site_keys - site_tr)
+        )
+        errors.extend(
+            f"{html_file.name}: missing EN key '{key}'"
+            for key in sorted(parser.site_keys - site_en)
+        )
     return errors
+
+
+def _load_paint_i18n(root: Path) -> tuple[set[str], set[str], list[str]]:
+    """Load TR and EN i18n keys from assets/mini-paint.js."""
+    errors: list[str] = []
+    file_path = root / "assets" / "mini-paint.js"
+    if not file_path.is_file():
+        return set(), set(), ["assets/mini-paint.js is missing."]
+    text = file_path.read_text(encoding="utf-8")
+    tr_keys = extract_keys(text, r"\btr\s*:\s*\{")
+    en_keys = extract_keys(text, r"\ben\s*:\s*\{")
+    if tr_keys is None:
+        errors.append("assets/mini-paint.js: failed to parse TR i18n keys")
+        tr_keys = set()
+    if en_keys is None:
+        errors.append("assets/mini-paint.js: failed to parse EN i18n keys")
+        en_keys = set()
+    return tr_keys, en_keys, errors
 
 
 def _load_site_i18n(root: Path) -> tuple[set[str], set[str], list[str]]:
@@ -658,15 +695,19 @@ def _load_site_i18n(root: Path) -> tuple[set[str], set[str], list[str]]:
     return tr_keys, en_keys, errors
 
 
-def _check_i18n_parity(site_tr: set[str], site_en: set[str]) -> list[str]:
+def _check_i18n_parity(
+    tr_keys: set[str],
+    en_keys: set[str],
+    scope: str = "site",
+) -> list[str]:
     """Verify exact TR and EN translation key parity."""
     errors = [
-        f"i18n parity: key '{key}' exists in TR but missing in EN"
-        for key in sorted(site_tr - site_en)
+        f"{scope} i18n parity: key '{key}' exists in TR but missing in EN"
+        for key in sorted(tr_keys - en_keys)
     ]
     errors.extend(
-        f"i18n parity: key '{key}' exists in EN but missing in TR"
-        for key in sorted(site_en - site_tr)
+        f"{scope} i18n parity: key '{key}' exists in EN but missing in TR"
+        for key in sorted(en_keys - tr_keys)
     )
     return errors
 
@@ -682,10 +723,24 @@ def check_site_basics(root: Path) -> list[str]:
     site_tr, site_en, i18n_errors = _load_site_i18n(root)
     errors.extend(i18n_errors)
     if not i18n_errors:
-        errors.extend(_check_i18n_parity(site_tr, site_en))
+        errors.extend(_check_i18n_parity(site_tr, site_en, scope="site"))
+
+    paint_tr, paint_en, paint_errors = _load_paint_i18n(root)
+    errors.extend(paint_errors)
+    if not paint_errors:
+        errors.extend(_check_i18n_parity(paint_tr, paint_en, scope="mini-paint"))
 
     for rel_html in SITE_HTML_FILES:
-        errors.extend(check_html_file(root / rel_html, root, site_tr, site_en))
+        errors.extend(
+            check_html_file(
+                root / rel_html,
+                root,
+                site_tr,
+                site_en,
+                paint_tr,
+                paint_en,
+            )
+        )
     return errors
 
 

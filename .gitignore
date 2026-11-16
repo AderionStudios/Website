@@ -128,7 +128,3 @@ desktop.ini
 # CI staging directory (if tested locally)
 _deploy/
 
-# Local standalone Mini Paint test files
-mini-paint.html
-assets/mini-paint.css
-assets/mini-paint.js

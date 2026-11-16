@@ -8,6 +8,7 @@
     "includes": [
       "assets/main.js",
       "assets/pages.js",
+      "assets/mini-paint.js",
       "assets/theme-init.js",
       "data/credits.json",
       "!node_modules",
